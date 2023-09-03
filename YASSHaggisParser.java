@@ -18,15 +18,15 @@ public class YASSHaggisParser {
     if (args.length == 0) {
 
       if (System.console() == null) {
-        //HaggisGUIStart.Start(args);
-        //return;
     	  
-    	  new HaggisEditorMain();
+        new HaggisEditorMain().setVisible(true);
+      } else{
+
+        // If nothing has been provided
+        System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run a HAGGIS program directly.");
+        System.exit(0);
       }
 
-      // If nothing has been provided
-      System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run a HAGGIS program directly.");
-      System.exit(0);
 
     }
 
@@ -51,7 +51,7 @@ public class YASSHaggisParser {
 		try {
 			s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-e").toString(), "utf-8");
 			String output = compileHaggis(s);
-	        if (!output.equals("")) {
+	        if (!output.isEmpty()) {
 	          System.out.println(output);
 	        }
 		} catch (IOException e) {
@@ -60,7 +60,7 @@ public class YASSHaggisParser {
 		}
         
     } else if (first.equals("-g")) {
-  	  new HaggisEditorMain().setVisible(true);;
+  	  new HaggisEditorMain().setVisible(true);
     } else {
       System.out.println("You have provided incorrect arguments to the application.");
     }
