@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import jamiebalfour.zpe.core.YASSRuntime;
+import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
@@ -31,7 +32,7 @@ public class YASSHaggisParser {
     }
 
     if (args.length > 0) {
-      first = args[0].toString();
+      first = args[0];
     }
 
     if (first.equals("-r") && argv.containsKey("-r")) {
@@ -39,7 +40,7 @@ public class YASSHaggisParser {
       try {
         String s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-r").toString(), "utf-8");
         String output = compileAndRunHaggis(s);
-        if (!output.equals("")) {
+        if (!output.isEmpty()) {
           System.out.println(output);
         }
 
@@ -55,8 +56,7 @@ public class YASSHaggisParser {
 	          System.out.println(output);
 	        }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+          ZPE.Log("Haggis Runtime error: " + e.getMessage());
 		}
         
     } else if (first.equals("-g")) {
@@ -74,8 +74,7 @@ public class YASSHaggisParser {
   
   public static String compileHaggis(String s) {
 	  YASSHaggisParser haggis = new YASSHaggisParser();
-	  String yass = haggis.parseToYASS(s);
-	  return yass;
+      return haggis.parseToYASS(s);
   }
 
   public static String compileAndRunHaggis(String s) {
@@ -98,23 +97,22 @@ public class YASSHaggisParser {
     try {
       ZPEKit.Compile(yass);
     } catch (CompileError e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      ZPE.Log("Haggis Runtime error: " + e.getMessage());
     }
 
   }
 
   public String parseToYASS(String code) {
-    String output = "";
+    StringBuilder output = new StringBuilder();
     parser = new ZenithParsingEngine(code, false, new YASSHaggisParserByteCodes());
 
     parser.getNextSymbol();
     while (parser.getCurrentSymbol() != -2) {
-      output += parse_one();
+      output.append(parse_one());
       parser.getNextSymbol();
     }
 
-    return output;
+    return output.toString();
   }
   
   
@@ -150,12 +148,7 @@ public class YASSHaggisParser {
   }
 
   private boolean is_join(byte symb) {
-
-    if (symb == YASSHaggisParserByteCodes.AND || symb == YASSHaggisParserByteCodes.OR || symb == YASSHaggisParserByteCodes.PLUS || symb == YASSHaggisParserByteCodes.MINUS || symb == YASSHaggisParserByteCodes.MULT || symb == YASSHaggisParserByteCodes.DIVIDE || symb == YASSHaggisParserByteCodes.MOD) {
-      return true;
-    }
-
-    return false;
+    return symb == YASSHaggisParserByteCodes.AND || symb == YASSHaggisParserByteCodes.OR || symb == YASSHaggisParserByteCodes.PLUS || symb == YASSHaggisParserByteCodes.MINUS || symb == YASSHaggisParserByteCodes.MULT || symb == YASSHaggisParserByteCodes.DIVIDE || symb == YASSHaggisParserByteCodes.MOD;
   }
 
   private boolean is_value(byte symb) {
@@ -167,76 +160,76 @@ public class YASSHaggisParser {
   }
 
   private String compile_value() {
-    String output = "";
+    StringBuilder output = new StringBuilder();
     if (is_value(parser.getCurrentSymbol())) {
       if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.NAME)
-        output += "$" + parser.getCurrentWord() + parser.getWhitespace();
+        output.append("$").append(parser.getCurrentWord()).append(parser.getWhitespace());
       else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.BOOLEAN)
-        output += parser.getCurrentWord().toLowerCase() + parser.getWhitespace();
+        output.append(parser.getCurrentWord().toLowerCase()).append(parser.getWhitespace());
       else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.STRING) {
-        output += "\"" + parser.getCurrentWord() + "\"" + parser.getWhitespace();
+        output.append("\"").append(parser.getCurrentWord()).append("\"").append(parser.getWhitespace());
       } else
-        output += parser.getWhitespace() + parser.getCurrentWord();
+        output.append(parser.getWhitespace()).append(parser.getCurrentWord());
     } else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.LSQBR) {
-    	output = "[";
+    	output = new StringBuilder("[");
     	parser.getNextSymbol();
     	while(parser.getCurrentSymbol() != YASSHaggisParserByteCodes.RSQBR) {
-    		output += compile_value();
+    		output.append(compile_value());
     		parser.getNextSymbol();
     		if(parser.getCurrentSymbol() == YASSHaggisParserByteCodes.COMMA) {
-    			output += ",";
+    			output.append(",");
     			parser.getNextSymbol();
     		}
     	}
-    	output += "]";
+    	output.append("]");
     	System.out.println(output);
     }
 
-    return output;
+    return output.toString();
   }
 
   private String compile_expression() {
-    String output = "";
+    StringBuilder output = new StringBuilder();
     while (true) {
 
       if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.LBRA) {
-        output += "(";
+        output.append("(");
         parser.getNextSymbol();
       }
-      output += compile_value();
+      output.append(compile_value());
 
       if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.RBRA) {
-        output += ")";
+        output.append(")");
         parser.getNextSymbol();
       }
       if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.LBRA) {
-        output += "(";
+        output.append("(");
         parser.getNextSymbol();
       }
       if (is_comparison(parser.peekAhead())) {
 
         parser.getNextSymbol();
-        output += parser.getCurrentWord() + parser.getWhitespace();
+        output.append(parser.getCurrentWord()).append(parser.getWhitespace());
         parser.getNextSymbol();
-        output += compile_value();
+        output.append(compile_value());
 
         if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.RBRA) {
-          output += ")";
+          output.append(")");
           parser.getNextSymbol();
         }
       }
 
       if (!is_join(parser.peekAhead()) && !is_join(parser.getCurrentSymbol())) {
-        return output;
+        return output.toString();
       } else {
         // Jump to
         if (is_join(parser.peekAhead()))
           parser.getNextSymbol();
         if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.MOD) {
-          output += " % " + parser.getWhitespace();
+          output.append(" % ").append(parser.getWhitespace());
           parser.getNextSymbol();
         } else {
-          output += " " + parser.getCurrentWord().toLowerCase() + " " + parser.getWhitespace();
+          output.append(" ").append(parser.getCurrentWord().toLowerCase()).append(" ").append(parser.getWhitespace());
           parser.getNextSymbol();
         }
       }
@@ -253,10 +246,10 @@ public class YASSHaggisParser {
       first = "loop until (";
     }
 
-    String body = "";
+    StringBuilder body = new StringBuilder();
 
     while (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.UNTIL) {
-      body += parse_one();
+      body.append(parse_one());
       parser.getNextSymbol();
     }
 
@@ -272,13 +265,13 @@ public class YASSHaggisParser {
   }
 
   private String compile_if() {
-    String output = "";
+    StringBuilder output = new StringBuilder();
     if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.IF) {
       parser.getNextSymbol();
-      output += "if (";
+      output.append("if (");
     }
 
-    output += compile_expression();
+    output.append(compile_expression());
 
     parser.getNextSymbol();
 
@@ -286,32 +279,32 @@ public class YASSHaggisParser {
       printError("Error. Expected THEN.");
     }
 
-    output += ") ";
+    output.append(") ");
 
     parser.getNextSymbol();
 
     while (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.END && parser.peekAhead() != YASSHaggisParserByteCodes.IF) {
-      output += parse_one();
+      output.append(parse_one());
       parser.getNextSymbol();
     }
 
     parser.getNextSymbol();
 
-    output += "end if ";
+    output.append("end if ");
 
-    return output;
+    return output.toString();
 
   }
 
   private String compile_while() {
-    String output = "";
+    StringBuilder output = new StringBuilder();
 
     if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.WHILE) {
       parser.getNextSymbol();
-      output += "while (";
+      output.append("while (");
     }
 
-    output += compile_expression();
+    output.append(compile_expression());
 
     parser.getNextSymbol();
 
@@ -319,52 +312,52 @@ public class YASSHaggisParser {
       printError("Error. Expected DO.");
     }
 
-    output += ") ";
+    output.append(") ");
 
     parser.getNextSymbol();
 
     while (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.END && parser.peekAhead() != YASSHaggisParserByteCodes.WHILE) {
-      output += parse_one();
+      output.append(parse_one());
       parser.getNextSymbol();
     }
 
     parser.getNextSymbol();
 
-    output += "end while ";
+    output.append("end while ");
 
-    return output;
+    return output.toString();
 
   }
   
   private String compile_for() {
-	    String output = "";
+	    StringBuilder output = new StringBuilder();
 	    
 	    boolean each = false;
 
 	    if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.FOR) {
 	      parser.getNextSymbol();
-	      output += "for ";
+	      output.append("for ");
 	    }
 	    
 	    if (parser.peekAhead() == YASSHaggisParserByteCodes.EACH) {
-	    	output += "each ";
+	    	output.append("each ");
 	    	each = true;
 	    }
 	    
-	    output += "(";
+	    output.append("(");
 	    
 
-	    output += compile_expression();
+	    output.append(compile_expression());
 
 	    parser.getNextSymbol();
 	    
 	    if(each) {
 	    	if (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.FROM) {
 	  	      parser.getNextSymbol();
-	  	      output += " in ";
+	  	      output.append(" in ");
 	  	    }
 	    	
-	    	output += compile_expression();
+	    	output.append(compile_expression());
 	    }
 	    
 
@@ -372,20 +365,20 @@ public class YASSHaggisParser {
 	      printError("Error. Expected DO.");
 	    }
 
-	    output += ") ";
+	    output.append(") ");
 
 	    parser.getNextSymbol();
 
 	    while (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.END && parser.peekAhead() != YASSHaggisParserByteCodes.FOR) {
-	      output += parse_one();
+	      output.append(parse_one());
 	      parser.getNextSymbol();
 	    }
 
 	    parser.getNextSymbol();
 
-	    output += "end for ";
+	    output.append("end for ");
 
-	    return output;
+	    return output.toString();
 
 	  }
 
@@ -550,7 +543,7 @@ public class YASSHaggisParser {
 
       boolean close = false;
 
-      if (parser.getCurrentWord().toLowerCase() == "integer") {
+      if (parser.getCurrentWord().equalsIgnoreCase("integer")) {
         output += " ceiling (";
         close = true;
       }
