@@ -10,11 +10,7 @@ import java.awt.Font;
 
 import javax.swing.JPanel;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +39,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import jamiebalfour.HelperFunctions;
+import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
@@ -179,9 +176,9 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 		
 		setJMenuBar(menuBar);
 		
-		int modifier = ActionEvent.CTRL_MASK;
+		int modifier = InputEvent.CTRL_DOWN_MASK;
 		if (HelperFunctions.isMac()) {
-			modifier = ActionEvent.META_MASK;
+			modifier = InputEvent.META_DOWN_MASK;
 		}
 
 		
@@ -212,7 +209,7 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 					try {
 						HelperFunctions.WriteFile(lastFileOpened, contentEditor.getText(), false);
 					} catch (IOException ex) {
-						ex.printStackTrace();
+						ZPE.Log("Haggis Runtime error: " + ex.getMessage());
 					}
 				}
 			}

@@ -487,7 +487,6 @@ public class YASSHaggisParser {
 
     output += "print(";
 
-    // TODO: Update with value etc.
     if (!is_value(parser.getCurrentSymbol())) {
       printError("Error. Expected VALUE.");
     }
