@@ -43,7 +43,6 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import jamiebalfour.HelperFunctions;
-import jamiebalfour.zpe.core.YASSRuntimeInterpreter;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
@@ -709,17 +708,15 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 					String extension = getSaveExtension(fc.getFileFilter());
 					// This is where a real application would open the file.
 					try {
-						YASSRuntimeInterpreter interpreter = new YASSRuntimeInterpreter();
-						
 
 						YASSHaggisParser haggis = new YASSHaggisParser();
 					    String yass = haggis.parseToYASS(contentEditor.getText());
 					    
-						String text = "";
-						for (byte s : interpreter.ParseToBytes(yass)) {
-							text += s + " ";
+						StringBuilder text = new StringBuilder();
+						for (byte s : jamiebalfour.zpe.core.ZPEKit.ParseToBytes(yass)) {
+							text.append(s).append(" ");
 						}
-						HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text, false);
+						HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
 					} catch (IOException ex) {
 						JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
 								JOptionPane.ERROR_MESSAGE);
