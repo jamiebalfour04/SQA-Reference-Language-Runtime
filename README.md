@@ -5,4 +5,4 @@ to run natively on a system with GraalVM very efficiently.
 
 It features a built-in UI editor, similar to but not as functional as the ZPE UI Editor, a command line interface and the ability to compile SQARL files directly into a binary and run them later.
 
-To download, agree to the terms and conditions for downloading from my website at https://jamiebalfour.scot/terms/?terms=software&type=1-zpe&file=sqarl-zpe-parser and enjoy!
+To download, agree to the terms and conditions for downloading from my website at https://jamiebalfour.scot/terms/read/software/1-zpe/sqarl-zpe-parser and enjoy!
