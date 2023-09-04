@@ -113,14 +113,14 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 				saveGUISettings(mainProperties);
 			}
 		});
-		
-		String path = System.getProperty("user.home") + "/.zpe/" + "gui.haggis.properties";
 
-		File f = new File(path);
-		if (!f.exists()) {
-			saveGUISettings(new Properties());
+		File f = new File(System.getProperty("user.home") + "/zpe/sqarl/");
+
+		if(!f.exists()){
+			f.mkdirs();
 		}
 		
+		String path = System.getProperty("user.home") + "/zpe/sqarl/" + "gui.haggis.properties";
 
 		
 		try {
@@ -853,15 +853,19 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 	
 	public void saveGUISettings(Properties props) {
 		if (propertiesChanged) {
+			File f = new File(System.getProperty("user.home") + "/zpe/sqarl/");
+			if(!f.exists()){
+				f.mkdirs();
+			}
 			OutputStream output = null;
-			String path = System.getProperty("user.home") + "/.zpe/" + "gui.properties";
+			String path = System.getProperty("user.home") + "/zpe/sqarl/" + "gui.properties";
 
 			try {
 				output = new FileOutputStream(path);
 				// save properties to project root folder
 				props.store(output, null);
 			} catch (Exception e) {
-				e.printStackTrace();
+				ZPE.Log("Haggis Runtime error: GUI cannot save" + e.getMessage());
 			}
 		}
 	}

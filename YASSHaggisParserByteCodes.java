@@ -69,6 +69,8 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 	final static byte LSQBR = 62;
 	final static byte RSQBR = 63;
 	final static byte COMMA = 70;
+
+	final static byte PROCEDURE = 71;
 	
 	
 	
@@ -102,10 +104,12 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 			return YASSHaggisParserByteCodes.SET;
 		if(w.matches(TYPE_INT)) 
 			return YASSHaggisParserByteCodes.INT;
+		if(w.matches(TYPE_BOOLEAN))
+			return YASSHaggisParserByteCodes.BOOLEAN;
 		if(w.matches(TYPE_DOUBLE)) 
 			return YASSHaggisParserByteCodes.REAL;
 		if(w.matches(TYPE_STRING)) 
-			return YASSHaggisParserByteCodes.STRING;	
+			return YASSHaggisParserByteCodes.STRING;
 		if(w.matches(NAME_STRING))
 			return YASSHaggisParserByteCodes.NAME;
 		if(w.equals("AND"))
@@ -136,10 +140,7 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 			return YASSHaggisParserByteCodes.RSQBR;
 		if(w.equals(","))
 			return YASSHaggisParserByteCodes.COMMA;
-		if(w.toLowerCase().equals("true"))
-			return YASSHaggisParserByteCodes.BOOLEAN;
-		if(w.toLowerCase().equals("false"))
-			return YASSHaggisParserByteCodes.BOOLEAN;
+
 		if(w.equals("+"))
 			return YASSHaggisParserByteCodes.PLUS;	
 		if(w.equals("-"))
@@ -165,7 +166,10 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 		if(w.equals("DO"))
 			return YASSHaggisParserByteCodes.DO;
 		if(w.equals("UNTIL"))
-			return YASSHaggisParserByteCodes.UNTIL;	
+			return YASSHaggisParserByteCodes.UNTIL;
+		if(w.equals("PROCEDURE")){
+			return YASSHaggisParserByteCodes.PROCEDURE;
+		}
 		
 		return -2;
 	}
@@ -184,19 +188,16 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 
 	@Override
 	public String[] listOfSubsequentCharacters() {
-		String[] characters = {};
-		return characters;
+        return new String[]{};
 	}
 
 	@Override
 	public String[] listOfBoundWords() {
-		String[] characters = {};
-		return characters;
+        return new String[]{};
 	}
 
 	public String[] listOfWhitespaces() {
-		String[] whitespaces = {" ", "" + '\n', "" + '\r', "\r\n", "" + '\t', System.getProperty("line.separator")};
-		return whitespaces;
+        return new String[]{" ", "" + '\n', "" + '\r', "\r\n", "" + '\t', System.getProperty("line.separator")};
 	}
 
 	@Override

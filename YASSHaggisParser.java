@@ -7,6 +7,8 @@ import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
+import javax.swing.text.html.parser.Parser;
+
 public class YASSHaggisParser {
 
   ZenithParsingEngine parser;
@@ -142,7 +144,10 @@ public class YASSHaggisParser {
     }
     if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.FOR) {
         return compile_for() + System.getProperty("line.separator");
-      }
+    }
+    if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.PROCEDURE){
+      return compile_procedure() + System.getProperty("line.separator");
+    }
 
     return "-1";
   }
@@ -479,6 +484,57 @@ public class YASSHaggisParser {
 
   }
 
+  private String compile_procedure(){
+    StringBuilder output = new StringBuilder("function ");
+
+    parser.getNextSymbol();
+
+    output.append(parser.getCurrentWord());
+
+    parser.getNextSymbol();
+
+    if(parser.getCurrentSymbol() != YASSHaggisParserByteCodes.LBRA){
+      printError("Error. Expected LBRACKET.");
+    }
+
+    output.append(" (");
+
+    parser.getNextSymbol();
+
+    while(parser.getCurrentSymbol() != YASSHaggisParserByteCodes.RBRA){
+      if(is_type()){
+        output.append(convertType()).append(" ");
+        parser.getNextSymbol();
+      } else{
+        printError("Expected type in PROCEDURE signature parameters.");
+      }
+      /*
+      PROCEDURE doubleUp(INTEGER n)
+  SEND n * 2 TO DISPLAY
+END PROCEDURE
+       */
+
+
+      output.append("$").append(parser.getCurrentWord()).append(" ");
+
+      parser.getNextSymbol();
+    }
+
+    output.append(") ");
+
+    parser.getNextSymbol();
+    while (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.END && parser.peekAhead() != YASSHaggisParserByteCodes.PROCEDURE) {
+      output.append(parse_one());
+      parser.getNextSymbol();
+    }
+
+    parser.getNextSymbol();
+
+    output.append(" end function");
+
+    return output.toString();
+  }
+
   private String compile_send() {
     String output = "";
     if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.SEND) {
@@ -576,6 +632,24 @@ public class YASSHaggisParser {
   private boolean is_type() {
     return parser.getCurrentSymbol() == YASSHaggisParserByteCodes.TYPE || (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.LBRA && parser.peekAhead() == YASSHaggisParserByteCodes.TYPE);
 
+  }
+
+  private String convertType(){
+    String output = "";
+
+    if(parser.getCurrentWord().equals("INTEGER") || parser.getCurrentWord().equals("REAL")){
+      return "number";
+    }
+
+    if(parser.getCurrentWord().equals("STRING") || parser.getCurrentWord().equals("CHARACTER")){
+      return "string";
+    }
+
+    if(parser.getCurrentWord().equals("BOOLEAN")){
+      return "boolean";
+    }
+
+    return output;
   }
 
 }
