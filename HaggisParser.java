@@ -11,7 +11,6 @@ import jamiebalfour.zpe.parser.ZenithParsingEngine;
 public class HaggisParser {
 
   ZenithParsingEngine parser;
-  ArrayList<String> procedures = new ArrayList<>();
 
   public static void main(String[] args) {
 
@@ -147,6 +146,9 @@ public class HaggisParser {
     }
     if (parser.getCurrentSymbol() == HaggisParserByteCodes.PROCEDURE){
       return compile_procedure() + System.getProperty("line.separator");
+    }
+    if (parser.getCurrentSymbol() == HaggisParserByteCodes.FUNCTION){
+      return compile_function() + System.getProperty("line.separator");
     }
     if (parser.getCurrentSymbol() == HaggisParserByteCodes.NAME && parser.peekAhead() == HaggisParserByteCodes.LBRA){
       return compile_function_call() + System.getProperty("line.separator");
@@ -564,6 +566,71 @@ public class HaggisParser {
     parser.getNextSymbol();
 
     output.append(" end function");
+
+    return output.toString();
+  }
+
+  private String compile_function(){
+    boolean returnFound = false;
+
+    StringBuilder output = new StringBuilder("function ");
+
+    parser.getNextSymbol();
+
+    output.append(parser.getCurrentWord());
+
+    parser.getNextSymbol();
+
+    if(parser.getCurrentSymbol() != HaggisParserByteCodes.LBRA){
+      printError("Error. Expected LBRACKET.");
+    }
+
+    output.append(" (");
+
+    parser.getNextSymbol();
+
+    while(parser.getCurrentSymbol() != HaggisParserByteCodes.RBRA){
+      if(is_type()){
+        output.append(convertType()).append(" ");
+        parser.getNextSymbol();
+      } else{
+        printError("Expected type in PROCEDURE signature parameters.");
+      }
+
+
+      output.append("$").append(parser.getCurrentWord());
+
+      parser.getNextSymbol();
+
+      if(parser.getCurrentSymbol() == HaggisParserByteCodes.COMMA){
+        output.append(", ");
+        parser.getNextSymbol();
+      }
+    }
+
+    output.append(") ");
+
+    parser.getNextSymbol();
+    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.FUNCTION) {
+      if(parser.getCurrentSymbol() == HaggisParserByteCodes.RETURN){
+        output.append("return ");
+        parser.getNextSymbol();
+        output.append(compile_expression());
+        returnFound = true;
+      } else{
+        output.append(parse_one());
+      }
+
+      parser.getNextSymbol();
+    }
+
+    parser.getNextSymbol();
+
+    output.append(" end function");
+
+    if(!returnFound){
+      printError("RETURN not provided in a function");
+    }
 
     return output.toString();
   }

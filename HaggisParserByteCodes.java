@@ -71,6 +71,8 @@ public class HaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser 
 	final static byte COMMA = 70;
 
 	final static byte PROCEDURE = 71;
+	final static byte FUNCTION = 72;
+	final static byte RETURN = 73;
 	
 	
 	
@@ -169,6 +171,12 @@ public class HaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser 
 			return HaggisParserByteCodes.UNTIL;
 		if(w.equals("PROCEDURE")){
 			return HaggisParserByteCodes.PROCEDURE;
+		}
+		if(w.equals("FUNCTION")){
+			return HaggisParserByteCodes.FUNCTION;
+		}
+		if(w.equals("RETURN")){
+			return HaggisParserByteCodes.RETURN;
 		}
 		
 		return -2;
