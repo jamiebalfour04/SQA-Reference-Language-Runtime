@@ -592,7 +592,7 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 					AttachedConsole.stop(0);
 				}
 				
-				YASSHaggisParser haggis = new YASSHaggisParser();
+				HaggisParser haggis = new HaggisParser();
 			    String yass = haggis.parseToYASS(contentEditor.getText());
 				
 				AttachedConsole.runCode(yass, new String[0],
@@ -641,10 +641,10 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 				try {
 
 
-					YASSHaggisParser haggis = new YASSHaggisParser();
+					HaggisParser haggis = new HaggisParser();
 				    String yass = haggis.parseToYASS(contentEditor.getText());
 					// null for no password
-					ZPEKit.Compile(yass, file.toString() + "." + extension, details,
+					jamiebalfour.zpe.core.ZPEKit.compile(yass, file.toString() + "." + extension, details,
 							!chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
 
 					JOptionPane.showMessageDialog(editor,
@@ -667,11 +667,11 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 			public void actionPerformed(ActionEvent e) {
 
 
-				YASSHaggisParser haggis = new YASSHaggisParser();
+				HaggisParser haggis = new HaggisParser();
 			    String yass = haggis.parseToYASS(contentEditor.getText());
 
 				try {
-					if (ZPEKit.ValidateCode(yass)) {
+					if (ZPEKit.validateCode(yass)) {
 						JOptionPane.showMessageDialog(editor, "Code is valid", "Code analysis",
 								JOptionPane.INFORMATION_MESSAGE);
 					} else {
@@ -706,11 +706,11 @@ class HaggisEditorMain extends JFrame implements GenericEditor {
 					// This is where a real application would open the file.
 					try {
 
-						YASSHaggisParser haggis = new YASSHaggisParser();
+						HaggisParser haggis = new HaggisParser();
 					    String yass = haggis.parseToYASS(contentEditor.getText());
 					    
 						StringBuilder text = new StringBuilder();
-						for (byte s : jamiebalfour.zpe.core.ZPEKit.ParseToBytes(yass)) {
+						for (byte s : jamiebalfour.zpe.core.ZPEKit.parseToBytes(yass)) {
 							text.append(s).append(" ");
 						}
 						HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text.toString(), false);

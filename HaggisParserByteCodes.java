@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import jamiebalfour.zpe.parser.ZenithParsingEngine.MultilineComment;
 
 
-public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
+public class HaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	
 	
 	final static String TYPE_INT = "(((-?[1-9]+)|[0-9][0-9]*)(E[0-9]+)?)";
@@ -81,94 +81,94 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 	@Override
 	public byte stringToByteCode(String w) {
 		if (w.equals("DECLARE"))
-			return YASSHaggisParserByteCodes.DECLARE;
+			return HaggisParserByteCodes.DECLARE;
 		if (w.equals("AS"))
-			return YASSHaggisParserByteCodes.AS;
+			return HaggisParserByteCodes.AS;
 		if (w.equals("INTEGER") || w.equals("BOOLEAN") || w.equals("REAL") || w.equals("STRING") || w.equals("ARRAY"))
-			return YASSHaggisParserByteCodes.TYPE;
+			return HaggisParserByteCodes.TYPE;
 		if (w.equals("INITIALLY"))
-			return YASSHaggisParserByteCodes.INITIALLY;
+			return HaggisParserByteCodes.INITIALLY;
 		if (w.equals("FROM"))
-			return YASSHaggisParserByteCodes.FROM;
+			return HaggisParserByteCodes.FROM;
 		if (w.equals("KEYBOARD"))
-			return YASSHaggisParserByteCodes.KEYBOARD;
+			return HaggisParserByteCodes.KEYBOARD;
 		if (w.equals("RECEIVE"))
-			return YASSHaggisParserByteCodes.RECEIVE;
+			return HaggisParserByteCodes.RECEIVE;
 		if (w.equals("SEND"))
-			return YASSHaggisParserByteCodes.SEND;
+			return HaggisParserByteCodes.SEND;
 		if (w.equals("TO"))
-			return YASSHaggisParserByteCodes.TO;
+			return HaggisParserByteCodes.TO;
 		if (w.equals("DISPLAY"))
-			return YASSHaggisParserByteCodes.DISPLAY;
+			return HaggisParserByteCodes.DISPLAY;
 		if (w.equals("SET"))
-			return YASSHaggisParserByteCodes.SET;
+			return HaggisParserByteCodes.SET;
 		if(w.matches(TYPE_INT)) 
-			return YASSHaggisParserByteCodes.INT;
+			return HaggisParserByteCodes.INT;
 		if(w.matches(TYPE_BOOLEAN))
-			return YASSHaggisParserByteCodes.BOOLEAN;
+			return HaggisParserByteCodes.BOOLEAN;
 		if(w.matches(TYPE_DOUBLE)) 
-			return YASSHaggisParserByteCodes.REAL;
+			return HaggisParserByteCodes.REAL;
 		if(w.matches(TYPE_STRING)) 
-			return YASSHaggisParserByteCodes.STRING;
+			return HaggisParserByteCodes.STRING;
 		if(w.matches(NAME_STRING))
-			return YASSHaggisParserByteCodes.NAME;
+			return HaggisParserByteCodes.NAME;
 		if(w.equals("AND"))
-			return YASSHaggisParserByteCodes.AND;
+			return HaggisParserByteCodes.AND;
 		if(w.equals("OR"))
-			return YASSHaggisParserByteCodes.OR;
+			return HaggisParserByteCodes.OR;
 		if(w.equals("NOT"))
-			return YASSHaggisParserByteCodes.NOT;		
+			return HaggisParserByteCodes.NOT;
 		if(w.equals("!="))
-			return YASSHaggisParserByteCodes.NEQUAL;
+			return HaggisParserByteCodes.NEQUAL;
 		if(w.equals("="))
-			return YASSHaggisParserByteCodes.EQUAL;
+			return HaggisParserByteCodes.EQUAL;
 		if(w.equals(">"))
-			return YASSHaggisParserByteCodes.GT;
+			return HaggisParserByteCodes.GT;
 		if(w.equals("<"))
-			return YASSHaggisParserByteCodes.LT;
+			return HaggisParserByteCodes.LT;
 		if(w.equals(">="))
-			return YASSHaggisParserByteCodes.GTE;
+			return HaggisParserByteCodes.GTE;
 		if(w.equals("<="))
-			return YASSHaggisParserByteCodes.LTE;
+			return HaggisParserByteCodes.LTE;
 		if(w.equals("("))
-			return YASSHaggisParserByteCodes.LBRA;
+			return HaggisParserByteCodes.LBRA;
 		if(w.equals(")"))
-			return YASSHaggisParserByteCodes.RBRA;
+			return HaggisParserByteCodes.RBRA;
 		if(w.equals("["))
-			return YASSHaggisParserByteCodes.LSQBR;
+			return HaggisParserByteCodes.LSQBR;
 		if(w.equals("]"))
-			return YASSHaggisParserByteCodes.RSQBR;
+			return HaggisParserByteCodes.RSQBR;
 		if(w.equals(","))
-			return YASSHaggisParserByteCodes.COMMA;
+			return HaggisParserByteCodes.COMMA;
 
 		if(w.equals("+"))
-			return YASSHaggisParserByteCodes.PLUS;	
+			return HaggisParserByteCodes.PLUS;
 		if(w.equals("-"))
-			return YASSHaggisParserByteCodes.MINUS;	
+			return HaggisParserByteCodes.MINUS;
 		if(w.equals("/"))
-			return YASSHaggisParserByteCodes.DIVIDE;	
+			return HaggisParserByteCodes.DIVIDE;
 		if(w.equals("*"))
-			return YASSHaggisParserByteCodes.MULT;	
+			return HaggisParserByteCodes.MULT;
 		if(w.equals("MOD"))
-			return YASSHaggisParserByteCodes.MOD;	
+			return HaggisParserByteCodes.MOD;
 		if(w.equals("REPEAT"))
-			return YASSHaggisParserByteCodes.REPEAT;
+			return HaggisParserByteCodes.REPEAT;
 		if(w.equals("IF"))
-			return YASSHaggisParserByteCodes.IF;	
+			return HaggisParserByteCodes.IF;
 		if(w.equals("THEN"))
-			return YASSHaggisParserByteCodes.THEN;
+			return HaggisParserByteCodes.THEN;
 		if(w.equals("WHILE"))
-			return YASSHaggisParserByteCodes.WHILE;
+			return HaggisParserByteCodes.WHILE;
 		if(w.equals("FOR"))
-			return YASSHaggisParserByteCodes.FOR;
+			return HaggisParserByteCodes.FOR;
 		if(w.equals("EACH"))
-			return YASSHaggisParserByteCodes.EACH;
+			return HaggisParserByteCodes.EACH;
 		if(w.equals("DO"))
-			return YASSHaggisParserByteCodes.DO;
+			return HaggisParserByteCodes.DO;
 		if(w.equals("UNTIL"))
-			return YASSHaggisParserByteCodes.UNTIL;
+			return HaggisParserByteCodes.UNTIL;
 		if(w.equals("PROCEDURE")){
-			return YASSHaggisParserByteCodes.PROCEDURE;
+			return HaggisParserByteCodes.PROCEDURE;
 		}
 		
 		return -2;
