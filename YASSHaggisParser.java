@@ -1,17 +1,18 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import jamiebalfour.zpe.core.YASSByteCodes;
 import jamiebalfour.zpe.core.YASSRuntime;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
-import javax.swing.text.html.parser.Parser;
-
 public class YASSHaggisParser {
 
   ZenithParsingEngine parser;
+  ArrayList<String> procedures = new ArrayList<>();
 
   public static void main(String[] args) {
 
@@ -97,7 +98,7 @@ public class YASSHaggisParser {
     String yass = haggis.parseToYASS(code);
 
     try {
-      ZPEKit.Compile(yass);
+      ZPEKit.compile(yass);
     } catch (CompileError e) {
       ZPE.Log("Haggis Runtime error: " + e.getMessage());
     }
@@ -148,6 +149,9 @@ public class YASSHaggisParser {
     if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.PROCEDURE){
       return compile_procedure() + System.getProperty("line.separator");
     }
+    if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.NAME && parser.peekAhead() == YASSHaggisParserByteCodes.LBRA){
+      return compile_function_call() + System.getProperty("line.separator");
+    }
 
     return "-1";
   }
@@ -167,8 +171,10 @@ public class YASSHaggisParser {
   private String compile_value() {
     StringBuilder output = new StringBuilder();
     if (is_value(parser.getCurrentSymbol())) {
-      if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.NAME)
-        output.append("$").append(parser.getCurrentWord()).append(parser.getWhitespace());
+      if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.NAME && parser.peekAhead() != YASSHaggisParserByteCodes.LBRA)
+        output.append("$").append(parser.getCurrentWord()).append(" ");
+      else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.NAME && parser.peekAhead() == YASSHaggisParserByteCodes.LBRA)
+        output.append(compile_function_call());
       else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.BOOLEAN)
         output.append(parser.getCurrentWord().toLowerCase()).append(parser.getWhitespace());
       else if (parser.getCurrentSymbol() == YASSHaggisParserByteCodes.STRING) {
@@ -241,6 +247,34 @@ public class YASSHaggisParser {
 
     }
 
+  }
+
+  private String compile_function_call(){
+    StringBuilder output = new StringBuilder();
+
+    output.append(parser.getCurrentWord());
+
+    parser.getNextSymbol();
+
+    output.append("(");
+
+    parser.getNextSymbol();
+
+    while(parser.getCurrentSymbol() != YASSHaggisParserByteCodes.RBRA){
+      output.append(parser.getCurrentWord());
+      parser.getNextSymbol();
+
+      if(parser.getCurrentSymbol() == YASSHaggisParserByteCodes.COMMA){
+        parser.getNextSymbol();
+        output.append(", ");
+      }
+    }
+
+    output.append(")");
+
+    parser.getNextSymbol();
+
+    return output.toString();
   }
 
   private String compile_repeat() {
@@ -508,16 +542,16 @@ public class YASSHaggisParser {
       } else{
         printError("Expected type in PROCEDURE signature parameters.");
       }
-      /*
-      PROCEDURE doubleUp(INTEGER n)
-  SEND n * 2 TO DISPLAY
-END PROCEDURE
-       */
 
 
-      output.append("$").append(parser.getCurrentWord()).append(" ");
+      output.append("$").append(parser.getCurrentWord());
 
       parser.getNextSymbol();
+
+      if(parser.getCurrentSymbol() == YASSHaggisParserByteCodes.COMMA){
+        output.append(", ");
+        parser.getNextSymbol();
+      }
     }
 
     output.append(") ");
@@ -549,7 +583,8 @@ END PROCEDURE
 
     output += compile_expression();
 
-    parser.getNextSymbol();
+    if(parser.getCurrentSymbol() != YASSHaggisParserByteCodes.TO)
+      parser.getNextSymbol();
 
     if (parser.getCurrentSymbol() != YASSHaggisParserByteCodes.TO) {
       printError("Error. Expected TO.");

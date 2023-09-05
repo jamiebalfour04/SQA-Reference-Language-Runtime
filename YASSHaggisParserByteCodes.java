@@ -176,15 +176,9 @@ public class YASSHaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeni
 
 	@Override
 	public String symbolToString(int i) {
-		// TODO Auto-generated method stub
+		// This is never needed because the code is transpiled to YASS
 		return null;
 	}
-
-	/*@Override
-	public String[] listOfSpecialCharacters() {
-		String[] characters = {" ", "+", "-", "*", "/", "(", ")"};
-		return characters;
-	}*/
 
 	@Override
 	public String[] listOfSubsequentCharacters() {
