@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import jamiebalfour.zpe.core.YASSRuntime;
@@ -8,7 +7,7 @@ import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
-public class HaggisParser {
+public class SQARLParser {
 
   ZenithParsingEngine parser;
 
@@ -21,7 +20,7 @@ public class HaggisParser {
 
       if (System.console() == null) {
     	  
-        new HaggisEditorMain().setVisible(true);
+        new SQARLEditorMain().setVisible(true);
       } else{
 
         // If nothing has been provided
@@ -57,11 +56,11 @@ public class HaggisParser {
 	          System.out.println(output);
 	        }
 		} catch (IOException e) {
-          ZPE.Log("Haggis Runtime error: " + e.getMessage());
+          ZPE.Log("SQARL Runtime error: " + e.getMessage());
 		}
         
     } else if (first.equals("-g")) {
-  	  new HaggisEditorMain().setVisible(true);
+  	  new SQARLEditorMain().setVisible(true);
     } else {
       System.out.println("You have provided incorrect arguments to the application.");
     }
@@ -74,12 +73,12 @@ public class HaggisParser {
   }
   
   public static String compileHaggis(String s) {
-	  HaggisParser haggis = new HaggisParser();
+	  SQARLParser haggis = new SQARLParser();
       return haggis.parseToYASS(s);
   }
 
   public static String compileAndRunHaggis(String s) {
-    HaggisParser haggis = new HaggisParser();
+    SQARLParser haggis = new SQARLParser();
     String yass = haggis.parseToYASS(s);
 
     YASSRuntime z = new YASSRuntime();
@@ -92,20 +91,20 @@ public class HaggisParser {
 
   public static void compileAndRunHaggisGUI(String code) {
 
-    HaggisParser haggis = new HaggisParser();
+    SQARLParser haggis = new SQARLParser();
     String yass = haggis.parseToYASS(code);
 
     try {
       ZPEKit.compile(yass);
     } catch (CompileError e) {
-      ZPE.Log("Haggis Runtime error: " + e.getMessage());
+      ZPE.Log("SQARL Runtime error: " + e.getMessage());
     }
 
   }
 
   public String parseToYASS(String code) {
     StringBuilder output = new StringBuilder();
-    parser = new ZenithParsingEngine(code, false, new HaggisParserByteCodes());
+    parser = new ZenithParsingEngine(code, false, new SQARLParserByteCodes());
 
     parser.getNextSymbol();
     while (parser.getCurrentSymbol() != -2) {
@@ -120,37 +119,37 @@ public class HaggisParser {
 
   // Simple method to get a single block
   private String parse_one() {
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.DECLARE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
       return compile_declare() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.SET) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.SET) {
       return compile_set() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.SEND) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.SEND) {
       return compile_send() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.RECEIVE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECEIVE) {
       return compile_receive() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.REPEAT) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.REPEAT) {
       return compile_repeat() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.IF) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.IF) {
       return compile_if() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.WHILE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.WHILE) {
       return compile_while() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.FOR) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.FOR) {
         return compile_for() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.PROCEDURE){
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.PROCEDURE){
       return compile_procedure() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.FUNCTION){
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.FUNCTION){
       return compile_function() + System.getProperty("line.separator");
     }
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.NAME && parser.peekAhead() == HaggisParserByteCodes.LBRA){
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA){
       return compile_function_call() + System.getProperty("line.separator");
     }
 
@@ -158,37 +157,37 @@ public class HaggisParser {
   }
 
   private boolean is_join(byte symb) {
-    return symb == HaggisParserByteCodes.AND || symb == HaggisParserByteCodes.OR || symb == HaggisParserByteCodes.PLUS || symb == HaggisParserByteCodes.MINUS || symb == HaggisParserByteCodes.MULT || symb == HaggisParserByteCodes.DIVIDE || symb == HaggisParserByteCodes.MOD;
+    return symb == SQARLParserByteCodes.AND || symb == SQARLParserByteCodes.OR || symb == SQARLParserByteCodes.PLUS || symb == SQARLParserByteCodes.MINUS || symb == SQARLParserByteCodes.MULT || symb == SQARLParserByteCodes.DIVIDE || symb == SQARLParserByteCodes.MOD;
   }
 
   private boolean is_value(byte symb) {
-    return symb == HaggisParserByteCodes.NAME || symb == HaggisParserByteCodes.INT || symb == HaggisParserByteCodes.STRING || symb == HaggisParserByteCodes.BOOLEAN || symb == HaggisParserByteCodes.REAL;
+    return symb == SQARLParserByteCodes.NAME || symb == SQARLParserByteCodes.INT || symb == SQARLParserByteCodes.STRING || symb == SQARLParserByteCodes.BOOLEAN || symb == SQARLParserByteCodes.REAL;
   }
 
   private boolean is_comparison(byte symb) {
-    return symb == HaggisParserByteCodes.GT || symb == HaggisParserByteCodes.LT || symb == HaggisParserByteCodes.GTE || symb == HaggisParserByteCodes.LTE || symb == HaggisParserByteCodes.EQUAL || symb == HaggisParserByteCodes.NEQUAL;
+    return symb == SQARLParserByteCodes.GT || symb == SQARLParserByteCodes.LT || symb == SQARLParserByteCodes.GTE || symb == SQARLParserByteCodes.LTE || symb == SQARLParserByteCodes.EQUAL || symb == SQARLParserByteCodes.NEQUAL;
   }
 
   private String compile_value() {
     StringBuilder output = new StringBuilder();
     if (is_value(parser.getCurrentSymbol())) {
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.NAME && parser.peekAhead() != HaggisParserByteCodes.LBRA)
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() != SQARLParserByteCodes.LBRA)
         output.append("$").append(parser.getCurrentWord()).append(" ");
-      else if (parser.getCurrentSymbol() == HaggisParserByteCodes.NAME && parser.peekAhead() == HaggisParserByteCodes.LBRA)
+      else if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA)
         output.append(compile_function_call());
-      else if (parser.getCurrentSymbol() == HaggisParserByteCodes.BOOLEAN)
+      else if (parser.getCurrentSymbol() == SQARLParserByteCodes.BOOLEAN)
         output.append(parser.getCurrentWord().toLowerCase()).append(parser.getWhitespace());
-      else if (parser.getCurrentSymbol() == HaggisParserByteCodes.STRING) {
+      else if (parser.getCurrentSymbol() == SQARLParserByteCodes.STRING) {
         output.append("\"").append(parser.getCurrentWord()).append("\"").append(parser.getWhitespace());
       } else
         output.append(parser.getWhitespace()).append(parser.getCurrentWord());
-    } else if (parser.getCurrentSymbol() == HaggisParserByteCodes.LSQBR) {
+    } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.LSQBR) {
     	output = new StringBuilder("[");
     	parser.getNextSymbol();
-    	while(parser.getCurrentSymbol() != HaggisParserByteCodes.RSQBR) {
+    	while(parser.getCurrentSymbol() != SQARLParserByteCodes.RSQBR) {
     		output.append(compile_value());
     		parser.getNextSymbol();
-    		if(parser.getCurrentSymbol() == HaggisParserByteCodes.COMMA) {
+    		if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA) {
     			output.append(",");
     			parser.getNextSymbol();
     		}
@@ -204,17 +203,17 @@ public class HaggisParser {
     StringBuilder output = new StringBuilder();
     while (true) {
 
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.LBRA) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         output.append("(");
         parser.getNextSymbol();
       }
       output.append(compile_value());
 
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.RBRA) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.RBRA) {
         output.append(")");
         parser.getNextSymbol();
       }
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.LBRA) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         output.append("(");
         parser.getNextSymbol();
       }
@@ -225,7 +224,7 @@ public class HaggisParser {
         parser.getNextSymbol();
         output.append(compile_value());
 
-        if (parser.getCurrentSymbol() == HaggisParserByteCodes.RBRA) {
+        if (parser.getCurrentSymbol() == SQARLParserByteCodes.RBRA) {
           output.append(")");
           parser.getNextSymbol();
         }
@@ -237,7 +236,7 @@ public class HaggisParser {
         // Jump to
         if (is_join(parser.peekAhead()))
           parser.getNextSymbol();
-        if (parser.getCurrentSymbol() == HaggisParserByteCodes.MOD) {
+        if (parser.getCurrentSymbol() == SQARLParserByteCodes.MOD) {
           output.append(" % ").append(parser.getWhitespace());
           parser.getNextSymbol();
         } else {
@@ -261,11 +260,11 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while(parser.getCurrentSymbol() != HaggisParserByteCodes.RBRA){
+    while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
       output.append(parser.getCurrentWord());
       parser.getNextSymbol();
 
-      if(parser.getCurrentSymbol() == HaggisParserByteCodes.COMMA){
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA){
         parser.getNextSymbol();
         output.append(", ");
       }
@@ -281,19 +280,19 @@ public class HaggisParser {
   private String compile_repeat() {
     String output = "";
     String first = "";
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.REPEAT) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.REPEAT) {
       parser.getNextSymbol();
       first = "loop until (";
     }
 
     StringBuilder body = new StringBuilder();
 
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.UNTIL) {
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.UNTIL) {
       body.append(parse_one());
       parser.getNextSymbol();
     }
 
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.UNTIL) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.UNTIL) {
       parser.getNextSymbol();
       first += compile_expression() + ")";
     }
@@ -306,7 +305,7 @@ public class HaggisParser {
 
   private String compile_if() {
     StringBuilder output = new StringBuilder();
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.IF) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.IF) {
       parser.getNextSymbol();
       output.append("if (");
     }
@@ -315,7 +314,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.THEN) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.THEN) {
       printError("Error. Expected THEN.");
     }
 
@@ -323,7 +322,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.IF) {
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
       output.append(parse_one());
       parser.getNextSymbol();
     }
@@ -339,7 +338,7 @@ public class HaggisParser {
   private String compile_while() {
     StringBuilder output = new StringBuilder();
 
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.WHILE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.WHILE) {
       parser.getNextSymbol();
       output.append("while (");
     }
@@ -348,7 +347,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.DO) {
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.DO) {
       printError("Error. Expected DO.");
     }
 
@@ -356,7 +355,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.WHILE) {
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.WHILE) {
       output.append(parse_one());
       parser.getNextSymbol();
     }
@@ -374,12 +373,12 @@ public class HaggisParser {
 	    
 	    boolean each = false;
 
-	    if (parser.getCurrentSymbol() == HaggisParserByteCodes.FOR) {
+	    if (parser.getCurrentSymbol() == SQARLParserByteCodes.FOR) {
 	      parser.getNextSymbol();
 	      output.append("for ");
 	    }
 	    
-	    if (parser.peekAhead() == HaggisParserByteCodes.EACH) {
+	    if (parser.peekAhead() == SQARLParserByteCodes.EACH) {
 	    	output.append("each ");
 	    	each = true;
 	    }
@@ -392,7 +391,7 @@ public class HaggisParser {
 	    parser.getNextSymbol();
 	    
 	    if(each) {
-	    	if (parser.getCurrentSymbol() != HaggisParserByteCodes.FROM) {
+	    	if (parser.getCurrentSymbol() != SQARLParserByteCodes.FROM) {
 	  	      parser.getNextSymbol();
 	  	      output.append(" in ");
 	  	    }
@@ -401,7 +400,7 @@ public class HaggisParser {
 	    }
 	    
 
-	    while (parser.getCurrentSymbol() != HaggisParserByteCodes.DO) {
+	    while (parser.getCurrentSymbol() != SQARLParserByteCodes.DO) {
 	      printError("Error. Expected DO.");
 	    }
 
@@ -409,7 +408,7 @@ public class HaggisParser {
 
 	    parser.getNextSymbol();
 
-	    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.FOR) {
+	    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.FOR) {
 	      output.append(parse_one());
 	      parser.getNextSymbol();
 	    }
@@ -424,11 +423,11 @@ public class HaggisParser {
 
   private String compile_set() {
     String output = "";
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.SET) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.SET) {
       parser.getNextSymbol();
     }
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.NAME) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
       printError("Error. Expected NAME_STRING.");
     }
 
@@ -438,13 +437,13 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.TO) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.TO) {
       printError("Error. Expected TO.");
     }
 
     parser.getNextSymbol();
 
-    if (!is_value(parser.getCurrentSymbol()) && !(parser.getCurrentSymbol() == HaggisParserByteCodes.LBRA)) {
+    if (!is_value(parser.getCurrentSymbol()) && !(parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA)) {
       printError("Error. Expected TYPE.");
     }
 
@@ -456,10 +455,10 @@ public class HaggisParser {
 
   private String compile_declare() {
     String output = "";
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.DECLARE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
       parser.getNextSymbol();
     }
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.NAME) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
       printError("Error. Expected NAME_STRING.");
     }
     // Add the name as a string
@@ -468,12 +467,12 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.AS) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.AS) {
       output += parser.getWhitespace();
 
       parser.getNextSymbol();
 
-      if (parser.getCurrentSymbol() != HaggisParserByteCodes.TYPE) {
+      if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE) {
         printError("Error. Expected TYPE.");
       }
 
@@ -483,19 +482,19 @@ public class HaggisParser {
     
 
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.INITIALLY) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.INITIALLY) {
       printError("Error. Expected INITIALLY.");
     }
 
     parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.FROM) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.FROM) {
       parser.getNextSymbol();
 
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.KEYBOARD) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.KEYBOARD) {
         output += "auto_input()";
       }
-    } else if (parser.getCurrentSymbol() == HaggisParserByteCodes.LSQBR) {
+    } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.LSQBR) {
     	//Array
     	output += compile_value();
     	
@@ -528,7 +527,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if(parser.getCurrentSymbol() != HaggisParserByteCodes.LBRA){
+    if(parser.getCurrentSymbol() != SQARLParserByteCodes.LBRA){
       printError("Error. Expected LBRACKET.");
     }
 
@@ -536,7 +535,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while(parser.getCurrentSymbol() != HaggisParserByteCodes.RBRA){
+    while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
       if(is_type()){
         output.append(convertType()).append(" ");
         parser.getNextSymbol();
@@ -549,7 +548,7 @@ public class HaggisParser {
 
       parser.getNextSymbol();
 
-      if(parser.getCurrentSymbol() == HaggisParserByteCodes.COMMA){
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA){
         output.append(", ");
         parser.getNextSymbol();
       }
@@ -558,7 +557,7 @@ public class HaggisParser {
     output.append(") ");
 
     parser.getNextSymbol();
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.PROCEDURE) {
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.PROCEDURE) {
       output.append(parse_one());
       parser.getNextSymbol();
     }
@@ -581,7 +580,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if(parser.getCurrentSymbol() != HaggisParserByteCodes.LBRA){
+    if(parser.getCurrentSymbol() != SQARLParserByteCodes.LBRA){
       printError("Error. Expected LBRACKET.");
     }
 
@@ -589,7 +588,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    while(parser.getCurrentSymbol() != HaggisParserByteCodes.RBRA){
+    while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
       if(is_type()){
         output.append(convertType()).append(" ");
         parser.getNextSymbol();
@@ -602,7 +601,7 @@ public class HaggisParser {
 
       parser.getNextSymbol();
 
-      if(parser.getCurrentSymbol() == HaggisParserByteCodes.COMMA){
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA){
         output.append(", ");
         parser.getNextSymbol();
       }
@@ -611,8 +610,8 @@ public class HaggisParser {
     output.append(") ");
 
     parser.getNextSymbol();
-    while (parser.getCurrentSymbol() != HaggisParserByteCodes.END && parser.peekAhead() != HaggisParserByteCodes.FUNCTION) {
-      if(parser.getCurrentSymbol() == HaggisParserByteCodes.RETURN){
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.FUNCTION) {
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.RETURN){
         output.append("return ");
         parser.getNextSymbol();
         output.append(compile_expression());
@@ -637,7 +636,7 @@ public class HaggisParser {
 
   private String compile_send() {
     String output = "";
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.SEND) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.SEND) {
       parser.getNextSymbol();
     }
 
@@ -649,10 +648,10 @@ public class HaggisParser {
 
     output += compile_expression();
 
-    if(parser.getCurrentSymbol() != HaggisParserByteCodes.TO)
+    if(parser.getCurrentSymbol() != SQARLParserByteCodes.TO)
       parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.TO) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.TO) {
       printError("Error. Expected TO.");
     }
 
@@ -660,7 +659,7 @@ public class HaggisParser {
 
     output += ")";
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.DISPLAY) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.DISPLAY) {
       printError("Error. Expected DISPLAY.");
     }
 
@@ -672,11 +671,11 @@ public class HaggisParser {
 
   private String compile_receive() {
     String output = "";
-    if (parser.getCurrentSymbol() == HaggisParserByteCodes.RECEIVE) {
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECEIVE) {
       parser.getNextSymbol();
     }
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.NAME) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
       printError("Error. Expected NAME_STRING.");
     }
 
@@ -684,7 +683,7 @@ public class HaggisParser {
 
     parser.getNextSymbol();
 
-    if (parser.getCurrentSymbol() != HaggisParserByteCodes.FROM) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.FROM) {
       printError("Error. Expected FROM.");
     }
 
@@ -692,7 +691,7 @@ public class HaggisParser {
 
     if (is_type()) {
       boolean brackets = false;
-      if (parser.getCurrentSymbol() == HaggisParserByteCodes.LBRA) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         parser.getNextSymbol();
         brackets = true;
       }
@@ -707,12 +706,12 @@ public class HaggisParser {
       parser.getNextSymbol();
 
       if (brackets) {
-        if (parser.getCurrentSymbol() == HaggisParserByteCodes.RBRA) {
+        if (parser.getCurrentSymbol() == SQARLParserByteCodes.RBRA) {
           parser.getNextSymbol();
         }
       }
 
-      if (parser.getCurrentSymbol() != HaggisParserByteCodes.KEYBOARD) {
+      if (parser.getCurrentSymbol() != SQARLParserByteCodes.KEYBOARD) {
         printError("Error. Expected INPUT.");
       }
 
@@ -720,7 +719,7 @@ public class HaggisParser {
         output += ")";
       }
     } else {
-      if (parser.getCurrentSymbol() != HaggisParserByteCodes.KEYBOARD) {
+      if (parser.getCurrentSymbol() != SQARLParserByteCodes.KEYBOARD) {
         printError("Error. Expected INPUT.");
       }
     }
@@ -731,7 +730,7 @@ public class HaggisParser {
   }
 
   private boolean is_type() {
-    return parser.getCurrentSymbol() == HaggisParserByteCodes.TYPE || (parser.getCurrentSymbol() == HaggisParserByteCodes.LBRA && parser.peekAhead() == HaggisParserByteCodes.TYPE);
+    return parser.getCurrentSymbol() == SQARLParserByteCodes.TYPE || (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA && parser.peekAhead() == SQARLParserByteCodes.TYPE);
 
   }
 

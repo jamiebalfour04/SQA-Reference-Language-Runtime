@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import jamiebalfour.zpe.parser.ZenithParsingEngine.MultilineComment;
 
 
-public class HaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
+public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	
 	
 	final static String TYPE_INT = "(((-?[1-9]+)|[0-9][0-9]*)(E[0-9]+)?)";
@@ -83,100 +83,100 @@ public class HaggisParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser 
 	@Override
 	public byte stringToByteCode(String w) {
 		if (w.equals("DECLARE"))
-			return HaggisParserByteCodes.DECLARE;
+			return SQARLParserByteCodes.DECLARE;
 		if (w.equals("AS"))
-			return HaggisParserByteCodes.AS;
+			return SQARLParserByteCodes.AS;
 		if (w.equals("INTEGER") || w.equals("BOOLEAN") || w.equals("REAL") || w.equals("STRING") || w.equals("ARRAY"))
-			return HaggisParserByteCodes.TYPE;
+			return SQARLParserByteCodes.TYPE;
 		if (w.equals("INITIALLY"))
-			return HaggisParserByteCodes.INITIALLY;
+			return SQARLParserByteCodes.INITIALLY;
 		if (w.equals("FROM"))
-			return HaggisParserByteCodes.FROM;
+			return SQARLParserByteCodes.FROM;
 		if (w.equals("KEYBOARD"))
-			return HaggisParserByteCodes.KEYBOARD;
+			return SQARLParserByteCodes.KEYBOARD;
 		if (w.equals("RECEIVE"))
-			return HaggisParserByteCodes.RECEIVE;
+			return SQARLParserByteCodes.RECEIVE;
 		if (w.equals("SEND"))
-			return HaggisParserByteCodes.SEND;
+			return SQARLParserByteCodes.SEND;
 		if (w.equals("TO"))
-			return HaggisParserByteCodes.TO;
+			return SQARLParserByteCodes.TO;
 		if (w.equals("DISPLAY"))
-			return HaggisParserByteCodes.DISPLAY;
+			return SQARLParserByteCodes.DISPLAY;
 		if (w.equals("SET"))
-			return HaggisParserByteCodes.SET;
+			return SQARLParserByteCodes.SET;
 		if(w.matches(TYPE_INT)) 
-			return HaggisParserByteCodes.INT;
+			return SQARLParserByteCodes.INT;
 		if(w.matches(TYPE_BOOLEAN))
-			return HaggisParserByteCodes.BOOLEAN;
+			return SQARLParserByteCodes.BOOLEAN;
 		if(w.matches(TYPE_DOUBLE)) 
-			return HaggisParserByteCodes.REAL;
+			return SQARLParserByteCodes.REAL;
 		if(w.matches(TYPE_STRING)) 
-			return HaggisParserByteCodes.STRING;
+			return SQARLParserByteCodes.STRING;
 		if(w.matches(NAME_STRING))
-			return HaggisParserByteCodes.NAME;
+			return SQARLParserByteCodes.NAME;
 		if(w.equals("AND"))
-			return HaggisParserByteCodes.AND;
+			return SQARLParserByteCodes.AND;
 		if(w.equals("OR"))
-			return HaggisParserByteCodes.OR;
+			return SQARLParserByteCodes.OR;
 		if(w.equals("NOT"))
-			return HaggisParserByteCodes.NOT;
+			return SQARLParserByteCodes.NOT;
 		if(w.equals("!="))
-			return HaggisParserByteCodes.NEQUAL;
+			return SQARLParserByteCodes.NEQUAL;
 		if(w.equals("="))
-			return HaggisParserByteCodes.EQUAL;
+			return SQARLParserByteCodes.EQUAL;
 		if(w.equals(">"))
-			return HaggisParserByteCodes.GT;
+			return SQARLParserByteCodes.GT;
 		if(w.equals("<"))
-			return HaggisParserByteCodes.LT;
+			return SQARLParserByteCodes.LT;
 		if(w.equals(">="))
-			return HaggisParserByteCodes.GTE;
+			return SQARLParserByteCodes.GTE;
 		if(w.equals("<="))
-			return HaggisParserByteCodes.LTE;
+			return SQARLParserByteCodes.LTE;
 		if(w.equals("("))
-			return HaggisParserByteCodes.LBRA;
+			return SQARLParserByteCodes.LBRA;
 		if(w.equals(")"))
-			return HaggisParserByteCodes.RBRA;
+			return SQARLParserByteCodes.RBRA;
 		if(w.equals("["))
-			return HaggisParserByteCodes.LSQBR;
+			return SQARLParserByteCodes.LSQBR;
 		if(w.equals("]"))
-			return HaggisParserByteCodes.RSQBR;
+			return SQARLParserByteCodes.RSQBR;
 		if(w.equals(","))
-			return HaggisParserByteCodes.COMMA;
+			return SQARLParserByteCodes.COMMA;
 
 		if(w.equals("+"))
-			return HaggisParserByteCodes.PLUS;
+			return SQARLParserByteCodes.PLUS;
 		if(w.equals("-"))
-			return HaggisParserByteCodes.MINUS;
+			return SQARLParserByteCodes.MINUS;
 		if(w.equals("/"))
-			return HaggisParserByteCodes.DIVIDE;
+			return SQARLParserByteCodes.DIVIDE;
 		if(w.equals("*"))
-			return HaggisParserByteCodes.MULT;
+			return SQARLParserByteCodes.MULT;
 		if(w.equals("MOD"))
-			return HaggisParserByteCodes.MOD;
+			return SQARLParserByteCodes.MOD;
 		if(w.equals("REPEAT"))
-			return HaggisParserByteCodes.REPEAT;
+			return SQARLParserByteCodes.REPEAT;
 		if(w.equals("IF"))
-			return HaggisParserByteCodes.IF;
+			return SQARLParserByteCodes.IF;
 		if(w.equals("THEN"))
-			return HaggisParserByteCodes.THEN;
+			return SQARLParserByteCodes.THEN;
 		if(w.equals("WHILE"))
-			return HaggisParserByteCodes.WHILE;
+			return SQARLParserByteCodes.WHILE;
 		if(w.equals("FOR"))
-			return HaggisParserByteCodes.FOR;
+			return SQARLParserByteCodes.FOR;
 		if(w.equals("EACH"))
-			return HaggisParserByteCodes.EACH;
+			return SQARLParserByteCodes.EACH;
 		if(w.equals("DO"))
-			return HaggisParserByteCodes.DO;
+			return SQARLParserByteCodes.DO;
 		if(w.equals("UNTIL"))
-			return HaggisParserByteCodes.UNTIL;
+			return SQARLParserByteCodes.UNTIL;
 		if(w.equals("PROCEDURE")){
-			return HaggisParserByteCodes.PROCEDURE;
+			return SQARLParserByteCodes.PROCEDURE;
 		}
 		if(w.equals("FUNCTION")){
-			return HaggisParserByteCodes.FUNCTION;
+			return SQARLParserByteCodes.FUNCTION;
 		}
 		if(w.equals("RETURN")){
-			return HaggisParserByteCodes.RETURN;
+			return SQARLParserByteCodes.RETURN;
 		}
 		
 		return -2;
