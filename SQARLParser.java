@@ -24,7 +24,7 @@ public class SQARLParser {
       } else{
 
         // If nothing has been provided
-        System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run a HAGGIS program directly.");
+        System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run an SQARL program directly.");
         System.exit(0);
       }
 
@@ -39,7 +39,7 @@ public class SQARLParser {
       // Run
       try {
         String s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-r").toString(), "utf-8");
-        String output = compileAndRunHaggis(s);
+        String output = compileAndRunSQARL(s);
         if (!output.isEmpty()) {
           System.out.println(output);
         }
@@ -51,7 +51,7 @@ public class SQARLParser {
     	String s;
 		try {
 			s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-e").toString(), "utf-8");
-			String output = compileHaggis(s);
+			String output = compileSQARL(s);
 	        if (!output.isEmpty()) {
 	          System.out.println(output);
 	        }
@@ -72,14 +72,14 @@ public class SQARLParser {
     System.exit(-1);
   }
   
-  public static String compileHaggis(String s) {
-	  SQARLParser haggis = new SQARLParser();
-      return haggis.parseToYASS(s);
+  public static String compileSQARL(String s) {
+	  SQARLParser sqarl = new SQARLParser();
+      return sqarl.parseToYASS(s);
   }
 
-  public static String compileAndRunHaggis(String s) {
-    SQARLParser haggis = new SQARLParser();
-    String yass = haggis.parseToYASS(s);
+  public static String compileAndRunSQARL(String s) {
+    SQARLParser sqarl = new SQARLParser();
+    String yass = sqarl.parseToYASS(s);
 
     YASSRuntime z = new YASSRuntime();
     Object out = z.Interpret(yass);
@@ -89,10 +89,10 @@ public class SQARLParser {
     return "";
   }
 
-  public static void compileAndRunHaggisGUI(String code) {
+  public static void compileAndRunSQARLGUI(String code) {
 
-    SQARLParser haggis = new SQARLParser();
-    String yass = haggis.parseToYASS(code);
+    SQARLParser sqarl = new SQARLParser();
+    String yass = sqarl.parseToYASS(code);
 
     try {
       ZPEKit.compile(yass);

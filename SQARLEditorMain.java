@@ -90,7 +90,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 	boolean dontUndo = true;
 	
 	public SQARLEditorMain() {
-		setTitle("Haggis Editor");
+		setTitle("SQARL Editor");
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -120,7 +120,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 			f.mkdirs();
 		}
 		
-		String path = System.getProperty("user.home") + "/zpe/sqarl/" + "gui.haggis.properties";
+		String path = System.getProperty("user.home") + "/zpe/sqarl/" + "gui.sqarl.properties";
 
 		
 		try {
@@ -592,8 +592,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 					AttachedConsole.stop(0);
 				}
 				
-				SQARLParser haggis = new SQARLParser();
-			    String yass = haggis.parseToYASS(contentEditor.getText());
+				SQARLParser sqarl = new SQARLParser();
+			    String yass = sqarl.parseToYASS(contentEditor.getText());
 				
 				AttachedConsole.runCode(yass, new String[0],
 						chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
@@ -641,8 +641,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 				try {
 
 
-					SQARLParser haggis = new SQARLParser();
-				    String yass = haggis.parseToYASS(contentEditor.getText());
+					SQARLParser sqarl = new SQARLParser();
+				    String yass = sqarl.parseToYASS(contentEditor.getText());
 					// null for no password
 					jamiebalfour.zpe.core.ZPEKit.compile(yass, file.toString() + "." + extension, details,
 							!chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
@@ -667,8 +667,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 			public void actionPerformed(ActionEvent e) {
 
 
-				SQARLParser haggis = new SQARLParser();
-			    String yass = haggis.parseToYASS(contentEditor.getText());
+				SQARLParser sqarl = new SQARLParser();
+			    String yass = sqarl.parseToYASS(contentEditor.getText());
 
 				try {
 					if (ZPEKit.validateCode(yass)) {
@@ -706,8 +706,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 					// This is where a real application would open the file.
 					try {
 
-						SQARLParser haggis = new SQARLParser();
-					    String yass = haggis.parseToYASS(contentEditor.getText());
+						SQARLParser sqarl = new SQARLParser();
+					    String yass = sqarl.parseToYASS(contentEditor.getText());
 					    
 						StringBuilder text = new StringBuilder();
 						for (byte s : jamiebalfour.zpe.core.ZPEKit.parseToBytes(yass)) {
