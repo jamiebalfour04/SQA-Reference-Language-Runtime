@@ -41,10 +41,10 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import jamiebalfour.HelperFunctions;
-import jamiebalfour.editor.EditorSyntaxHighlighter;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
+import jamiebalfour.zpe.editor.CodeEditorView;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.types.CompileDetails;
@@ -54,7 +54,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 	SQARLEditorMain _this = this;
 
 
-	EditorSyntaxHighlighter mainSyntax;
+	CodeEditorView mainSyntax;
 	protected UndoHandler undoHandler = new UndoHandler();
 	protected UndoManager undoManager = new UndoManager();
 	
@@ -88,48 +88,48 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		setTitle("SQARL Editor");
 
 		final HashMap<String, SimpleAttributeSet> SQARL_KEYWORDS = new HashMap<>(16);
-		SQARL_KEYWORDS.put("DECLARE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("INITIALLY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("WHILE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("RECEIVE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("FROM", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("KEYBOARD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("END", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("SEND", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("FOR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("EACH", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("DO", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("IF", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("THEN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("SET", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("TO", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("DISPLAY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("ARRAY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("STRING", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("RECORD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("CLASS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("INTEGER", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("REAL", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("BOOLEAN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("CHARACTER", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("FUNCTION", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("RETURN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("PROCEDURE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("AND", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("OR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("NOT", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("MOD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("OPEN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("CLOSE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("CREATE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("METHODS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("THIS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("WITH", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("OVERRIDE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("INHERITS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
-		SQARL_KEYWORDS.put("CONSTRUCTOR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("DECLARE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INITIALLY", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("WHILE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RECEIVE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FROM", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("KEYBOARD", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("END", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("SEND", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FOR", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("EACH", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("DO", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("IF", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("THEN", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("SET", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("TO", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("DISPLAY", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("ARRAY", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("STRING", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RECORD", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CLASS", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INTEGER", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("REAL", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("BOOLEAN", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CHARACTER", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FUNCTION", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RETURN", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("PROCEDURE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("AND", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OR", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("NOT", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("MOD", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OPEN", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CLOSE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CREATE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("METHODS", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("THIS", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("WITH", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OVERRIDE", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INHERITS", CodeEditorView.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CONSTRUCTOR", CodeEditorView.DEFAULT_KEYWORD);
 
-		mainSyntax = new EditorSyntaxHighlighter(SQARL_KEYWORDS, "\"'", "");
+		mainSyntax = new CodeEditorView(SQARL_KEYWORDS, "\"'", "");
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -207,9 +207,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 				+ "SEND total / 10.0 TO DISPLAY");
 		scrollPane.setViewportView(contentEditor);
 
-		jamiebalfour.editor.LineNumberEditor lineNumbers = new jamiebalfour.editor.LineNumberEditor(contentEditor);
-		
-		scrollPane.setRowHeaderView(lineNumbers);
+		scrollPane.setRowHeaderView(mainSyntax.getEditor());
 		
 		JMenuBar menuBar = new JMenuBar();
 		
