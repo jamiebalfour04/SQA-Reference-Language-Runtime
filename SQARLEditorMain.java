@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.swing.JMenu;
@@ -34,11 +35,13 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.SimpleAttributeSet;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import jamiebalfour.HelperFunctions;
+import jamiebalfour.editor.EditorSyntaxHighlighter;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
@@ -47,14 +50,11 @@ import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.types.CompileDetails;
 
 class SQARLEditorMain extends JFrame implements GenericEditor {
-	
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	SQARLEditorMain _this = this;
-	SyntaxHighlighter mainSyntax = new SyntaxHighlighter();
+
+
+	EditorSyntaxHighlighter mainSyntax;
 	protected UndoHandler undoHandler = new UndoHandler();
 	protected UndoManager undoManager = new UndoManager();
 	
@@ -65,32 +65,71 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 	Properties mainProperties;
 
-	private UndoAction undoAction = null;
-	private RedoAction redoAction = null;
+	private final UndoAction undoAction;
+	private final RedoAction redoAction;
 	JEditorPane contentEditor;
 	
 	String lastFileOpened = "";
 	
 
 	JMenuItem mntmClearConsoleBeforeRunMenuItem;
-	JCheckBoxMenuItem mnUseMacMenuBarMenuItem;
-	
+
 
 	static FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Text files (*.txt)", "txt");
 	static FileNameExtensionFilter filter2 = new FileNameExtensionFilter("YASS Executable files (*.yex)", "yex");
-	private JFrame editor;
-	
-	JCheckBoxMenuItem chckbxmntmFontSizeNormalCheckItem;
-	JCheckBoxMenuItem chckbxmntmFontSizeLargeCheckItem;
-	JCheckBoxMenuItem chckbxmntmFontSizeExtraLargeCheckItem;
+	private final JFrame editor;
+
 	JCheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
-	JCheckBoxMenuItem mntmMaximiseMenuItem;
 	
 
 	boolean dontUndo = true;
 	
 	public SQARLEditorMain() {
 		setTitle("SQARL Editor");
+
+		final HashMap<String, SimpleAttributeSet> SQARL_KEYWORDS = new HashMap<>(16);
+		SQARL_KEYWORDS.put("DECLARE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INITIALLY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("WHILE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RECEIVE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FROM", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("KEYBOARD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("END", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("SEND", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FOR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("EACH", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("DO", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("IF", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("THEN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("SET", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("TO", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("DISPLAY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("ARRAY", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("STRING", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RECORD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CLASS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INTEGER", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("REAL", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("BOOLEAN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CHARACTER", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("FUNCTION", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("RETURN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("PROCEDURE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("AND", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("NOT", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("MOD", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OPEN", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CLOSE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CREATE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("METHODS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("THIS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("WITH", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("OVERRIDE", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("INHERITS", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+		SQARL_KEYWORDS.put("CONSTRUCTOR", EditorSyntaxHighlighter.DEFAULT_KEYWORD);
+
+		mainSyntax = new EditorSyntaxHighlighter(SQARL_KEYWORDS, "\"'", "");
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -167,8 +206,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 				+ "END WHILE\r\n"
 				+ "SEND total / 10.0 TO DISPLAY");
 		scrollPane.setViewportView(contentEditor);
-		
-		LineNumbersView lineNumbers = new LineNumbersView(contentEditor);
+
+		jamiebalfour.editor.LineNumberEditor lineNumbers = new jamiebalfour.editor.LineNumberEditor(contentEditor);
 		
 		scrollPane.setRowHeaderView(lineNumbers);
 		
@@ -203,7 +242,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		mntmSaveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', modifier));
 		mntmSaveMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (lastFileOpened.equals("")) {
+				if (lastFileOpened.isEmpty()) {
 					saveAsDialog();
 				} else {
 					try {
@@ -351,219 +390,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		mnEditMenu.add(mntmSelectAllMenuItem);
 		
 
-		/*JMenu mnViewMenu = new JMenu("View");
-		mnViewMenu.setMnemonic('V');
-		menuBar.add(mnViewMenu);
-
-		mntmClearConsoleBeforeRunMenuItem = new JCheckBoxMenuItem("Clear console before run");
-		mntmClearConsoleBeforeRunMenuItem.setSelected(true);
-		mnViewMenu.add(mntmClearConsoleBeforeRunMenuItem);
-
-		mnViewMenu.add(new JSeparator());
-
-		JMenu mnFontSizeMenu = new JMenu("Font size");
-		mnViewMenu.add(mnFontSizeMenu);
-
-		chckbxmntmFontSizeNormalCheckItem = new JCheckBoxMenuItem("Normal");
-		chckbxmntmFontSizeNormalCheckItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeFontSize(0);
-				setProperty("FONT_SIZE", "" + 0);
-				saveGUISettings(mainProperties);
-			}
-		});
-		chckbxmntmFontSizeNormalCheckItem.setSelected(true);
-		mnFontSizeMenu.add(chckbxmntmFontSizeNormalCheckItem);
-
-		chckbxmntmFontSizeLargeCheckItem = new JCheckBoxMenuItem("Large");
-		chckbxmntmFontSizeLargeCheckItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeFontSize(1);
-				setProperty("FONT_SIZE", "" + 1);
-				saveGUISettings(mainProperties);
-			}
-		});
-		mnFontSizeMenu.add(chckbxmntmFontSizeLargeCheckItem);
-
-		chckbxmntmFontSizeExtraLargeCheckItem = new JCheckBoxMenuItem("Extra Large");
-		chckbxmntmFontSizeExtraLargeCheckItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeFontSize(2);
-				setProperty("FONT_SIZE", "" + 2);
-				saveGUISettings(mainProperties);
-			}
-		});
-		mnFontSizeMenu.add(chckbxmntmFontSizeExtraLargeCheckItem);
-
-		mnFontFamilyMenu = new JMenu("Font family");
-		mnViewMenu.add(mnFontFamilyMenu);
-		
-
-		JCheckBoxMenuItem defaultFont = new JCheckBoxMenuItem("Default font");
-		defaultFont.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				changeFontFamily("Monospaced");
-
-				setProperty("FONT_FAMILY", "Monospaced");
-				saveGUISettings(mainProperties);
-			}
-		});
-
-		mnFontFamilyMenu.add(defaultFont);
-		
-		mnFontFamilyMenu.add(new JSeparator());
-
-		for (String s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
-			if(!s.startsWith(".")) {
-				JCheckBoxMenuItem i = new JCheckBoxMenuItem(s);
-				//i.setFont(new Font(s, 12, 0));
-				final String thisFont = s;
-				i.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						changeFontFamily(thisFont);
-
-						setProperty("FONT_FAMILY", thisFont);
-						saveGUISettings(mainProperties);
-
-					}
-
-				});
-				mnFontFamilyMenu.add(i);
-			}
-			
-
-			
-		}
-		
-		final JCheckBoxMenuItem mntmMakeTextBoldMenuItem = new JCheckBoxMenuItem("Make text bold");
-		mntmMakeTextBoldMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(mntmMakeTextBoldMenuItem.isSelected()) {
-					mainSyntax.makeBold(true);
-					setProperty("USE_BOLD_TEXT", "true");
-				} else {
-					mainSyntax.makeBold(false);
-					setProperty("USE_BOLD_TEXT", "false");
-				}
-				
-				
-				saveGUISettings(mainProperties);
-				updateEditor();
-			}
-		});
-
-		mnViewMenu.add(mntmMakeTextBoldMenuItem);
-		
-
-		mnViewMenu.add(new JSeparator());
-
-		mnDarkModeMenuItem = new JCheckBoxMenuItem("Dark Mode");
-		mnViewMenu.add(mnDarkModeMenuItem);
-		mnDarkModeMenuItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!darkMode) {
-					switchOnDarkMode();
-				} else {
-					switchOffDarkMode();
-				}
-
-				setProperty("DARK_MODE", "" + darkMode);
-				saveGUISettings(mainProperties);
-
-				updateEditor();
-			}
-
-		});
-		
-		if (HelperFunctions.isMac()) {
-			mnUseMacMenuBarMenuItem = new JCheckBoxMenuItem("Use Mac Menubar");
-			
-			
-			mnViewMenu.add(mnUseMacMenuBarMenuItem);
-			
-			final boolean macMenuBarEnabled = useMacMenuBar;
-			
-			mnUseMacMenuBarMenuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(macMenuBarEnabled) {
-						setProperty("USE_MAC_SIMPLEBAR", "true");
-					} else {
-						setProperty("USE_MAC_SIMPLEBAR", "false");
-					}
-					mnUseMacMenuBarMenuItem.setEnabled(false);
-					saveGUISettings(mainProperties);
-					JOptionPane.showMessageDialog(editor, "This will happen on the next start.", "macOS Menubar",
-							JOptionPane.WARNING_MESSAGE);
-				}				
-			});
-			
-			if(useMacMenuBar) {
-				mnUseMacMenuBarMenuItem.setSelected(true);
-			}
-		}
-		
-	
-		
-
-		mnViewMenu.add(new JSeparator());
-
-		JMenu mnWindowMenu = new JMenu("Window");
-		mnWindowMenu.setMnemonic('W');
-		mnViewMenu.add(mnWindowMenu);
-
-		mntmMaximiseMenuItem = new JCheckBoxMenuItem("Maximise");
-
-		if (HelperFunctions.isMac()) {
-			mntmMaximiseMenuItem.setText("Zoom");
-		}
-
-		mntmMaximiseMenuItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (editor.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
-					editor.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					mntmMaximiseMenuItem.setSelected(true);
-				} else {
-					editor.setExtendedState(JFrame.NORMAL);
-					editor.setSize(new Dimension(400, 400));
-					mntmMaximiseMenuItem.setSelected(false);
-				}
-
-			}
-
-		});
-		mnWindowMenu.add(mntmMaximiseMenuItem);
-
-		JMenuItem mntmFullScreenMenuItem = new JMenuItem("Full screen");
-		mntmFullScreenMenuItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
-				if (gd.isFullScreenSupported()) {
-
-					try {
-						// _this.setUndecorated(false);
-						gd.setFullScreenWindow(_this);
-					} catch (Exception e1) {
-						// gd.setFullScreenWindow(null);
-					}
-				} else {
-					System.err.println("Full screen not supported");
-				}
-
-			}
-
-		});*/
-		
 		JMenu mnScriptMenu = new JMenu("Script");
 		mnScriptMenu.setMnemonic('S');
 		menuBar.add(mnScriptMenu);
@@ -648,7 +474,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 							!chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
 
 					JOptionPane.showMessageDialog(editor,
-							"YASS compile success. The file has been successfully compiled to " + file.toString() + ".",
+							"YASS compile success. The file has been successfully compiled to " + file + ".",
 							"YASS compiler", JOptionPane.WARNING_MESSAGE);
 
 				} catch (IOException ex) {
@@ -857,7 +683,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 			if(!f.exists()){
 				f.mkdirs();
 			}
-			OutputStream output = null;
+			OutputStream output;
 			String path = System.getProperty("user.home") + "/zpe/sqarl/" + "gui.properties";
 
 			try {
