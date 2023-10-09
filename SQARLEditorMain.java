@@ -1,14 +1,10 @@
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
-import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.awt.print.PrinterException;
@@ -19,18 +15,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.swing.JMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
@@ -42,6 +26,7 @@ import javax.swing.undo.UndoManager;
 
 import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.ZPE;
+import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.editor.CodeEditorView;
@@ -548,6 +533,28 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		});
 
 		mnScriptMenu.add(mntmToByteCodeFileMenuItem);
+
+		JMenuItem mntmUnfoldCodeMenuItem = new JMenuItem("Unfold (explain) code");
+		mntmUnfoldCodeMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String result = null;
+				try {
+					SQARLParser sqarl = new SQARLParser();
+					String yass = sqarl.parseToYASS(contentEditor.getText());
+					result = ZPEKit.unfold(yass);
+					System.out.println(result);
+					JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} catch (CompileError ex) {
+					throw new RuntimeException(ex);
+				}
+
+			}
+		});
+
+		mnScriptMenu.add(mntmUnfoldCodeMenuItem);
 	}
 	
 	private void clearUndoRedoManagers() {

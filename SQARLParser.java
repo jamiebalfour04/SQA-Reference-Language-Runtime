@@ -172,7 +172,7 @@ public class SQARLParser {
     StringBuilder output = new StringBuilder();
     if (is_value(parser.getCurrentSymbol())) {
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() != SQARLParserByteCodes.LBRA)
-        output.append("$").append(parser.getCurrentWord()).append(" ");
+        output.append(parser.getCurrentWord()).append(" ");
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA)
         output.append(compile_function_call());
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.BOOLEAN)
@@ -432,7 +432,7 @@ public class SQARLParser {
     }
 
     // Add the name as a string
-    String var = "$" + parser.getCurrentWord();
+    String var = parser.getCurrentWord();
     output += var + " = ";
 
     parser.getNextSymbol();
@@ -462,7 +462,7 @@ public class SQARLParser {
       printError("Error. Expected NAME_STRING.");
     }
     // Add the name as a string
-    String var = "$" + parser.getCurrentWord();
+    String var = parser.getCurrentWord();
     output += var + parser.getWhitespace() + "=";
 
     parser.getNextSymbol();
@@ -544,7 +544,7 @@ public class SQARLParser {
       }
 
 
-      output.append("$").append(parser.getCurrentWord());
+      output.append(parser.getCurrentWord());
 
       parser.getNextSymbol();
 
@@ -597,7 +597,7 @@ public class SQARLParser {
       }
 
 
-      output.append("$").append(parser.getCurrentWord());
+      output.append(parser.getCurrentWord());
 
       parser.getNextSymbol();
 
@@ -679,7 +679,7 @@ public class SQARLParser {
       printError("Error. Expected NAME_STRING.");
     }
 
-    output += "$" + parser.getCurrentWord();
+    output += parser.getCurrentWord();
 
     parser.getNextSymbol();
 
