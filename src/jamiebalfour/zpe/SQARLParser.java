@@ -1,7 +1,9 @@
+package jamiebalfour.zpe;
+
 import java.io.IOException;
 import java.util.HashMap;
 
-import jamiebalfour.zpe.core.YASSRuntime;
+import jamiebalfour.zpe.core.ZPERuntimeEnvironment;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.core.errors.CompileError;
@@ -22,7 +24,6 @@ public class SQARLParser {
     	  
         new SQARLEditorMain().setVisible(true);
       } else{
-
         // If nothing has been provided
         System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run an SQARL program directly.");
         System.exit(0);
@@ -81,7 +82,7 @@ public class SQARLParser {
     SQARLParser sqarl = new SQARLParser();
     String yass = sqarl.parseToYASS(s);
 
-    YASSRuntime z = new YASSRuntime();
+    ZPERuntimeEnvironment z = new ZPERuntimeEnvironment();
     Object out = z.Interpret(yass);
     if (out != null) {
       return out.toString();

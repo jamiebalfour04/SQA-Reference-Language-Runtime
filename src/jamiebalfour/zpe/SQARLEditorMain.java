@@ -1,28 +1,4 @@
-import javax.swing.*;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-
-import java.awt.GridLayout;
-import java.awt.event.*;
-import java.awt.print.PrinterException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Properties;
-
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoManager;
+package jamiebalfour.zpe;
 
 import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.ZPE;
@@ -33,6 +9,25 @@ import jamiebalfour.zpe.editor.CodeEditorView;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.types.CompileDetails;
+
+import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.print.PrinterException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Properties;
 
 class SQARLEditorMain extends JFrame implements GenericEditor {
 
@@ -396,7 +391,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 				 * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
 				 */
 				if (AttachedConsole == null) {
-					AttachedConsole = new ZPEEditorConsole(_this, "");
+					AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18));
 				} else {
 					AttachedConsole.stop(0);
 				}
@@ -542,7 +537,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 				try {
 					SQARLParser sqarl = new SQARLParser();
 					String yass = sqarl.parseToYASS(contentEditor.getText());
-					result = ZPEKit.unfold(yass);
+					result = ZPEKit.unfold(yass, false);
 					System.out.println(result);
 					JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
 							JOptionPane.INFORMATION_MESSAGE);

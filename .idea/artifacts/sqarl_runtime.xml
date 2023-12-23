@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="sqarl-runtime">
+    <output-path>$USER_HOME$/Dropbox/Programs/ZPE</output-path>
+    <root id="archive" name="sqarl-runtime.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

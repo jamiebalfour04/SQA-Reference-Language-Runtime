@@ -1,3 +1,5 @@
+package jamiebalfour.zpe;
+
 import java.util.ArrayList;
 
 import jamiebalfour.zpe.parser.ZenithParsingEngine.MultilineComment;
