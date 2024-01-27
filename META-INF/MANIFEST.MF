@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: jamiebalfour.zpe.SQARLParser.java
+Main-Class: jamiebalfour.zpe.SQARLParser
+Class-Path: .classpath
 
