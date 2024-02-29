@@ -188,6 +188,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		scrollPane.setViewportView(contentEditor);
 
 		scrollPane.setRowHeaderView(mainSyntax.getEditor());
+
+
+		try {
+			if (java.awt.Taskbar.isTaskbarSupported()) {
+				final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+				final java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
+			}
+		} catch (Exception e) {
+		}
+		if (HelperFunctions.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+		}
 		
 		JMenuBar menuBar = new JMenuBar();
 		
