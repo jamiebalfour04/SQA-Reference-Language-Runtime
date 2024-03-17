@@ -5,9 +5,9 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
+      <element id="library" level="project" name="ZenithParsingEngine" />
       <element id="module-output" name="sqa-reference-language-runtime" />
-      <element id="extracted-dir" path="$USER_HOME$/Dropbox/Programs/JARs/ZenithParsingEngine.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Dropbox/Programs/ZPE/zpe.jar" path-in-jar="/" />
+      <element id="library" level="project" name="zpe" />
     </root>
   </artifact>
 </component>
