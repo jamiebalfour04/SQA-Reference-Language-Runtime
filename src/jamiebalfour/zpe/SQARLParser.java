@@ -3,6 +3,8 @@ package jamiebalfour.zpe;
 import java.io.IOException;
 import java.util.HashMap;
 
+import jamiebalfour.HelperFunctions;
+import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPERuntimeEnvironment;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEKit;
@@ -21,8 +23,11 @@ public class SQARLParser {
     if (args.length == 0) {
 
       if (System.console() == null) {
-    	  
-        new SQARLEditorMain().setVisible(true);
+
+        if(!ZPEHelperFunctions.isHeadless()){
+          new SQARLEditorMain().setVisible(true);
+        }
+
       } else{
         // If nothing has been provided
         System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run an SQARL program directly.");
@@ -30,41 +35,43 @@ public class SQARLParser {
       }
 
 
-    }
+    } else{
+      if (args.length > 0) {
+        first = args[0];
+      }
 
-    if (args.length > 0) {
-      first = args[0];
-    }
+      if (first.equals("-r") && argv.containsKey("-r")) {
+        // Run
+        try {
+          String s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-r").toString(), "utf-8");
+          String output = compileAndRunSQARL(s);
+          if (!output.isEmpty()) {
+            System.out.println(output);
+          }
 
-    if (first.equals("-r") && argv.containsKey("-r")) {
-      // Run
-      try {
-        String s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-r").toString(), "utf-8");
-        String output = compileAndRunSQARL(s);
-        if (!output.isEmpty()) {
-          System.out.println(output);
+        } catch (IOException e) {
+          System.err.println("File not found!");
+        }
+      } else if (first.equals("-e")) {
+        String s;
+        try {
+          s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-e").toString(), "utf-8");
+          String output = compileSQARL(s);
+          if (!output.isEmpty()) {
+            System.out.println(output);
+          }
+        } catch (IOException e) {
+          ZPE.Log("SQARL Runtime error: " + e.getMessage());
         }
 
-      } catch (IOException e) {
-        System.err.println("File not found!");
+      } else if (first.equals("-g")) {
+        new SQARLEditorMain().setVisible(true);
+      } else {
+        System.out.println("You have provided incorrect arguments to the application.");
       }
-    } else if (first.equals("-e")) {
-    	String s;
-		try {
-			s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-e").toString(), "utf-8");
-			String output = compileSQARL(s);
-	        if (!output.isEmpty()) {
-	          System.out.println(output);
-	        }
-		} catch (IOException e) {
-          ZPE.Log("SQARL Runtime error: " + e.getMessage());
-		}
-        
-    } else if (first.equals("-g")) {
-  	  new SQARLEditorMain().setVisible(true);
-    } else {
-      System.out.println("You have provided incorrect arguments to the application.");
     }
+
+
 
   }
 

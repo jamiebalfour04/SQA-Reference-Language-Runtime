@@ -8,6 +8,7 @@ import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.editor.CodeEditorView;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.interfaces.GenericEditor;
+import jamiebalfour.zpe.os.macos.macOS;
 import jamiebalfour.zpe.types.CompileDetails;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -199,6 +201,17 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		}
 		if (HelperFunctions.isMac()) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			try {
+				macOS a = new macOS();
+				a.addAboutDialog(new Runnable() {
+					@Override
+					public void run() {
+						showAbout();
+
+					}
+				});
+			} catch (Exception e) {
+			}
 		}
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -687,6 +700,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+
+	private void showAbout() {
+
+		JOptionPane op = new JOptionPane(new SQARLAboutDialog().getContentPane(), JOptionPane.PLAIN_MESSAGE,
+				JOptionPane.OK_OPTION);
+
+		JDialog dlg = op.createDialog(editor, "About SQA Reference Language Runtime");
+
+		dlg.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+
+		dlg.setVisible(true);
 	}
 	
 	public void saveGUISettings(Properties props) {
