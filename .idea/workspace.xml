@@ -9,7 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to latest version of ZPE for better performance (LAME X2)" />
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Bumped up to ZPE 1.12.4.">
+      <change afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,6 +27,7 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -169,7 +174,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711181642040</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Bumped up to ZPE 1.12.4.">
+      <option name="closed" value="true" />
+      <created>1711959503576</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1711959503576</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -177,6 +190,7 @@
     <MESSAGE value="Fixed the setup for IntelliJ IDEA." />
     <MESSAGE value="Updated to latest version of ZPE for better performance." />
     <MESSAGE value="Updated to latest version of ZPE for better performance (LAME X2)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to latest version of ZPE for better performance (LAME X2)" />
+    <MESSAGE value="Bumped up to ZPE 1.12.4." />
+    <option name="LAST_COMMIT_MESSAGE" value="Bumped up to ZPE 1.12.4." />
   </component>
 </project>
