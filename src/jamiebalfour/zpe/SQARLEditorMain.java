@@ -575,6 +575,40 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 		});
 
 		mnScriptMenu.add(mntmUnfoldCodeMenuItem);
+
+		//Help menu
+		JMenu mnHelpMenu = new JMenu("Help");
+		mnHelpMenu.setMnemonic('H');
+		menuBar.add(mnHelpMenu);
+
+		if(!HelperFunctions.isMac()){
+			JMenuItem mntmAboutFileMenuItem = new JMenuItem("About");
+			mntmAboutFileMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showAbout();
+				}
+			});
+			mnHelpMenu.add(mntmAboutFileMenuItem);
+			mnHelpMenu.add(new JSeparator());
+		}
+
+		JMenuItem mntmSQARLSpecificationWebsiteMenuItem = new JMenuItem("Read the SQARL Specification");
+		mntmSQARLSpecificationWebsiteMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
+			}
+		});
+
+		mnHelpMenu.add(mntmSQARLSpecificationWebsiteMenuItem);
+
+		JMenuItem mntmSQAWebsiteMenuItem = new JMenuItem("Visit SQA Website");
+		mntmSQAWebsiteMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html");
+			}
+		});
+
+		mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 	}
 	
 	private void clearUndoRedoManagers() {
@@ -705,7 +739,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 	private void showAbout() {
 
 		JOptionPane op = new JOptionPane(new SQARLAboutDialog().getContentPane(), JOptionPane.PLAIN_MESSAGE,
-				JOptionPane.OK_OPTION);
+				JOptionPane.OK_OPTION, null, new String[]{});
 
 		JDialog dlg = op.createDialog(editor, "About SQA Reference Language Runtime");
 
