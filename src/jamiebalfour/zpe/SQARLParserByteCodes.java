@@ -14,7 +14,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	final static String TYPE_NULL = "null";
 	final static String TYPE_BOOLEAN = "(true|false)";
 	//A string of characters outwith quotes
-	final static String NAME_STRING = "([a-z][A-z0-9_]*)";
+	final static String NAME_STRING = "([A-z][A-z0-9_]*)";
 	
 	final static byte DECLARE = 0;
 	final static byte AS = 1;
@@ -64,8 +64,11 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	final static byte MINUS = 50;
 	final static byte DIVIDE = 51;
 	final static byte MULT = 52;
-	final static byte MOD = 53;	
-	
+	final static byte MOD = 53;
+	final static byte CONCAT = 54;
+
+	final static byte LBRACE = 58;
+	final static byte RBRACE = 59;
 	final static byte LBRA = 60;
 	final static byte RBRA = 61;
 	final static byte LSQBR = 62;
@@ -75,6 +78,11 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	final static byte PROCEDURE = 71;
 	final static byte FUNCTION = 72;
 	final static byte RETURN = 73;
+	final static byte CLASS = 74;
+	final static byte IS = 75;
+	final static byte METHODS = 76;
+	final static byte CONSTRUCTOR = 77;
+	final static byte RETURNS = 78;
 	
 	
 	
@@ -98,6 +106,14 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 			return SQARLParserByteCodes.KEYBOARD;
 		if (w.equals("RECEIVE"))
 			return SQARLParserByteCodes.RECEIVE;
+		if (w.equals("CLASS"))
+			return SQARLParserByteCodes.CLASS;
+		if (w.equals("IS"))
+			return SQARLParserByteCodes.IS;
+		if (w.equals("METHODS"))
+			return SQARLParserByteCodes.METHODS;
+		if (w.equals("CONSTRUCTOR"))
+			return SQARLParserByteCodes.CONSTRUCTOR;
 		if (w.equals("SEND"))
 			return SQARLParserByteCodes.SEND;
 		if (w.equals("TO"))
@@ -114,14 +130,15 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 			return SQARLParserByteCodes.REAL;
 		if(w.matches(TYPE_STRING)) 
 			return SQARLParserByteCodes.STRING;
-		if(w.matches(NAME_STRING))
-			return SQARLParserByteCodes.NAME;
+
 		if(w.equals("AND"))
 			return SQARLParserByteCodes.AND;
 		if(w.equals("OR"))
 			return SQARLParserByteCodes.OR;
 		if(w.equals("NOT"))
 			return SQARLParserByteCodes.NOT;
+		if(w.equals("&"))
+			return SQARLParserByteCodes.CONCAT;
 		if(w.equals("!="))
 			return SQARLParserByteCodes.NEQUAL;
 		if(w.equals("="))
@@ -138,6 +155,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 			return SQARLParserByteCodes.LBRA;
 		if(w.equals(")"))
 			return SQARLParserByteCodes.RBRA;
+		if(w.equals("{"))
+			return SQARLParserByteCodes.LBRACE;
+		if(w.equals("}"))
+			return SQARLParserByteCodes.RBRACE;
 		if(w.equals("["))
 			return SQARLParserByteCodes.LSQBR;
 		if(w.equals("]"))
@@ -171,15 +192,18 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 			return SQARLParserByteCodes.DO;
 		if(w.equals("UNTIL"))
 			return SQARLParserByteCodes.UNTIL;
-		if(w.equals("PROCEDURE")){
+		if(w.equals("PROCEDURE"))
 			return SQARLParserByteCodes.PROCEDURE;
-		}
-		if(w.equals("FUNCTION")){
+		if(w.equals("FUNCTION"))
 			return SQARLParserByteCodes.FUNCTION;
-		}
-		if(w.equals("RETURN")){
+		if(w.equals("END"))
+			return SQARLParserByteCodes.END;
+		if(w.equals("RETURN"))
 			return SQARLParserByteCodes.RETURN;
-		}
+		if(w.equals("RETURNS"))
+			return SQARLParserByteCodes.RETURNS;
+		if(w.matches(NAME_STRING))
+			return SQARLParserByteCodes.NAME;
 		
 		return -2;
 	}
