@@ -81,8 +81,12 @@ public class SQARLParser {
   }
 
   private String varProcess(String s){
-    s = s.replace("count", "mcot");
-    s = s.replace("list", "mlst");
+    s = s.replace("count", "_count");
+    s = s.replace("list", "_list");
+
+    if(!s.startsWith("_")){
+      s = "_" + s;
+    }
 
     return s;
   }
@@ -692,7 +696,7 @@ public class SQARLParser {
     }
 
     StringBuilder output = new StringBuilder();
-    output.append("class " + parser.getCurrentWord() + " ");
+    output.append("class " + parser.getCurrentWord() + " " + System.getProperty("line.separator"));
 
     classes.add(parser.getCurrentWord());
 
