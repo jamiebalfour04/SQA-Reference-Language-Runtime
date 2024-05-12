@@ -507,6 +507,47 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
     mnScriptMenu.add(mntmCompileCodeMenuItem);
 
+    JMenuItem mntmTranspileCodeMenuItem = new JMenuItem("Transpile code to Python");
+    mntmTranspileCodeMenuItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        File file;
+        String extension;
+
+        final JFileChooser fc = new JFileChooser();
+
+        fc.addChoosableFileFilter(filter2);
+        fc.setAcceptAllFileFilterUsed(false);
+
+        int returnVal = fc.showSaveDialog(editor.getContentPane());
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          file = fc.getSelectedFile();
+          extension = getSaveExtension(fc.getFileFilter());
+        } else {
+          return;
+        }
+
+        try {
+
+
+          SQARLParser sqarl = new SQARLParser();
+          String yass = sqarl.parseToYASS(contentEditor.getText());
+          // null for no password
+          PythonTranspiler t = new PythonTranspiler();
+          String code = t.Transpile(ZPEKit.compile(yass), "");
+          HelperFunctions.WriteFile(file.getPath(), code, false);
+
+          JOptionPane.showMessageDialog(editor,
+                  "Python transpile success. The file has been successfully compiled to " + file + ".",
+                  "Python transpiler", JOptionPane.WARNING_MESSAGE);
+
+        } catch(Exception ex){
+
+        }
+      }
+    });
+    mnScriptMenu.add(mntmTranspileCodeMenuItem);
+
     mnScriptMenu.add(new JSeparator());
 
     JMenuItem mntmAnalyseCodeMenuItem = new JMenuItem("Analyse code");
