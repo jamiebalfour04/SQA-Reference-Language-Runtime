@@ -511,18 +511,17 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mntmTranspileCodeMenuItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         File file;
-        String extension;
+        String extension = ".py";
 
         final JFileChooser fc = new JFileChooser();
-
-        fc.addChoosableFileFilter(filter2);
+        FileNameExtensionFilter pythonFilter = new FileNameExtensionFilter("Python files (*.py)", "py");
+        fc.addChoosableFileFilter(pythonFilter);
         fc.setAcceptAllFileFilterUsed(false);
 
         int returnVal = fc.showSaveDialog(editor.getContentPane());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           file = fc.getSelectedFile();
-          extension = getSaveExtension(fc.getFileFilter());
         } else {
           return;
         }
@@ -532,13 +531,16 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
           SQARLParser sqarl = new SQARLParser();
           String yass = sqarl.parseToYASS(contentEditor.getText());
-          // null for no password
           PythonTranspiler t = new PythonTranspiler();
           String code = t.Transpile(ZPEKit.compile(yass), "");
-          HelperFunctions.WriteFile(file.getPath(), code, false);
+          String path = file.getPath();
+          if(!path.endsWith(extension)){
+            path = path + extension;
+          }
+          HelperFunctions.WriteFile(path, code, false);
 
           JOptionPane.showMessageDialog(editor,
-                  "Python transpile success. The file has been successfully compiled to " + file + ".",
+                  "Python transpile success. The file has been successfully compiled to " + path + ".",
                   "Python transpiler", JOptionPane.WARNING_MESSAGE);
 
         } catch(Exception ex){
@@ -622,7 +624,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
           SQARLParser sqarl = new SQARLParser();
           String yass = sqarl.parseToYASS(contentEditor.getText());
           result = ZPEKit.unfold(yass, false);
-          System.out.println(result);
           JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
                   JOptionPane.INFORMATION_MESSAGE);
 

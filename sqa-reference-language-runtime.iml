@@ -9,6 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="zpe" level="project" />
     <orderEntry type="library" exported="" name="ZenithParsingEngine" level="project" />
-    <orderEntry type="library" name="python" level="project" />
+    <orderEntry type="library" name="yass-python-transpiler" level="project" />
   </component>
 </module>
