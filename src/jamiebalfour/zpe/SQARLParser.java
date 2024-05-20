@@ -93,7 +93,7 @@ public class SQARLParser {
 
   private void printError(String err) {
     System.err.println(err);
-    System.exit(-1);
+    //System.exit(-1);
   }
   
   public static String compileSQARL(String s) {
@@ -233,16 +233,14 @@ public class SQARLParser {
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         output.append("(");
         parser.getNextSymbol();
+        output.append(compile_expression());
       }
       output.append(compile_value());
 
-      if (parser.getCurrentSymbol() == SQARLParserByteCodes.RBRA) {
+      if (parser.peekAhead() == SQARLParserByteCodes.RBRA) {
         output.append(")");
         parser.getNextSymbol();
-      }
-      if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
-        output.append("(");
-        parser.getNextSymbol();
+        return output.toString();
       }
       if (is_comparison(parser.peekAhead())) {
 
@@ -263,6 +261,10 @@ public class SQARLParser {
         return output.append(" & ").append(compile_expression()).toString();
       }
       if (!is_join(parser.peekAhead()) && !is_join(parser.getCurrentSymbol())) {
+        if(parser.peekAhead(2) == SQARLParserByteCodes.RBRA){
+          parser.getNextSymbol();
+          output.append(")");
+        }
         return output.toString();
       } else {
         // Jump to
@@ -470,7 +472,7 @@ public class SQARLParser {
     parser.getNextSymbol();
 
     if (parser.getCurrentSymbol() != SQARLParserByteCodes.TO) {
-      printError("Error. Expected TO.");
+      printError("Error. Expected TO IN SET.");
     }
 
     parser.getNextSymbol();

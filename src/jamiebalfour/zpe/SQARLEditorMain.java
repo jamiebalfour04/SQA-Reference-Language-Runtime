@@ -544,7 +544,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
                   "Python transpiler", JOptionPane.WARNING_MESSAGE);
 
         } catch(Exception ex){
-
+          System.out.println(ex.getMessage());
         }
       }
     });
