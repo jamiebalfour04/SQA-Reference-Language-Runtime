@@ -12,9 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the README.md file with information about the download from the build folder.">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the README.md file with links." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -324,7 +322,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716934969781</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Updated the README.md file with links.">
+      <option name="closed" value="true" />
+      <created>1716935177215</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1716935177215</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -345,7 +351,8 @@
     <MESSAGE value="Added a build folder." />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
     <MESSAGE value="Updated the README.md file with information about the download from the build folder." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated the README.md file with information about the download from the build folder." />
+    <MESSAGE value="Updated the README.md file with links." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the README.md file with links." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
