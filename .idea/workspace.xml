@@ -12,9 +12,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the README.md file with information about the download from the build folder.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +268,39 @@
       <option name="project" value="LOCAL" />
       <updated>1716228547194</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
+      <option name="closed" value="true" />
+      <created>1716925872141</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1716925872141</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added a build folder.">
+      <option name="closed" value="true" />
+      <created>1716926033464</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1716926033464</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added a build folder.">
+      <option name="closed" value="true" />
+      <created>1716926056759</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1716926056759</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Updated the README.md file with information about the download from the build folder.">
+      <option name="closed" value="true" />
+      <created>1716926180127</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1716926180127</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -285,8 +316,11 @@
     <MESSAGE value="Bumped up to ZPE 1.12.5 support to fix issues with $-unbound variables." />
     <MESSAGE value="Added the YASS Python transpiler to allow conversion to Python." />
     <MESSAGE value="Updated to the latest version of ZPE." />
+    <MESSAGE value="Added a build" />
     <MESSAGE value="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though." />
-    <option name="LAST_COMMIT_MESSAGE" value="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though." />
+    <MESSAGE value="Added a build folder." />
+    <MESSAGE value="Updated the README.md file with information about the download from the build folder." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the README.md file with information about the download from the build folder." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
