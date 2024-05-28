@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="sqarl-runtime-local">
+    <output-path>$PROJECT_DIR$/build/</output-path>
+    <root id="archive" name="sqarl-runtime.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.mf" />
+      </element>
+      <element id="module-output" name="sqa-reference-language-runtime" />
+      <element id="extracted-dir" path="$USER_HOME$/Dropbox/Programs/JARs/ZenithParsingEngine.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Dropbox/Programs/ZPE/zpe.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/zpe/transpilers/yass-python-transpiler.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

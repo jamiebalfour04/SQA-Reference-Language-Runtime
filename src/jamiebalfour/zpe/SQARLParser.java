@@ -1,11 +1,9 @@
 package jamiebalfour.zpe;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.*;
 import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
