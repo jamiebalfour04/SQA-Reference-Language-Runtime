@@ -13,7 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the README.md file with information about the download from the build folder.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,7 +300,31 @@
       <option name="project" value="LOCAL" />
       <updated>1716926180127</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Updated the README.md file with information about the download from the build folder.">
+      <option name="closed" value="true" />
+      <created>1716934811535</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1716934811535</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Updated the README.md file with information about the download from the build folder.">
+      <option name="closed" value="true" />
+      <created>1716934871788</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1716934871788</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Updated the README.md file with information about the download from the build folder.">
+      <option name="closed" value="true" />
+      <created>1716934969781</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1716934969781</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -319,6 +343,7 @@
     <MESSAGE value="Added a build" />
     <MESSAGE value="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though." />
     <MESSAGE value="Added a build folder." />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
     <MESSAGE value="Updated the README.md file with information about the download from the build folder." />
     <option name="LAST_COMMIT_MESSAGE" value="Updated the README.md file with information about the download from the build folder." />
   </component>
