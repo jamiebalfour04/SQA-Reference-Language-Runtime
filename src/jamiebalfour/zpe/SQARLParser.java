@@ -6,10 +6,10 @@ import java.util.HashMap;
 
 import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.*;
-import jamiebalfour.zpe.core.exceptions.BreakPointHalt;
-import jamiebalfour.zpe.core.exceptions.CompileError;
-import jamiebalfour.zpe.core.exceptions.ExitHalt;
-import jamiebalfour.zpe.core.exceptions.ZPERuntimeError;
+import jamiebalfour.zpe.exceptions.BreakPointHalt;
+import jamiebalfour.zpe.exceptions.CompileException;
+import jamiebalfour.zpe.exceptions.ExitHalt;
+import jamiebalfour.zpe.exceptions.ZPERuntimeException;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
 public class SQARLParser {
@@ -51,12 +51,14 @@ public class SQARLParser {
             if (!output.isEmpty()) {
               System.out.println(output);
             }
-          } catch(CompileError | ZPERuntimeError e){
-            System.out.println(e.getMessage());
           } catch (ExitHalt e){
             System.exit(HelperFunctions.StringToInteger(e.getMessage()));
           }  catch (BreakPointHalt e){
             System.out.println(e.getMessage());
+          } catch (CompileException e) {
+            throw new RuntimeException(e);
+          } catch (ZPERuntimeException e) {
+            throw new RuntimeException(e);
           }
 
 
@@ -107,12 +109,11 @@ public class SQARLParser {
       return sqarl.parseToYASS(s);
   }
 
-  public static String compileAndRunSQARL(String s) throws CompileError, ZPERuntimeError, ExitHalt, BreakPointHalt {
+  public static String compileAndRunSQARL(String s) throws CompileException, ZPERuntimeException, ExitHalt, BreakPointHalt {
     SQARLParser sqarl = new SQARLParser();
     String yass = sqarl.parseToYASS(s);
 
-    ZPERuntimeEnvironment z = new ZPERuntimeEnvironment();
-    Object out = z.Interpret(yass);
+    Object out = ZPEKit.interpret(yass);
     if (out != null) {
       return out.toString();
     }
@@ -126,8 +127,8 @@ public class SQARLParser {
 
     try {
       ZPEKit.compile(yass);
-    } catch (CompileError e) {
-      ZPE.Log("SQARL Runtime error: " + e.getMessage());
+    } catch (CompileException e) {
+      ZPE.Log("SQARL Runtime compile exception: " + e.getMessage());
     }
 
   }
