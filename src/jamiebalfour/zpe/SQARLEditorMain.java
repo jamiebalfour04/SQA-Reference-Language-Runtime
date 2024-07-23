@@ -4,9 +4,9 @@ import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
-import jamiebalfour.zpe.core.errors.CompileError;
 import jamiebalfour.zpe.editor.CodeEditorView;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
+import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.os.macos.macOS;
 import jamiebalfour.zpe.types.CompileDetails;
@@ -500,7 +500,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
         } catch (IOException ex) {
           JOptionPane.showMessageDialog(editor,
-                  "YASS compile failure. The YASS compiler could not compile the code given. The error was -1.",
+                  "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
+                  "YASS compiler", JOptionPane.ERROR_MESSAGE);
+        } catch (CompileException ex) {
+          JOptionPane.showMessageDialog(editor,
+                  "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
                   "YASS compiler", JOptionPane.ERROR_MESSAGE);
         }
       }
@@ -568,7 +572,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
             JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
                     JOptionPane.INFORMATION_MESSAGE);
           }
-        } catch (CompileError ex) {
+        } catch (CompileException ex) {
           JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
                   JOptionPane.INFORMATION_MESSAGE);
         }
@@ -627,7 +631,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
           JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
                   JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (CompileError ex) {
+        } catch (CompileException ex) {
           throw new RuntimeException(ex);
         }
 

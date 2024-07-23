@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import jamiebalfour.HelperFunctions;
 import jamiebalfour.zpe.core.*;
-import jamiebalfour.zpe.core.errors.CompileError;
+import jamiebalfour.zpe.core.exceptions.BreakPointHalt;
+import jamiebalfour.zpe.core.exceptions.CompileError;
+import jamiebalfour.zpe.core.exceptions.ExitHalt;
+import jamiebalfour.zpe.core.exceptions.ZPERuntimeError;
 import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
 public class SQARLParser {
@@ -47,7 +51,11 @@ public class SQARLParser {
             if (!output.isEmpty()) {
               System.out.println(output);
             }
-          } catch(CompileError e){
+          } catch(CompileError | ZPERuntimeError e){
+            System.out.println(e.getMessage());
+          } catch (ExitHalt e){
+            System.exit(HelperFunctions.StringToInteger(e.getMessage()));
+          }  catch (BreakPointHalt e){
             System.out.println(e.getMessage());
           }
 
@@ -99,7 +107,7 @@ public class SQARLParser {
       return sqarl.parseToYASS(s);
   }
 
-  public static String compileAndRunSQARL(String s) throws CompileError {
+  public static String compileAndRunSQARL(String s) throws CompileError, ZPERuntimeError, ExitHalt, BreakPointHalt {
     SQARLParser sqarl = new SQARLParser();
     String yass = sqarl.parseToYASS(s);
 
