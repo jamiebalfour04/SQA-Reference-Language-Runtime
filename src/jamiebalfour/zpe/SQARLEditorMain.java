@@ -1,6 +1,7 @@
 package jamiebalfour.zpe;
 
 import jamiebalfour.HelperFunctions;
+import jamiebalfour.zpe.core.RunningInstance;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
@@ -673,6 +674,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
 
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
+
+    RunningInstance.ERROR_LEVEL = 1;
 
 
   }
