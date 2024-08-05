@@ -12,7 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Moved to the latest version of ZPE.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
@@ -39,14 +39,12 @@
     &quot;assignee&quot;: &quot;jamiebalfour04&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="746bdf84-6c27-4572-9649-2ed5dca3dff7" />
-        <option name="url" value="https://github.com/jamiebalfour04/sqa-reference-language-runtime.git" />
-      </UrlAndAccount>
-    </option>
-  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jamiebalfour04/sqa-reference-language-runtime.git&quot;,
+    &quot;accountId&quot;: &quot;746bdf84-6c27-4572-9649-2ed5dca3dff7&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$USER_HOME$/Dropbox/Programs/ZPE/zpe.jar!/jamiebalfour/zpe/editor/ZPEEditorConsole.class" root0="SKIP_INSPECTION" />
   </component>
@@ -127,13 +125,6 @@
         <item itemvalue="Application.SQARLParser" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.9-corretto-17.0.9-8336523bb0d9-301ddabe" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -400,7 +391,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721747947955</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Moved to the latest version of ZPE.">
+      <option name="closed" value="true" />
+      <created>1722266568466</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1722266568466</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -425,7 +424,8 @@
     <MESSAGE value="Updated ZPE version to match current build and updated the editor." />
     <MESSAGE value="Updated to match fixes in ZPE." />
     <MESSAGE value="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them." />
-    <option name="LAST_COMMIT_MESSAGE" value="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them." />
+    <MESSAGE value="Moved to the latest version of ZPE." />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved to the latest version of ZPE." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -439,16 +439,6 @@
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
           <line>683</line>
           <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
-          <line>538</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
-          <line>540</line>
-          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>

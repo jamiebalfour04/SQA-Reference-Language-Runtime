@@ -225,13 +225,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
       try {
         macOS a = new macOS();
-        a.addAboutDialog(new Runnable() {
-          @Override
-          public void run() {
-            showAbout();
-
-          }
-        });
+        a.addAboutDialog(() -> showAbout());
       } catch (Exception e) {
       }
     }
@@ -253,60 +247,46 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     JMenuItem mntmNewMenuItem = new JMenuItem("New");
     mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke('N', modifier));
-    mntmNewMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        clearUndoRedoManagers();
-        setTextProperly("");
-      }
+    mntmNewMenuItem.addActionListener(e -> {
+      clearUndoRedoManagers();
+      setTextProperly("");
     });
     mnFileMenu.add(mntmNewMenuItem);
 
     JMenuItem mntmSaveMenuItem = new JMenuItem("Save");
     mntmSaveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', modifier));
-    mntmSaveMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (lastFileOpened.isEmpty()) {
-          saveAsDialog();
-        } else {
-          try {
-            HelperFunctions.WriteFile(lastFileOpened, contentEditor.getText(), false);
-          } catch (IOException ex) {
-            ZPE.Log("SQARL Runtime error: " + ex.getMessage());
-          }
+    mntmSaveMenuItem.addActionListener(e -> {
+      if (lastFileOpened.isEmpty()) {
+        saveAsDialog();
+      } else {
+        try {
+          HelperFunctions.WriteFile(lastFileOpened, contentEditor.getText(), false);
+        } catch (IOException ex) {
+          ZPE.Log("SQARL Runtime error: " + ex.getMessage());
         }
       }
     });
     mnFileMenu.add(mntmSaveMenuItem);
 
     JMenuItem mntmSaveAsMenuItem = new JMenuItem("Save As");
-    mntmSaveAsMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        saveAsDialog();
-      }
-    });
+    mntmSaveAsMenuItem.addActionListener(e -> saveAsDialog());
     mnFileMenu.add(mntmSaveAsMenuItem);
 
     JMenuItem mntmOpenMenuItem = new JMenuItem("Open");
     mntmOpenMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', modifier));
-    mntmOpenMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        open();
-      }
-    });
+    mntmOpenMenuItem.addActionListener(e -> open());
     mnFileMenu.add(mntmOpenMenuItem);
 
     mnFileMenu.add(new JSeparator());
 
     JMenuItem mntmPrintMenuItem = new JMenuItem("Print");
     mntmPrintMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', modifier));
-    mntmPrintMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          contentEditor.print();
-        } catch (PrinterException e1) {
-          JOptionPane.showMessageDialog(editor, "An error was encountered whilst trying to print.", "Error",
-                  JOptionPane.ERROR_MESSAGE);
-        }
+    mntmPrintMenuItem.addActionListener(e -> {
+      try {
+        contentEditor.print();
+      } catch (PrinterException e1) {
+        JOptionPane.showMessageDialog(editor, "An error was encountered whilst trying to print.", "Error",
+                JOptionPane.ERROR_MESSAGE);
       }
     });
     mnFileMenu.add(mntmPrintMenuItem);
@@ -314,11 +294,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnFileMenu.add(new JSeparator());
 
     JMenuItem mntmExitMenuItem = new JMenuItem("Exit");
-    mntmExitMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        System.exit(0);
-      }
-    });
+    mntmExitMenuItem.addActionListener(e -> System.exit(0));
 
 
     mnFileMenu.add(mntmExitMenuItem);
@@ -356,46 +332,29 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     JMenuItem mntmCutMenuItem = new JMenuItem("Cut");
     mntmCutMenuItem.setAccelerator(KeyStroke.getKeyStroke('X', modifier));
-    mntmCutMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        contentEditor.cut();
-
-      }
-    });
+    mntmCutMenuItem.addActionListener(e -> contentEditor.cut());
     mnEditMenu.add(mntmCutMenuItem);
 
     JMenuItem mntmCopyMenuItem = new JMenuItem("Copy");
     mntmCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke('C', modifier));
-    mntmCopyMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        contentEditor.copy();
-
-      }
-    });
+    mntmCopyMenuItem.addActionListener(e -> contentEditor.copy());
     mnEditMenu.add(mntmCopyMenuItem);
 
     JMenuItem mntmPasteMenuItem = new JMenuItem("Paste");
     mntmPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke('V', modifier));
-    mntmPasteMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        contentEditor.paste();
-
-      }
-    });
+    mntmPasteMenuItem.addActionListener(e -> contentEditor.paste());
     mnEditMenu.add(mntmPasteMenuItem);
 
     JMenuItem mntmDeleteMenuItem = new JMenuItem("Delete");
-    mntmDeleteMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        int start = contentEditor.getSelectionStart();
-        int end = contentEditor.getSelectionEnd();
+    mntmDeleteMenuItem.addActionListener(e -> {
+      int start = contentEditor.getSelectionStart();
+      int end = contentEditor.getSelectionEnd();
 
-        String current = contentEditor.getText();
+      String current = contentEditor.getText();
 
-        String newText = current.substring(0, start) + current.substring(end);
-        contentEditor.setText(newText);
+      String newText = current.substring(0, start) + current.substring(end);
+      contentEditor.setText(newText);
 
-      }
     });
     mnEditMenu.add(mntmDeleteMenuItem);
 
@@ -403,12 +362,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     JMenuItem mntmSelectAllMenuItem = new JMenuItem("Select All");
     mntmSelectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke('A', modifier));
-    mntmSelectAllMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        contentEditor.selectAll();
-
-      }
-    });
+    mntmSelectAllMenuItem.addActionListener(e -> contentEditor.selectAll());
 
     mnEditMenu.add(mntmSelectAllMenuItem);
 
@@ -429,128 +383,118 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     JMenuItem mntmRunCodeMenuItem = new JMenuItem("Run code");
     mntmRunCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-    mntmRunCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        /*
-         * running = new ConsoleThread(); running.startConsole(contentEditor.getText(),
-         * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
-         */
-        if (AttachedConsole == null) {
-          AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18));
-        } else {
-          AttachedConsole.stop(0);
-        }
-
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
-
-        AttachedConsole.runCode(yass, new String[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+    mntmRunCodeMenuItem.addActionListener(e -> {
+      /*
+       * running = new ConsoleThread(); running.startConsole(contentEditor.getText(),
+       * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+       */
+      if (AttachedConsole == null) {
+        AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18));
+      } else {
+        AttachedConsole.stop(0);
       }
+
+      SQARLParser sqarl = new SQARLParser();
+      String yass = sqarl.parseToYASS(contentEditor.getText());
+
+      AttachedConsole.runCode(yass, new String[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
 
     JMenuItem mntmStopCodeMenuItem = new JMenuItem("Stop code");
     mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
-    mntmStopCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        AttachedConsole.stop();
-      }
-    });
+    mntmStopCodeMenuItem.addActionListener(e -> AttachedConsole.stop());
 
     mnScriptMenu.add(mntmStopCodeMenuItem);
 
     mnScriptMenu.add(new JSeparator());
 
     JMenuItem mntmCompileCodeMenuItem = new JMenuItem("Compile code");
-    mntmCompileCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        String name = JOptionPane.showInputDialog(editor,
-                "Please insert the name of the compiled application.");
-        CompileDetails details = new CompileDetails();
+    mntmCompileCodeMenuItem.addActionListener(e -> {
+      String name = JOptionPane.showInputDialog(editor,
+              "Please insert the name of the compiled application.");
+      CompileDetails details = new CompileDetails();
 
-        details.name = name;
-        File file;
-        String extension;
+      details.name = name;
+      File file;
+      String extension;
 
-        final JFileChooser fc = new JFileChooser();
+      final JFileChooser fc = new JFileChooser();
 
-        fc.addChoosableFileFilter(filter2);
-        fc.setAcceptAllFileFilterUsed(false);
+      fc.addChoosableFileFilter(filter2);
+      fc.setAcceptAllFileFilterUsed(false);
 
-        int returnVal = fc.showSaveDialog(editor.getContentPane());
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          file = fc.getSelectedFile();
-          extension = getSaveExtension(fc.getFileFilter());
-        } else {
-          return;
-        }
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+        extension = getSaveExtension(fc.getFileFilter());
+      } else {
+        return;
+      }
 
-        try {
+      try {
 
 
-          SQARLParser sqarl = new SQARLParser();
-          String yass = sqarl.parseToYASS(contentEditor.getText());
-          // null for no password
-          jamiebalfour.zpe.core.ZPEKit.compile(yass, file.toString() + "." + extension, details,
-                  !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(contentEditor.getText());
+        // null for no password
+        ZPEKit.compile(yass, file.toString() + "." + extension, details,
+                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
 
-          JOptionPane.showMessageDialog(editor,
-                  "YASS compile success. The file has been successfully compiled to " + file + ".",
-                  "YASS compiler", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile success. The file has been successfully compiled to " + file + ".",
+                "YASS compiler", JOptionPane.WARNING_MESSAGE);
 
-        } catch (IOException ex) {
-          JOptionPane.showMessageDialog(editor,
-                  "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
-                  "YASS compiler", JOptionPane.ERROR_MESSAGE);
-        } catch (CompileException ex) {
-          JOptionPane.showMessageDialog(editor,
-                  "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
-                  "YASS compiler", JOptionPane.ERROR_MESSAGE);
-        }
+      } catch (IOException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
       }
     });
     mnScriptMenu.add(mntmCompileCodeMenuItem);
 
     JMenuItem mntmTranspileCodeMenuItem = new JMenuItem("Transpile code to Python");
-    mntmTranspileCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        File file;
-        String extension = ".py";
+    mntmTranspileCodeMenuItem.addActionListener(e -> {
+      File file;
+      String extension = ".py";
 
-        final JFileChooser fc = new JFileChooser();
-        FileNameExtensionFilter pythonFilter = new FileNameExtensionFilter("Python files (*.py)", "py");
-        fc.addChoosableFileFilter(pythonFilter);
-        fc.setAcceptAllFileFilterUsed(false);
+      final JFileChooser fc = new JFileChooser();
+      FileNameExtensionFilter pythonFilter = new FileNameExtensionFilter("Python files (*.py)", "py");
+      fc.addChoosableFileFilter(pythonFilter);
+      fc.setAcceptAllFileFilterUsed(false);
 
-        int returnVal = fc.showSaveDialog(editor.getContentPane());
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          file = fc.getSelectedFile();
-        } else {
-          return;
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+      } else {
+        return;
+      }
+
+      try {
+
+
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(contentEditor.getText());
+        PythonTranspiler t = new PythonTranspiler();
+        String code = t.Transpile(ZPEKit.compile(yass), "");
+        String path1 = file.getPath();
+        if(!path1.endsWith(extension)){
+          path1 = path1 + extension;
         }
+        HelperFunctions.WriteFile(path1, code, false);
 
-        try {
+        JOptionPane.showMessageDialog(editor,
+                "Python transpile success. The file has been successfully compiled to " + path1 + ".",
+                "Python transpiler", JOptionPane.WARNING_MESSAGE);
 
-
-          SQARLParser sqarl = new SQARLParser();
-          String yass = sqarl.parseToYASS(contentEditor.getText());
-          PythonTranspiler t = new PythonTranspiler();
-          String code = t.Transpile(ZPEKit.compile(yass), "");
-          String path = file.getPath();
-          if(!path.endsWith(extension)){
-            path = path + extension;
-          }
-          HelperFunctions.WriteFile(path, code, false);
-
-          JOptionPane.showMessageDialog(editor,
-                  "Python transpile success. The file has been successfully compiled to " + path + ".",
-                  "Python transpiler", JOptionPane.WARNING_MESSAGE);
-
-        } catch(Exception ex){
-          System.out.println(ex.getMessage());
-        }
+      } catch(Exception ex){
+        System.out.println(ex.getMessage());
       }
     });
     mnScriptMenu.add(mntmTranspileCodeMenuItem);
@@ -558,85 +502,79 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnScriptMenu.add(new JSeparator());
 
     JMenuItem mntmAnalyseCodeMenuItem = new JMenuItem("Analyse code");
-    mntmAnalyseCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    mntmAnalyseCodeMenuItem.addActionListener(e -> {
 
 
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
+      SQARLParser sqarl = new SQARLParser();
+      String yass = sqarl.parseToYASS(contentEditor.getText());
 
-        try {
-          if (ZPEKit.validateCode(yass)) {
-            JOptionPane.showMessageDialog(editor, "Code is valid", "Code analysis",
-                    JOptionPane.INFORMATION_MESSAGE);
-          } else {
-            JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
-                    JOptionPane.INFORMATION_MESSAGE);
-          }
-        } catch (CompileException ex) {
+      try {
+        if (ZPEKit.validateCode(yass)) {
+          JOptionPane.showMessageDialog(editor, "Code is valid", "Code analysis",
+                  JOptionPane.INFORMATION_MESSAGE);
+        } else {
           JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
                   JOptionPane.INFORMATION_MESSAGE);
         }
-
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
+                JOptionPane.INFORMATION_MESSAGE);
       }
+
     });
 
     mnScriptMenu.add(mntmAnalyseCodeMenuItem);
 
 
     JMenuItem mntmToByteCodeFileMenuItem = new JMenuItem("Compile to byte codes");
-    mntmToByteCodeFileMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    mntmToByteCodeFileMenuItem.addActionListener(e -> {
 
-        final JFileChooser fc = new JFileChooser();
+      final JFileChooser fc = new JFileChooser();
 
-        fc.addChoosableFileFilter(filter2);
-        fc.setAcceptAllFileFilterUsed(false);
+      fc.addChoosableFileFilter(filter2);
+      fc.setAcceptAllFileFilterUsed(false);
 
-        int returnVal = fc.showSaveDialog(editor.getContentPane());
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          File file = fc.getSelectedFile();
-          String extension = getSaveExtension(fc.getFileFilter());
-          // This is where a real application would open the file.
-          try {
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = fc.getSelectedFile();
+        String extension = getSaveExtension(fc.getFileFilter());
+        // This is where a real application would open the file.
+        try {
 
-            SQARLParser sqarl = new SQARLParser();
-            String yass = sqarl.parseToYASS(contentEditor.getText());
+          SQARLParser sqarl = new SQARLParser();
+          String yass = sqarl.parseToYASS(contentEditor.getText());
 
-            StringBuilder text = new StringBuilder();
-            for (byte s : jamiebalfour.zpe.core.ZPEKit.parseToBytes(yass)) {
-              text.append(s).append(" ");
-            }
-            HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
-          } catch (IOException ex) {
-            JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+          StringBuilder text = new StringBuilder();
+          for (byte s : ZPEKit.parseToBytes(yass)) {
+            text.append(s).append(" ");
           }
+          HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
+        } catch (IOException ex) {
+          JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
+                  JOptionPane.ERROR_MESSAGE);
         }
-
       }
+
     });
 
     mnScriptMenu.add(mntmToByteCodeFileMenuItem);
 
     JMenuItem mntmUnfoldCodeMenuItem = new JMenuItem("Unfold (explain) code");
-    mntmUnfoldCodeMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    mntmUnfoldCodeMenuItem.addActionListener(e -> {
 
-        String result = null;
-        try {
-          SQARLParser sqarl = new SQARLParser();
-          String yass = sqarl.parseToYASS(contentEditor.getText());
-          result = ZPEKit.unfold(yass, false);
-          JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
-                  JOptionPane.INFORMATION_MESSAGE);
+      String result = null;
+      try {
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(contentEditor.getText());
+        result = ZPEKit.unfold(yass, false);
+        JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
+                JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (CompileException ex) {
-          throw new RuntimeException(ex);
-        }
-
+      } catch (CompileException ex) {
+        throw new RuntimeException(ex);
       }
+
     });
 
     mnScriptMenu.add(mntmUnfoldCodeMenuItem);
@@ -648,30 +586,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     if (!HelperFunctions.isMac()) {
       JMenuItem mntmAboutFileMenuItem = new JMenuItem("About");
-      mntmAboutFileMenuItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          showAbout();
-        }
-      });
+      mntmAboutFileMenuItem.addActionListener(e -> showAbout());
       mnHelpMenu.add(mntmAboutFileMenuItem);
       mnHelpMenu.add(new JSeparator());
     }
 
     JMenuItem mntmSQARLSpecificationWebsiteMenuItem = new JMenuItem("Read the SQARL Specification");
-    mntmSQARLSpecificationWebsiteMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
-      }
-    });
+    mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf"));
 
     mnHelpMenu.add(mntmSQARLSpecificationWebsiteMenuItem);
 
     JMenuItem mntmSQAWebsiteMenuItem = new JMenuItem("Visit SQA Website");
-    mntmSQAWebsiteMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html");
-      }
-    });
+    mntmSQAWebsiteMenuItem.addActionListener(e -> HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html"));
 
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 
