@@ -139,7 +139,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     File f = new File(ZPEKit.getInstallPath() + "/sqarl/");
 
     if (!f.exists()) {
-      f.mkdirs();
+      if(!f.mkdirs()){
+        ZPE.Log(f + " could not be created");
+      }
     }
 
     String path = ZPEKit.getInstallPath() + "/sqarl/" + "gui.properties";
@@ -213,20 +215,20 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
 
-    try {
+    /*try {
       if (java.awt.Taskbar.isTaskbarSupported()) {
-        final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
         final java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
       }
     } catch (Exception e) {
-
-    }
+      //Don't do anything
+    }*/
     if (HelperFunctions.isMac()) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
       try {
         macOS a = new macOS();
-        a.addAboutDialog(() -> showAbout());
+        a.addAboutDialog(this::showAbout);
       } catch (Exception e) {
+        //Don't do anything
       }
     }
 
@@ -409,53 +411,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnScriptMenu.add(new JSeparator());
 
-    JMenuItem mntmCompileCodeMenuItem = new JMenuItem("Compile code");
-    mntmCompileCodeMenuItem.addActionListener(e -> {
-      String name = JOptionPane.showInputDialog(editor,
-              "Please insert the name of the compiled application.");
-      CompileDetails details = new CompileDetails();
-
-      details.name = name;
-      File file;
-      String extension;
-
-      final JFileChooser fc = new JFileChooser();
-
-      fc.addChoosableFileFilter(filter2);
-      fc.setAcceptAllFileFilterUsed(false);
-
-      int returnVal = fc.showSaveDialog(editor.getContentPane());
-
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-        file = fc.getSelectedFile();
-        extension = getSaveExtension(fc.getFileFilter());
-      } else {
-        return;
-      }
-
-      try {
-
-
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
-        // null for no password
-        ZPEKit.compile(yass, file.toString() + "." + extension, details,
-                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
-
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile success. The file has been successfully compiled to " + file + ".",
-                "YASS compiler", JOptionPane.WARNING_MESSAGE);
-
-      } catch (IOException ex) {
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
-      } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
-      }
-    });
+    JMenuItem mntmCompileCodeMenuItem = getjMenuItem();
     mnScriptMenu.add(mntmCompileCodeMenuItem);
 
     JMenuItem mntmTranspileCodeMenuItem = new JMenuItem("Transpile code to Python");
@@ -563,7 +519,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     JMenuItem mntmUnfoldCodeMenuItem = new JMenuItem("Unfold (explain) code");
     mntmUnfoldCodeMenuItem.addActionListener(e -> {
 
-      String result = null;
+      String result;
       try {
         SQARLParser sqarl = new SQARLParser();
         String yass = sqarl.parseToYASS(contentEditor.getText());
@@ -604,6 +560,57 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     RunningInstance.ERROR_LEVEL = 1;
 
 
+  }
+
+  private JMenuItem getjMenuItem() {
+    JMenuItem mntmCompileCodeMenuItem = new JMenuItem("Compile code");
+    mntmCompileCodeMenuItem.addActionListener(e -> {
+      String name = JOptionPane.showInputDialog(editor,
+              "Please insert the name of the compiled application.");
+      CompileDetails details = new CompileDetails();
+
+      details.name = name;
+      File file;
+      String extension;
+
+      final JFileChooser fc = new JFileChooser();
+
+      fc.addChoosableFileFilter(filter2);
+      fc.setAcceptAllFileFilterUsed(false);
+
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
+
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+        extension = getSaveExtension(fc.getFileFilter());
+      } else {
+        return;
+      }
+
+      try {
+
+
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(contentEditor.getText());
+        // null for no password
+        ZPEKit.compile(yass, file.toString() + "." + extension, details,
+                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
+
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile success. The file has been successfully compiled to " + file + ".",
+                "YASS compiler", JOptionPane.WARNING_MESSAGE);
+
+      } catch (IOException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+      }
+    });
+    return mntmCompileCodeMenuItem;
   }
 
   private void clearUndoRedoManagers() {
@@ -734,7 +741,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private void showAbout() {
 
     JOptionPane op = new JOptionPane(new SQARLAboutDialog().getContentPane(), JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.OK_OPTION, null, new String[]{});
+            JOptionPane.DEFAULT_OPTION, null, new String[]{});
 
     JDialog dlg = op.createDialog(editor, "About SQA Reference Language Runtime");
 
@@ -747,7 +754,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     if (propertiesChanged) {
       File f = new File(ZPEKit.getInstallPath() + "/sqarl/");
       if (!f.exists()) {
-        f.mkdirs();
+        if(!f.mkdirs()){
+          ZPE.Log(f + " could not be created.");
+        }
       }
       OutputStream output;
       String path = ZPEKit.getInstallPath() + "/sqarl/" + "gui.properties";
