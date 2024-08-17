@@ -12,7 +12,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Pushed the latest version of ZPE.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -412,7 +416,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722942851939</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Pushed the latest version of ZPE.">
+      <option name="closed" value="true" />
+      <created>1723382192411</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1723382192411</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -439,7 +451,8 @@
     <MESSAGE value="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them." />
     <MESSAGE value="Moved to the latest version of ZPE." />
     <MESSAGE value="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
+    <MESSAGE value="Pushed the latest version of ZPE." />
+    <option name="LAST_COMMIT_MESSAGE" value="Pushed the latest version of ZPE." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

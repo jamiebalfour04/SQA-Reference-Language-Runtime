@@ -22,7 +22,7 @@ public class SQARLParser {
   public static void main(String[] args) {
 
     HashMap<String, Object> argv = jamiebalfour.HelperFunctions.GenerateArgumentMap(args);
-    String first = "";
+    String first;
 
     if (args.length == 0) {
 
@@ -113,7 +113,7 @@ public class SQARLParser {
     SQARLParser sqarl = new SQARLParser();
     String yass = sqarl.parseToYASS(s);
 
-    Object out = ZPEKit.interpret(yass);
+    Object out = ZPEKit.interpret(yass, 5);
     if (out != null) {
       return out.toString();
     }
@@ -151,40 +151,40 @@ public class SQARLParser {
   // Simple method to get a single block
   private String parse_one() {
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
-      return compile_declare() + System.getProperty("line.separator");
+      return compile_declare() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SET) {
-      return compile_set() + System.getProperty("line.separator");
+      return compile_set() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SEND) {
-      return compile_send() + System.getProperty("line.separator");
+      return compile_send() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECEIVE) {
-      return compile_receive() + System.getProperty("line.separator");
+      return compile_receive() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.REPEAT) {
-      return compile_repeat() + System.getProperty("line.separator");
+      return compile_repeat() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.IF) {
-      return compile_if() + System.getProperty("line.separator");
+      return compile_if() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.WHILE) {
-      return compile_while() + System.getProperty("line.separator");
+      return compile_while() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.FOR) {
-        return compile_for() + System.getProperty("line.separator");
+        return compile_for() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.PROCEDURE){
-      return compile_procedure() + System.getProperty("line.separator");
+      return compile_procedure() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.FUNCTION){
-      return compile_function() + System.getProperty("line.separator");
+      return compile_function() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.CLASS){
-      return compile_class() + System.getProperty("line.separator");
+      return compile_class() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA){
-      return compile_function_call() + System.getProperty("line.separator");
+      return compile_function_call() + System.lineSeparator();
     }
 
     return "-1";
@@ -495,7 +495,7 @@ public class SQARLParser {
   }
 
   private String compile_declare() {
-    String output = "";
+    StringBuilder output = new StringBuilder();
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
       parser.getNextSymbol();
     }
@@ -505,12 +505,12 @@ public class SQARLParser {
 
     // Add the name as a string
     String var = varProcess(parser.getCurrentWord());
-    output += var + parser.getWhitespace() + "=";
+    output.append(var).append(parser.getWhitespace()).append("=");
 
     parser.getNextSymbol();
 
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.AS) {
-      output += parser.getWhitespace();
+      output.append(parser.getWhitespace());
 
       parser.getNextSymbol();
 
@@ -534,27 +534,27 @@ public class SQARLParser {
       parser.getNextSymbol();
 
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.KEYBOARD) {
-        output += "auto_input()";
+        output.append("auto_input()");
       }
     } else if(parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA && classes.contains(parser.getCurrentWord())) {
-      output += " new " + parser.getCurrentWord() + " (";
+      output.append(" new ").append(parser.getCurrentWord()).append(" (");
       parser.getNextSymbol();
       parser.getNextSymbol();
 
       while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
-        output += parser.getCurrentWord();
+        output.append(parser.getCurrentWord());
         parser.getNextSymbol();
 
         if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA){
-          output += ", ";
+          output.append(", ");
           parser.getNextSymbol();
         }
       }
 
-      output += ") ";
+      output.append(") ");
     } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.LSQBR) {
     	//Array
-    	output += compile_value();
+    	output.append(compile_value());
     	
     } else {
       if (!is_value(parser.getCurrentSymbol())) {
@@ -566,13 +566,13 @@ public class SQARLParser {
 
       // Multiple values
       // compile_values();
-      output += compile_value();
+      output.append(compile_value());
 
     }
 
-    output += parser.getWhitespace();
+    output.append(parser.getWhitespace());
 
-    return output;
+    return output.toString();
 
   }
 
@@ -705,7 +705,7 @@ public class SQARLParser {
     }
 
     StringBuilder output = new StringBuilder();
-    output.append("class " + parser.getCurrentWord() + " " + System.getProperty("line.separator"));
+    output.append("class ").append(parser.getCurrentWord()).append(" ").append(System.lineSeparator());
 
     classes.add(parser.getCurrentWord());
 
@@ -754,10 +754,10 @@ public class SQARLParser {
 
     while (!(parser.getCurrentSymbol() == SQARLParserByteCodes.END && parser.peekAhead() == SQARLParserByteCodes.CLASS)){
       if(parser.getCurrentSymbol() == SQARLParserByteCodes.FUNCTION){
-        output.append(compile_function()).append(System.getProperty("line.separator"));
+        output.append(compile_function()).append(System.lineSeparator());
         parser.getNextSymbol();
       } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.PROCEDURE){
-        output.append(compile_procedure()).append(System.getProperty("line.separator"));
+        output.append(compile_procedure()).append(System.lineSeparator());
         parser.getNextSymbol();
       }
     }
