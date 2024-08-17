@@ -120,19 +120,20 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         int confirmed = JOptionPane.showConfirmDialog(editor, "Are you sure you want to exit the program?", "Exit Program Message Box", JOptionPane.YES_NO_OPTION);
         if (confirmed == JOptionPane.YES_OPTION) {
           dispose();
-        }
 
-        setProperty("HEIGHT", "" + editor.getHeight());
-        setProperty("WIDTH", "" + editor.getWidth());
-        setProperty("XPOS", "" + editor.getX());
-        setProperty("YPOS", "" + editor.getY());
-        if (editor.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
-          setProperty("MAXIMISED", "true");
-        } else {
-          setProperty("MAXIMISED", "false");
+
+          setProperty("HEIGHT", "" + editor.getHeight());
+          setProperty("WIDTH", "" + editor.getWidth());
+          setProperty("XPOS", "" + editor.getX());
+          setProperty("YPOS", "" + editor.getY());
+          if (editor.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
+            setProperty("MAXIMISED", "true");
+          } else {
+            setProperty("MAXIMISED", "false");
+          }
+          saveGUISettings(mainProperties);
+          System.exit(0);
         }
-        saveGUISettings(mainProperties);
-        System.exit(0);
       }
     });
 
@@ -391,7 +392,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
        * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
        */
       if (AttachedConsole == null) {
-        AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18));
+        AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18), 5);
       } else {
         AttachedConsole.stop(0);
       }
@@ -557,8 +558,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 
-    RunningInstance.ERROR_LEVEL = 1;
-
+    RunningInstance.setErrorLevel(1);
 
   }
 
