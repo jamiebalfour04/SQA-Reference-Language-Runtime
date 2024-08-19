@@ -11,6 +11,7 @@ import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.os.macos.macOS;
 import jamiebalfour.zpe.types.CompileDetails;
+import jamiebalfour.zpe.types.ZPEString;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -400,7 +401,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       SQARLParser sqarl = new SQARLParser();
       String yass = sqarl.parseToYASS(contentEditor.getText());
 
-      AttachedConsole.runCode(yass, new String[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+      AttachedConsole.runCode(yass, new ZPEString[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
 
