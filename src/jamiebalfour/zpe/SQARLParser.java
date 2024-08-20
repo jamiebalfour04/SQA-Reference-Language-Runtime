@@ -120,26 +120,13 @@ public class SQARLParser {
     return "";
   }
 
-  public static void compileAndRunSQARLGUI(String code) {
-
-    SQARLParser sqarl = new SQARLParser();
-    String yass = sqarl.parseToYASS(code);
-
-    try {
-      ZPEKit.compile(yass);
-    } catch (CompileException e) {
-      ZPE.Log("SQARL Runtime compile exception: " + e.getMessage());
-    }
-
-  }
-
   public String parseToYASS(String code) {
     StringBuilder output = new StringBuilder();
     parser = new ZenithParsingEngine(code, false, new SQARLParserByteCodes());
 
     parser.getNextSymbol();
     while (parser.getCurrentSymbol() != -2) {
-      output.append(parse_one());
+      output.append(parseOne());
       parser.getNextSymbol();
     }
 
@@ -149,66 +136,69 @@ public class SQARLParser {
   
 
   // Simple method to get a single block
-  private String parse_one() {
+  private String parseOne() {
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
-      return compile_declare() + System.lineSeparator();
+      return compileDeclare() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SET) {
-      return compile_set() + System.lineSeparator();
+      return compileSet() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SEND) {
-      return compile_send() + System.lineSeparator();
+      return compileSend() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECEIVE) {
-      return compile_receive() + System.lineSeparator();
+      return compileReceive() + System.lineSeparator();
+    }
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECORD) {
+      return compileRecord() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.REPEAT) {
-      return compile_repeat() + System.lineSeparator();
+      return compileRepeat() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.IF) {
-      return compile_if() + System.lineSeparator();
+      return compileIf() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.WHILE) {
-      return compile_while() + System.lineSeparator();
+      return compileWhile() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.FOR) {
-        return compile_for() + System.lineSeparator();
+        return compileFor() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.PROCEDURE){
-      return compile_procedure() + System.lineSeparator();
+      return compileProcedure() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.FUNCTION){
-      return compile_function() + System.lineSeparator();
+      return compileFunction() + System.lineSeparator();
     }
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.CLASS){
-      return compile_class() + System.lineSeparator();
+      return compileClass() + System.lineSeparator();
     }
-    if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA){
-      return compile_function_call() + System.lineSeparator();
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() == SQARLParserByteCodes.LBRA){
+      return compileFunctionCall() + System.lineSeparator();
     }
 
     return "-1";
   }
 
-  private boolean is_join(byte symb) {
+  private boolean isJoin(byte symb) {
     return symb == SQARLParserByteCodes.AND || symb == SQARLParserByteCodes.OR || symb == SQARLParserByteCodes.PLUS || symb == SQARLParserByteCodes.MINUS || symb == SQARLParserByteCodes.MULT || symb == SQARLParserByteCodes.DIVIDE || symb == SQARLParserByteCodes.MOD;
   }
 
-  private boolean is_value(byte symb) {
-    return symb == SQARLParserByteCodes.NAME || symb == SQARLParserByteCodes.INT || symb == SQARLParserByteCodes.STRING || symb == SQARLParserByteCodes.BOOLEAN || symb == SQARLParserByteCodes.REAL;
+  private boolean isValue(byte symb) {
+    return symb == SQARLParserByteCodes.IDENTIFIER || symb == SQARLParserByteCodes.INT || symb == SQARLParserByteCodes.STRING || symb == SQARLParserByteCodes.BOOLEAN || symb == SQARLParserByteCodes.REAL;
   }
 
-  private boolean is_comparison(byte symb) {
+  private boolean isComparison(byte symb) {
     return symb == SQARLParserByteCodes.GT || symb == SQARLParserByteCodes.LT || symb == SQARLParserByteCodes.GTE || symb == SQARLParserByteCodes.LTE || symb == SQARLParserByteCodes.EQUAL || symb == SQARLParserByteCodes.NEQUAL;
   }
 
-  private String compile_value() {
+  private String compileValue() {
     StringBuilder output = new StringBuilder();
-    if (is_value(parser.getCurrentSymbol())) {
-      if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() != SQARLParserByteCodes.LBRA)
+    if (isValue(parser.getCurrentSymbol())) {
+      if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() != SQARLParserByteCodes.LBRA)
         output.append(varProcess(parser.getCurrentWord())).append(" ");
-      else if (parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA)
-        output.append(compile_function_call());
+      else if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() == SQARLParserByteCodes.LBRA)
+        output.append(compileFunctionCall());
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.BOOLEAN)
         output.append(parser.getCurrentWord().toLowerCase()).append(parser.getWhitespace());
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.STRING) {
@@ -219,7 +209,7 @@ public class SQARLParser {
     	output = new StringBuilder("[");
     	parser.getNextSymbol();
     	while(parser.getCurrentSymbol() != SQARLParserByteCodes.RSQBR) {
-    		output.append(compile_value());
+    		output.append(compileValue());
     		parser.getNextSymbol();
     		if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA) {
     			output.append(",");
@@ -233,28 +223,28 @@ public class SQARLParser {
     return output.toString();
   }
 
-  private String compile_expression() {
+  private String compileExpression() {
     StringBuilder output = new StringBuilder();
     while (true) {
 
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         output.append("(");
         parser.getNextSymbol();
-        output.append(compile_expression());
+        output.append(compileExpression());
       }
-      output.append(compile_value());
+      output.append(compileValue());
 
       if (parser.peekAhead() == SQARLParserByteCodes.RBRA) {
         output.append(")");
         parser.getNextSymbol();
         return output.toString();
       }
-      if (is_comparison(parser.peekAhead())) {
+      if (isComparison(parser.peekAhead())) {
 
         parser.getNextSymbol();
         output.append(parser.getCurrentWord()).append(parser.getWhitespace());
         parser.getNextSymbol();
-        output.append(compile_value());
+        output.append(compileValue());
 
         if (parser.getCurrentSymbol() == SQARLParserByteCodes.RBRA) {
           output.append(")");
@@ -265,9 +255,9 @@ public class SQARLParser {
       if (parser.peekAhead() == SQARLParserByteCodes.CONCAT){
         parser.getNextSymbol();
         parser.getNextSymbol();
-        return output.append(" & ").append(compile_expression()).toString();
+        return output.append(" & ").append(compileExpression()).toString();
       }
-      if (!is_join(parser.peekAhead()) && !is_join(parser.getCurrentSymbol())) {
+      if (!isJoin(parser.peekAhead()) && !isJoin(parser.getCurrentSymbol())) {
         if(parser.peekAhead(2) == SQARLParserByteCodes.RBRA){
           parser.getNextSymbol();
           output.append(")");
@@ -275,7 +265,7 @@ public class SQARLParser {
         return output.toString();
       } else {
         // Jump to
-        if (is_join(parser.peekAhead()))
+        if (isJoin(parser.peekAhead()))
           parser.getNextSymbol();
         if (parser.getCurrentSymbol() == SQARLParserByteCodes.MOD) {
           output.append(" % ").append(parser.getWhitespace());
@@ -290,7 +280,7 @@ public class SQARLParser {
 
   }
 
-  private String compile_function_call(){
+  private String compileFunctionCall(){
     StringBuilder output = new StringBuilder();
 
     output.append(parser.getCurrentWord());
@@ -318,7 +308,7 @@ public class SQARLParser {
     return output.toString();
   }
 
-  private String compile_repeat() {
+  private String compileRepeat() {
     String output = "";
     String first = "";
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.REPEAT) {
@@ -329,13 +319,13 @@ public class SQARLParser {
     StringBuilder body = new StringBuilder();
 
     while (parser.getCurrentSymbol() != SQARLParserByteCodes.UNTIL) {
-      body.append(parse_one());
+      body.append(parseOne());
       parser.getNextSymbol();
     }
 
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.UNTIL) {
       parser.getNextSymbol();
-      first += compile_expression() + ")";
+      first += compileExpression() + ")";
     }
 
     output += first + " " + body + "end loop ";
@@ -344,14 +334,14 @@ public class SQARLParser {
 
   }
 
-  private String compile_if() {
+  private String compileIf() {
     StringBuilder output = new StringBuilder();
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.IF) {
       parser.getNextSymbol();
       output.append("if (");
     }
 
-    output.append(compile_expression());
+    output.append(compileExpression());
 
     parser.getNextSymbol();
 
@@ -364,7 +354,7 @@ public class SQARLParser {
     parser.getNextSymbol();
 
     while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
-      output.append(parse_one());
+      output.append(parseOne());
       parser.getNextSymbol();
     }
 
@@ -376,7 +366,7 @@ public class SQARLParser {
 
   }
 
-  private String compile_while() {
+  private String compileWhile() {
     StringBuilder output = new StringBuilder();
 
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.WHILE) {
@@ -384,7 +374,7 @@ public class SQARLParser {
       output.append("while (");
     }
 
-    output.append(compile_expression());
+    output.append(compileExpression());
 
     parser.getNextSymbol();
 
@@ -397,7 +387,7 @@ public class SQARLParser {
     parser.getNextSymbol();
 
     while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.WHILE) {
-      output.append(parse_one());
+      output.append(parseOne());
       parser.getNextSymbol();
     }
 
@@ -409,7 +399,7 @@ public class SQARLParser {
 
   }
   
-  private String compile_for() {
+  private String compileFor() {
 	    StringBuilder output = new StringBuilder();
 	    
 	    boolean each = false;
@@ -427,7 +417,7 @@ public class SQARLParser {
 	    output.append("(");
 	    
 
-	    output.append(compile_expression());
+	    output.append(compileExpression());
 
 	    parser.getNextSymbol();
 	    
@@ -437,7 +427,7 @@ public class SQARLParser {
 	  	      output.append(" in ");
 	  	    }
 	    	
-	    	output.append(compile_expression());
+	    	output.append(compileExpression());
 	    }
 	    
 
@@ -450,7 +440,7 @@ public class SQARLParser {
 	    parser.getNextSymbol();
 
 	    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.FOR) {
-	      output.append(parse_one());
+	      output.append(parseOne());
 	      parser.getNextSymbol();
 	    }
 
@@ -462,14 +452,14 @@ public class SQARLParser {
 
 	  }
 
-  private String compile_set() {
+  private String compileSet() {
     String output = "";
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SET) {
       parser.getNextSymbol();
     }
 
-    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
-      printError("Error. Expected NAME_STRING.");
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER) {
+      printError("Error. Expected IDENTIFIER.");
     }
 
     // Add the name as a string
@@ -484,23 +474,24 @@ public class SQARLParser {
 
     parser.getNextSymbol();
 
-    if (!is_value(parser.getCurrentSymbol()) && !(parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA)) {
+    if (!isValue(parser.getCurrentSymbol()) && !(parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA)) {
       printError("Error. Expected TYPE.");
     }
 
-    output += compile_expression();
+    output += compileExpression();
 
     return output;
 
   }
 
-  private String compile_declare() {
+  private String compileDeclare() {
     StringBuilder output = new StringBuilder();
+    boolean array = false;
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
       parser.getNextSymbol();
     }
-    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
-      printError("Error. Expected NAME_STRING.");
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER) {
+      printError("Error. Expected IDENTIFIER.");
     }
 
     // Add the name as a string
@@ -516,6 +507,59 @@ public class SQARLParser {
 
       if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE) {
         printError("Error. Expected TYPE.");
+      }
+
+      if(parser.getCurrentWord().equalsIgnoreCase("array")){
+        array = true;
+
+        parser.getNextSymbol();
+
+        if (parser.getCurrentSymbol() != SQARLParserByteCodes.OF) {
+          printError("Error. Expected OF.");
+        }
+
+        parser.getNextSymbol();
+
+        if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE) {
+          printError("Error. Expected TYPE.");
+        }
+
+        parser.getNextSymbol();
+
+        if (parser.getCurrentSymbol() != SQARLParserByteCodes.INITIALLY) {
+          printError("Error. Expected INITIALLY.");
+        }
+
+        parser.getNextSymbol();
+        //[
+
+        parser.getNextSymbol();
+        //Type of array
+
+
+
+        if(parser.getCurrentWord().equals("")){
+          output.append("[").append("\"\"").append("]");
+        } else{
+          output.append("[").append(parser.getCurrentWord()).append("]");
+        }
+
+        parser.getNextSymbol();
+        //]
+
+        parser.getNextSymbol();
+        //*
+        if (parser.getCurrentSymbol() != SQARLParserByteCodes.MULT) {
+          printError("Error. Expected MULT.");
+        }
+
+        parser.getNextSymbol();
+
+        output.append(" * ").append(parser.getCurrentWord());
+
+
+        return output.toString();
+
       }
 
       parser.getNextSymbol();
@@ -536,7 +580,7 @@ public class SQARLParser {
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.KEYBOARD) {
         output.append("auto_input()");
       }
-    } else if(parser.getCurrentSymbol() == SQARLParserByteCodes.NAME && parser.peekAhead() == SQARLParserByteCodes.LBRA && classes.contains(parser.getCurrentWord())) {
+    } else if(parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() == SQARLParserByteCodes.LBRA && classes.contains(parser.getCurrentWord())) {
       output.append(" new ").append(parser.getCurrentWord()).append(" (");
       parser.getNextSymbol();
       parser.getNextSymbol();
@@ -554,10 +598,10 @@ public class SQARLParser {
       output.append(") ");
     } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.LSQBR) {
     	//Array
-    	output.append(compile_value());
+    	output.append(compileValue());
     	
     } else {
-      if (!is_value(parser.getCurrentSymbol())) {
+      if (!isValue(parser.getCurrentSymbol())) {
     	  
     	  
     	  
@@ -566,7 +610,7 @@ public class SQARLParser {
 
       // Multiple values
       // compile_values();
-      output.append(compile_value());
+      output.append(compileValue());
 
     }
 
@@ -576,7 +620,7 @@ public class SQARLParser {
 
   }
 
-  private String compile_procedure(){
+  private String compileProcedure(){
     StringBuilder output = new StringBuilder("function ");
 
     parser.getNextSymbol();
@@ -594,7 +638,7 @@ public class SQARLParser {
     parser.getNextSymbol();
 
     while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
-      if(is_type()){
+      if(isType()){
         output.append(convertType()).append(" ");
         parser.getNextSymbol();
       } else{
@@ -616,7 +660,7 @@ public class SQARLParser {
 
     parser.getNextSymbol();
     while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.PROCEDURE) {
-      output.append(parse_one());
+      output.append(parseOne());
       parser.getNextSymbol();
     }
 
@@ -627,7 +671,7 @@ public class SQARLParser {
     return output.toString();
   }
 
-  private String compile_function(){
+  private String compileFunction(){
     boolean returnFound = false;
 
     StringBuilder output = new StringBuilder("function ");
@@ -647,7 +691,7 @@ public class SQARLParser {
     parser.getNextSymbol();
 
     while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRA){
-      if(is_type()){
+      if(isType()){
         output.append(convertType()).append(" ");
         parser.getNextSymbol();
       } else{
@@ -678,10 +722,10 @@ public class SQARLParser {
       if(parser.getCurrentSymbol() == SQARLParserByteCodes.RETURN){
         output.append("return ");
         parser.getNextSymbol();
-        output.append(compile_expression());
+        output.append(compileExpression());
         returnFound = true;
       } else{
-        output.append(parse_one());
+        output.append(parseOne());
       }
 
       parser.getNextSymbol();
@@ -698,9 +742,9 @@ public class SQARLParser {
     return output.toString();
   }
 
-  private String compile_class(){
+  private String compileClass(){
     parser.getNextSymbol();
-    if(parser.getCurrentSymbol() != SQARLParserByteCodes.NAME){
+    if(parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER){
       //printError("IDENTIFIER not provided for a class");
     }
 
@@ -721,7 +765,7 @@ public class SQARLParser {
       params.append("( ");
       //Parser params
       while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRACE){
-        if(is_type()){
+        if(isType()){
           params.append(convertType()).append(" ");
           parser.getNextSymbol();
         } else{
@@ -754,10 +798,10 @@ public class SQARLParser {
 
     while (!(parser.getCurrentSymbol() == SQARLParserByteCodes.END && parser.peekAhead() == SQARLParserByteCodes.CLASS)){
       if(parser.getCurrentSymbol() == SQARLParserByteCodes.FUNCTION){
-        output.append(compile_function()).append(System.lineSeparator());
+        output.append(compileFunction()).append(System.lineSeparator());
         parser.getNextSymbol();
       } else if (parser.getCurrentSymbol() == SQARLParserByteCodes.PROCEDURE){
-        output.append(compile_procedure()).append(System.lineSeparator());
+        output.append(compileProcedure()).append(System.lineSeparator());
         parser.getNextSymbol();
       }
     }
@@ -769,7 +813,7 @@ public class SQARLParser {
     return output.toString();
   }
 
-  private String compile_send() {
+  private String compileSend() {
     String output = "";
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.SEND) {
       parser.getNextSymbol();
@@ -777,11 +821,11 @@ public class SQARLParser {
 
     output += "print(";
 
-    if (!is_value(parser.getCurrentSymbol())) {
+    if (!isValue(parser.getCurrentSymbol())) {
       printError("Error. Expected VALUE.");
     }
 
-    output += compile_expression();
+    output += compileExpression();
 
     if(parser.getCurrentSymbol() != SQARLParserByteCodes.TO)
       parser.getNextSymbol();
@@ -804,14 +848,92 @@ public class SQARLParser {
 
   }
 
-  private String compile_receive() {
+  private String compileRecord(){
+
+    StringBuilder output = new StringBuilder();
+
+    if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECORD) {
+      parser.getNextSymbol();
+    }
+
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER) {
+      printError("Error. Expected IDENTIFIER.");
+    }
+
+    String name = parser.getCurrentWord();
+
+    output.append("record structure ").append(name).append(" {");
+
+    parser.getNextSymbol();
+
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.IS) {
+      printError("Error. Expected IS.");
+    }
+
+    parser.getNextSymbol();
+
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.LBRACE) {
+      printError("Error. Expected LBRACE.");
+    }
+
+    parser.getNextSymbol();
+
+    boolean hasLooped = false;
+
+    while(parser.getCurrentSymbol() != SQARLParserByteCodes.RBRACE){
+
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.COMMA){
+        parser.getNextSymbol();
+      }
+
+      //Check if the first word is a data type
+
+      if(parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE){
+        printError("Error. Expected TYPE.");
+      }
+
+      String t = parser.getCurrentWord().toLowerCase();
+
+      if(t.equalsIgnoreCase("integer") || t.equalsIgnoreCase("real")){
+        t = "number";
+      }
+
+      if(hasLooped){
+        output.append(", ");
+      }
+
+      output.append(t).append(" ");
+
+      parser.getNextSymbol();
+
+      if(parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER){
+        printError("Error. Expected IDENTIFIER.");
+      }
+
+      output.append(parser.getCurrentWord());
+
+      parser.getNextSymbol();
+
+      hasLooped = true;
+
+
+    }
+
+    output.append("}");
+
+    return output.toString();
+
+
+  }
+
+  private String compileReceive() {
     String output = "";
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.RECEIVE) {
       parser.getNextSymbol();
     }
 
-    if (parser.getCurrentSymbol() != SQARLParserByteCodes.NAME) {
-      printError("Error. Expected NAME_STRING.");
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER) {
+      printError("Error. Expected IDENTIFIER.");
     }
 
     output += varProcess(parser.getCurrentWord());
@@ -824,7 +946,7 @@ public class SQARLParser {
 
     parser.getNextSymbol();
 
-    if (is_type()) {
+    if (isType()) {
       boolean brackets = false;
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA) {
         parser.getNextSymbol();
@@ -864,7 +986,7 @@ public class SQARLParser {
     return output;
   }
 
-  private boolean is_type() {
+  private boolean isType() {
     return parser.getCurrentSymbol() == SQARLParserByteCodes.TYPE || (parser.getCurrentSymbol() == SQARLParserByteCodes.LBRA && parser.peekAhead() == SQARLParserByteCodes.TYPE);
 
   }

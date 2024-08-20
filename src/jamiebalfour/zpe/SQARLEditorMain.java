@@ -111,6 +111,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     SQARL_KEYWORDS.put("OVERRIDE", CodeEditorView.DEFAULT_KEYWORD);
     SQARL_KEYWORDS.put("INHERITS", CodeEditorView.DEFAULT_KEYWORD);
     SQARL_KEYWORDS.put("CONSTRUCTOR", CodeEditorView.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("IS", CodeEditorView.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("AS", CodeEditorView.DEFAULT_KEYWORD);
 
     mainSyntax = new CodeEditorView(SQARL_KEYWORDS, "\"'", "");
 
@@ -202,7 +204,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     contentEditor.setFont(new Font("Monospaced", Font.PLAIN, 18));
 
-    contentEditor.setText("DECLARE total INITIALLY 0\r\n"
+    contentEditor.setText("RECORD pupil IS {STRING name, INTEGER age}\r\n" +
+            "DECLARE total INITIALLY 0\r\n"
             + "DECLARE counter INITIALLY 0\r\n"
             + "DECLARE nextInput INITIALLY 0\r\n"
             + "WHILE counter < 10 DO\r\n"
