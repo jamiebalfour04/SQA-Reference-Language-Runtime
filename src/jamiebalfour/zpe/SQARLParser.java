@@ -510,7 +510,6 @@ public class SQARLParser {
       }
 
       if(parser.getCurrentWord().equalsIgnoreCase("array")){
-        array = true;
 
         parser.getNextSymbol();
 
