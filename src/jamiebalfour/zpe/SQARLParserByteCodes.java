@@ -16,6 +16,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	//A string of characters outwith quotes
 	final static String IDENTIFIER_REGEX = "([A-z][A-z0-9_]*)";
 
+  final static byte ARRAY = -1;
 	final static byte DECLARE = 0;
 	final static byte AS = 1;
 	final static byte TYPE = 2;
@@ -105,8 +106,9 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
       case "BOOLEAN":
       case "REAL":
       case "STRING":
-      case "ARRAY":
         return SQARLParserByteCodes.TYPE;
+      case "ARRAY":
+        return SQARLParserByteCodes.ARRAY;
       case "INITIALLY":
         return SQARLParserByteCodes.INITIALLY;
       case "FROM":

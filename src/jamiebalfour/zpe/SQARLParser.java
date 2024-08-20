@@ -509,7 +509,7 @@ public class SQARLParser {
         printError("Error. Expected TYPE.");
       }
 
-      if(parser.getCurrentWord().equalsIgnoreCase("array")){
+      if(parser.getCurrentSymbol() == SQARLParserByteCodes.ARRAY){
 
         parser.getNextSymbol();
 
@@ -519,29 +519,68 @@ public class SQARLParser {
 
         parser.getNextSymbol();
 
-        if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE) {
+        if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE && parser.getCurrentSymbol() != SQARLParserByteCodes.ARRAY) {
           printError("Error. Expected TYPE.");
         }
 
-        parser.getNextSymbol();
+        if(parser.getCurrentSymbol() == SQARLParserByteCodes.ARRAY){
 
-        if (parser.getCurrentSymbol() != SQARLParserByteCodes.INITIALLY) {
-          printError("Error. Expected INITIALLY.");
-        }
+          parser.getNextSymbol();
 
-        parser.getNextSymbol();
-        //[
+          if (parser.getCurrentSymbol() != SQARLParserByteCodes.OF) {
+            printError("Error. Expected OF.");
+          }
 
-        parser.getNextSymbol();
-        //Type of array
+          parser.getNextSymbol();
+
+          if (parser.getCurrentSymbol() != SQARLParserByteCodes.TYPE && parser.getCurrentSymbol() != SQARLParserByteCodes.ARRAY) {
+            printError("Error. Expected TYPE.");
+          }
+
+          parser.getNextSymbol();
+
+          if (parser.getCurrentSymbol() != SQARLParserByteCodes.INITIALLY) {
+            printError("Error. Expected INITIALLY.");
+          }
 
 
+          parser.getNextSymbol();
+          //[
 
-        if(parser.getCurrentWord().equals("")){
-          output.append("[").append("\"\"").append("]");
+          if(parser.peekAhead() == SQARLParserByteCodes.RSQBR){
+            return output.append("[[]]").toString();
+          }
+
+
+          if(parser.getCurrentWord().equals("")){
+            output.append("[[").append("\"\"").append("]]");
+          } else{
+            output.append("[[").append(parser.getCurrentWord()).append("]]");
+          }
+
         } else{
-          output.append("[").append(parser.getCurrentWord()).append("]");
+          parser.getNextSymbol();
+
+          if (parser.getCurrentSymbol() != SQARLParserByteCodes.INITIALLY) {
+            printError("Error. Expected INITIALLY.");
+          }
+
+          parser.getNextSymbol();
+          //[
+
+          parser.getNextSymbol();
+          //Type of array
+
+
+
+          if(parser.getCurrentWord().equals("")){
+            output.append("[").append("\"\"").append("]");
+          } else{
+            output.append("[").append(parser.getCurrentWord()).append("]");
+          }
+
         }
+
 
         parser.getNextSymbol();
         //]
@@ -558,6 +597,8 @@ public class SQARLParser {
 
 
         return output.toString();
+
+
 
       }
 
