@@ -76,6 +76,18 @@ public class SQARLParser {
         } catch (IOException e) {
           ZPE.Log("SQARL Runtime error: " + e.getMessage());
         }
+      } else if(first.equals("-python")){
+        String s;
+        try {
+          s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-python").toString(), "utf-8");
+          PythonTranspiler t = new PythonTranspiler();
+          String output = compileSQARL(s);
+          String code = t.Transpile(ZPEKit.compile(output), "");
+          System.out.print(code);
+        } catch (IOException | CompileException e) {
+          ZPE.Log("SQARL Runtime error: " + e.getMessage());
+          System.out.println("Transpile error in the compiler");
+        }
 
       } else if (first.equals("-g")) {
         new SQARLEditorMain().setVisible(true);

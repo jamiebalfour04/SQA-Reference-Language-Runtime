@@ -12,11 +12,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added arrays of arrays (2D arrays)">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Renamed methods that have changed and added exception handling to the methods that now throw errors.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -482,11 +480,18 @@
       <option name="project" value="LOCAL" />
       <updated>1724182204590</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Renamed methods that have changed and added exception handling to the methods that now throw errors.">
+      <option name="closed" value="true" />
+      <created>1724244138390</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1724244138390</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Bumped up to ZPE 1.12.4." />
     <MESSAGE value="Fixed the issue in which the runtime would not start and would instead start the underlying ZPE runtime. This was due to the JAR file having two MANIFEST files, one MANIFEST.MF and the other having MANIFEST.mf (ZPE). To fix this, I have named the one in the SQARL as MANIFEST.mf, overwriting the ZPE one." />
     <MESSAGE value="Added new Help menu to the editor which has the 'about' information and links to important SQA pages." />
     <MESSAGE value="Added a .gitignore file" />
@@ -511,25 +516,21 @@
     <MESSAGE value="Updated with the more changes brought to ZPE 1.12.9." />
     <MESSAGE value="Added records and arrays" />
     <MESSAGE value="Added arrays of arrays (2D arrays)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added arrays of arrays (2D arrays)" />
+    <MESSAGE value="Renamed methods that have changed and added exception handling to the methods that now throw errors." />
+    <option name="LAST_COMMIT_MESSAGE" value="Renamed methods that have changed and added exception handling to the methods that now throw errors." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>714</line>
+          <line>726</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>767</line>
+          <line>779</line>
           <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>226</line>
-          <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
@@ -538,28 +539,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>930</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>904</line>
+          <line>916</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>936</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>525</line>
+          <line>537</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>549</line>
+          <line>561</line>
           <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>632</line>
+          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
