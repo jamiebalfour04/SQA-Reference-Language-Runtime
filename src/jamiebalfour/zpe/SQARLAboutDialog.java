@@ -12,6 +12,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 
 class SQARLAboutDialog extends JDialog {
@@ -60,8 +62,12 @@ class SQARLAboutDialog extends JDialog {
         final JButton btnVisitWebsiteButton = new JButton("Visit website");
         btnVisitWebsiteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+              try {
                 HelperFunctions.OpenWebsite("https://www.jamiebalfour.scot/projects/zpe/");
-                close(btnVisitWebsiteButton);
+              } catch (Exception ex) {
+                throw new RuntimeException(ex);
+              }
+              close(btnVisitWebsiteButton);
 
             }
         });

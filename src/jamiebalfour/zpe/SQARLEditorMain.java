@@ -158,7 +158,12 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
 
 
-    mainProperties = HelperFunctions.ReadProperties(path);
+    try{
+      mainProperties = HelperFunctions.ReadProperties(path);
+    } catch (Exception e){
+      //Ignore
+    }
+
 
     this.editor = this;
     getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
@@ -553,12 +558,23 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
 
     JMenuItem mntmSQARLSpecificationWebsiteMenuItem = new JMenuItem("Read the SQARL Specification");
-    mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf"));
+    mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> {try{
+      HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
+    } catch (Exception ex){
+      JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
+    }});
 
     mnHelpMenu.add(mntmSQARLSpecificationWebsiteMenuItem);
 
     JMenuItem mntmSQAWebsiteMenuItem = new JMenuItem("Visit SQA Website");
-    mntmSQAWebsiteMenuItem.addActionListener(e -> HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html"));
+
+      mntmSQAWebsiteMenuItem.addActionListener(e -> {try {
+        HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html");
+      } catch (Exception ex){
+        JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
+      }});
+
+
 
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 
@@ -711,7 +727,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       // This is where a real application would open the file.
       try {
         clearUndoRedoManagers();
-        setTextProperly(HelperFunctions.ReadFileAsString(file.getAbsolutePath()));
+        setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
         editor.setTitle("ZPE Editor " + file.getAbsolutePath());
       } catch (IOException e) {
         JOptionPane.showMessageDialog(editor, "The file could not be opened.", "Error",

@@ -45,7 +45,7 @@ public class SQARLParser {
       if (first.equals("-r") && argv.containsKey("-r")) {
         // Run
         try {
-          String s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-r").toString(), "utf-8");
+          String s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-r").toString(), "utf-8");
           try{
             String output = compileAndRunSQARL(s);
             if (!output.isEmpty()) {
@@ -68,7 +68,7 @@ public class SQARLParser {
       } else if (first.equals("-e")) {
         String s;
         try {
-          s = jamiebalfour.HelperFunctions.ReadFileAsString(argv.get("-e").toString(), "utf-8");
+          s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-e").toString(), "utf-8");
           String output = compileSQARL(s);
           if (!output.isEmpty()) {
             System.out.println(output);
