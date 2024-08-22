@@ -12,10 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added support for &gt;= and &lt;=.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,26 +63,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.Main.executor": "Run",
-    "Application.SQARLParser -g.executor": "Debug",
-    "Application.SQARLParser.executor": "Run",
-    "JAR Application.sqarl-runtime.jar.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "main",
-    "jdk.selected.JAVA_MODULE": "17",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SQARLParser -g.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SQARLParser.executor&quot;: &quot;Run&quot;,
+    &quot;JAR Application.sqarl-runtime.jar.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -512,11 +512,18 @@
       <option name="project" value="LOCAL" />
       <updated>1724314008665</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Added support for &gt;= and &lt;=.">
+      <option name="closed" value="true" />
+      <created>1724354565776</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1724354565776</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added support for classes. There's still more to be done with them such as adding the constructor which will use the YASS constructor method." />
     <MESSAGE value="Bumped up to ZPE 1.12.5 support to fix issues with $-unbound variables." />
     <MESSAGE value="Added the YASS Python transpiler to allow conversion to Python." />
     <MESSAGE value="Updated to the latest version of ZPE." />
@@ -541,7 +548,8 @@
     <MESSAGE value="Added command line transpiling to Python using the -python argument." />
     <MESSAGE value="Added support for for loops that look like:&#10;FOR count FROM 0 TO 8 DO&#10;  SEND count TO DISPLAY&#10;END FOR" />
     <MESSAGE value="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR" />
+    <MESSAGE value="Added support for &gt;= and &lt;=." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for &gt;= and &lt;=." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -558,7 +566,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
-          <line>123</line>
+          <line>127</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

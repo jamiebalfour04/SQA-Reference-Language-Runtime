@@ -6,6 +6,7 @@ import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.editor.CodeEditorView;
+import jamiebalfour.zpe.editor.ZPEEditor;
 import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.interfaces.GenericEditor;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -63,6 +65,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private final JFrame editor;
 
   JCheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
+  ArrayList<String> recents = ZPEEditor.getRecentFiles();
+
 
 
   boolean dontUndo = true;
@@ -124,17 +128,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         if (confirmed == JOptionPane.YES_OPTION) {
           dispose();
 
-
-          setProperty("HEIGHT", "" + editor.getHeight());
-          setProperty("WIDTH", "" + editor.getWidth());
-          setProperty("XPOS", "" + editor.getX());
-          setProperty("YPOS", "" + editor.getY());
-          if (editor.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
-            setProperty("MAXIMISED", "true");
-          } else {
-            setProperty("MAXIMISED", "false");
-          }
-          saveGUISettings(mainProperties);
+          closeUp();
           System.exit(0);
         }
       }
@@ -284,10 +278,33 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mntmSaveAsMenuItem.addActionListener(e -> saveAsDialog());
     mnFileMenu.add(mntmSaveAsMenuItem);
 
+    mnFileMenu.add(new JSeparator());
+
     JMenuItem mntmOpenMenuItem = new JMenuItem("Open");
     mntmOpenMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', modifier));
     mntmOpenMenuItem.addActionListener(e -> open());
     mnFileMenu.add(mntmOpenMenuItem);
+
+    JMenuItem mntmRecentMenuItem = new JMenu("Recent files");
+
+    for(String fStr : recents){
+      JMenuItem item = new JMenuItem(new File(fStr).getName());
+      item.addActionListener(e -> {
+        try {
+          clearUndoRedoManagers();
+          setTextProperly(HelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
+          editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+      });
+      mntmRecentMenuItem.add(item);
+    }
+
+    if(!recents.isEmpty()) {
+      mnFileMenu.add(mntmRecentMenuItem);
+    }
+
 
     mnFileMenu.add(new JSeparator());
 
@@ -306,7 +323,10 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnFileMenu.add(new JSeparator());
 
     JMenuItem mntmExitMenuItem = new JMenuItem("Exit");
-    mntmExitMenuItem.addActionListener(e -> System.exit(0));
+    mntmExitMenuItem.addActionListener(e -> {
+      closeUp();
+      System.exit(0);
+    });
 
 
     mnFileMenu.add(mntmExitMenuItem);
@@ -582,6 +602,25 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   }
 
+  private void closeUp(){
+
+    try {
+      ZPEEditor.storeRecentFiles(recents);
+    } catch (IOException ex) {
+      ZPE.Log(ex.getMessage());
+    }
+    setProperty("HEIGHT", "" + editor.getHeight());
+    setProperty("WIDTH", "" + editor.getWidth());
+    setProperty("XPOS", "" + editor.getX());
+    setProperty("YPOS", "" + editor.getY());
+    if (editor.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
+      setProperty("MAXIMISED", "true");
+    } else {
+      setProperty("MAXIMISED", "false");
+    }
+    saveGUISettings(mainProperties);
+  }
+
   private JMenuItem getjMenuItem() {
     JMenuItem mntmCompileCodeMenuItem = new JMenuItem("Compile code");
     mntmCompileCodeMenuItem.addActionListener(e -> {
@@ -728,6 +767,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       try {
         clearUndoRedoManagers();
         setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
+        recents.add(file.getAbsolutePath());
         editor.setTitle("ZPE Editor " + file.getAbsolutePath());
       } catch (IOException e) {
         JOptionPane.showMessageDialog(editor, "The file could not be opened.", "Error",
