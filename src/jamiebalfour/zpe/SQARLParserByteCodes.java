@@ -231,7 +231,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 
 	@Override
 	public String[] listOfSubsequentCharacters() {
-        return new String[]{};
+        return new String[]{"<=", ">="};
 	}
 
 	@Override

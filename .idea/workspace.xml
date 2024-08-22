@@ -12,10 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added support for for loops that look like:&#10;FOR count FROM 0 TO 8 DO&#10;  SEND count TO DISPLAY&#10;END FOR">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +67,7 @@
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Application.Main.executor": "Run",
-    "Application.SQARLParser -g.executor": "Run",
+    "Application.SQARLParser -g.executor": "Debug",
     "Application.SQARLParser.executor": "Run",
     "JAR Application.sqarl-runtime.jar.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -504,11 +504,18 @@
       <option name="project" value="LOCAL" />
       <updated>1724308879689</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR">
+      <option name="closed" value="true" />
+      <created>1724314008665</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1724314008665</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added a .gitignore file" />
     <MESSAGE value="Added support for classes. There's still more to be done with them such as adding the constructor which will use the YASS constructor method." />
     <MESSAGE value="Bumped up to ZPE 1.12.5 support to fix issues with $-unbound variables." />
     <MESSAGE value="Added the YASS Python transpiler to allow conversion to Python." />
@@ -533,7 +540,8 @@
     <MESSAGE value="Renamed methods that have changed and added exception handling to the methods that now throw errors." />
     <MESSAGE value="Added command line transpiling to Python using the -python argument." />
     <MESSAGE value="Added support for for loops that look like:&#10;FOR count FROM 0 TO 8 DO&#10;  SEND count TO DISPLAY&#10;END FOR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support for for loops that look like:&#10;FOR count FROM 0 TO 8 DO&#10;  SEND count TO DISPLAY&#10;END FOR" />
+    <MESSAGE value="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -615,13 +623,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>152</line>
-          <option name="timeStamp" value="55" />
+          <line>515</line>
+          <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>515</line>
-          <option name="timeStamp" value="56" />
+          <line>396</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>253</line>
+          <option name="timeStamp" value="58" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
