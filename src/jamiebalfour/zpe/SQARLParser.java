@@ -205,11 +205,15 @@ public class SQARLParser {
     return symb == SQARLParserByteCodes.GT || symb == SQARLParserByteCodes.LT || symb == SQARLParserByteCodes.GTE || symb == SQARLParserByteCodes.LTE || symb == SQARLParserByteCodes.EQUAL || symb == SQARLParserByteCodes.NEQUAL;
   }
 
+  //DECLARE first INITIALLY [10, 11, 12] # an array
+  //DECLARE second INITIALLY first # still just 1 array
+  //SET first[0] TO 20
+  //SEND second TO DISPLAY # update to first is seen
   private String compileValue() {
     StringBuilder output = new StringBuilder();
     if (isValue(parser.getCurrentSymbol())) {
       if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() != SQARLParserByteCodes.LBRA)
-        output.append(varProcess(parser.getCurrentWord())).append(" ");
+        output.append(compileVar()).append(" ");
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && parser.peekAhead() == SQARLParserByteCodes.LBRA)
         output.append(compileFunctionCall());
       else if (parser.getCurrentSymbol() == SQARLParserByteCodes.BOOLEAN)
@@ -230,10 +234,20 @@ public class SQARLParser {
         }
       }
       output.append("]");
-      System.out.println(output);
     }
 
     return output.toString();
+  }
+
+  private String compileVar(){
+    String output = varProcess(parser.getCurrentWord());
+
+    if(parser.peekAhead() == SQARLParserByteCodes.LSQBR){
+      parser.getNextSymbol();
+      output += compileIndex();
+      parser.getNextSymbol();
+    }
+    return output;
   }
 
   private String compileExpression() {
@@ -412,6 +426,17 @@ public class SQARLParser {
 
   }
 
+  private String compileIndex() {
+    String output = "";
+
+    output += "[";
+    parser.getNextSymbol();
+    output += compileExpression();
+    output += "]";
+
+    return output;
+  }
+
   private String compileFor() {
     StringBuilder output = new StringBuilder();
 
@@ -430,11 +455,11 @@ public class SQARLParser {
     output.append("(");
 
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.IDENTIFIER && !each) {
-      String var = varProcess(parser.getCurrentWord());
+      String var = compileVar();
       output.append(var).append(" = ");
       parser.getNextSymbol();
 
-      if(parser.getCurrentSymbol() != SQARLParserByteCodes.FROM){
+      if (parser.getCurrentSymbol() != SQARLParserByteCodes.FROM) {
         printError("Expected FROM.");
       }
       parser.getNextSymbol();
@@ -458,11 +483,11 @@ public class SQARLParser {
 
       output.append(compileExpression());
     } else {
-        parser.getNextSymbol();
-        output.append(" to ");
+      parser.getNextSymbol();
+      output.append(" to ");
 
-        output.append(compileExpression());
-        parser.getNextSymbol();
+      output.append(compileExpression());
+      parser.getNextSymbol();
     }
 
 
@@ -498,7 +523,7 @@ public class SQARLParser {
     }
 
     // Add the name as a string
-    String var = varProcess(parser.getCurrentWord());
+    String var = compileVar();
     output += var + " = ";
 
     parser.getNextSymbol();
