@@ -1,7 +1,6 @@
 package jamiebalfour.zpe;
 
 import jamiebalfour.HelperFunctions;
-import jamiebalfour.zpe.core.YASSByteCodes;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
@@ -382,25 +381,27 @@ public class SQARLParser {
 
 
 
-    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF && parser.getCurrentSymbol() != SQARLParserByteCodes.ELSE) {
+    while ((parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) && parser.getCurrentSymbol() != SQARLParserByteCodes.ELSE) {
       output.append(parseOne());
       parser.getNextSymbol();
     }
 
     if(parser.getCurrentSymbol() == SQARLParserByteCodes.ELSE){
-      if(parser.peekAhead() == SQARLParserByteCodes.IF) {
-        output.append("else");
-        if(parser.peekAhead() == SQARLParserByteCodes.IF){
-          compileIf();
-        }
-      } else{
-        output.append("else: ");
-        parser.getNextSymbol();
-        while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
-          output.append(parseOne());
+      while(parser.getCurrentSymbol() == SQARLParserByteCodes.ELSE){
+        if(parser.peekAhead() == SQARLParserByteCodes.IF) {
+          if(parser.peekAhead() == SQARLParserByteCodes.IF){
+            output.append(compileElseIf());
+          }
+        } else{
+          output.append("else ");
           parser.getNextSymbol();
+          while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
+            output.append(parseOne());
+            parser.getNextSymbol();
+          }
         }
       }
+
     }
 
     parser.getNextSymbol();
@@ -409,6 +410,34 @@ public class SQARLParser {
 
     return output.toString();
 
+  }
+
+  private String compileElseIf(){
+    StringBuilder output = new StringBuilder();
+
+    parser.getNextSymbol();
+    parser.getNextSymbol();
+    output.append("elseif (");
+
+
+    output.append(compileExpression());
+
+    parser.getNextSymbol();
+
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.THEN) {
+      printError("Error. Expected THEN.");
+    }
+
+    output.append(") ");
+
+    parser.getNextSymbol();
+
+    while ((parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) && parser.getCurrentSymbol() != SQARLParserByteCodes.ELSE) {
+      output.append(parseOne());
+      parser.getNextSymbol();
+    }
+
+    return output.toString();
   }
 
   private String compileWhile() {

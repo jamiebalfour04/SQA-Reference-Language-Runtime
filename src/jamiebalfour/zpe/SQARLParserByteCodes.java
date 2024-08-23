@@ -2,6 +2,7 @@ package jamiebalfour.zpe;
 
 import java.util.ArrayList;
 
+import jamiebalfour.zpe.core.YASSByteCodes;
 import jamiebalfour.zpe.parser.ZenithParsingEngine.MultilineComment;
 
 
@@ -48,7 +49,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	final static byte STRING = 30;
 	final static byte BOOLEAN = 31;
 	final static byte REAL = 32;
-
+  final static byte ASSIGNMENT = 33;
 	
 	final static byte AND = 40;
 	final static byte OR = 41;	
@@ -149,6 +150,8 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
       case "!=":
         return SQARLParserByteCodes.NEQUAL;
       case "=":
+        return SQARLParserByteCodes.ASSIGNMENT;
+      case "==":
         return SQARLParserByteCodes.EQUAL;
       case ">":
         return SQARLParserByteCodes.GT;
@@ -234,7 +237,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 
 	@Override
 	public String[] listOfSubsequentCharacters() {
-        return new String[]{"<=", ">="};
+        return new String[]{"<=", ">=", "=="};
 	}
 
 	@Override
