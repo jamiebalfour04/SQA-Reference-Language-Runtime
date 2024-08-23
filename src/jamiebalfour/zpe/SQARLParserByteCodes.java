@@ -41,6 +41,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 	final static byte DO = 18;
 	final static byte FOR = 19;
 	final static byte EACH = 20;
+  final static byte ELSE = 21;
 	
 	
 	final static byte INT = 29;
@@ -173,6 +174,8 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
         return SQARLParserByteCodes.COMMA;
       case "+":
         return SQARLParserByteCodes.PLUS;
+      case "ELSE":
+        return SQARLParserByteCodes.ELSE;
       case "-":
         return SQARLParserByteCodes.MINUS;
       case "/":

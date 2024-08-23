@@ -11,7 +11,7 @@ import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.os.macos.macOS;
-import jamiebalfour.zpe.types.CompileDetails;
+import jamiebalfour.zpe.core.CompileDetails;
 import jamiebalfour.zpe.types.ZPEString;
 
 import javax.swing.*;
@@ -117,6 +117,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     SQARL_KEYWORDS.put("CONSTRUCTOR", CodeEditorView.DEFAULT_KEYWORD);
     SQARL_KEYWORDS.put("IS", CodeEditorView.DEFAULT_KEYWORD);
     SQARL_KEYWORDS.put("AS", CodeEditorView.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("ELSE", CodeEditorView.DEFAULT_KEYWORD);
 
     mainSyntax = new CodeEditorView(SQARL_KEYWORDS, "\"'", "");
 
@@ -245,6 +246,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       modifier = InputEvent.META_DOWN_MASK;
     }
 
+    this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
     JMenu mnFileMenu = new JMenu("File");
     mnFileMenu.setMnemonic('F');
@@ -604,11 +606,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   private void closeUp(){
 
-    try {
-      ZPEEditor.storeRecentFiles(recents);
-    } catch (IOException ex) {
-      ZPE.Log(ex.getMessage());
-    }
     setProperty("HEIGHT", "" + editor.getHeight());
     setProperty("WIDTH", "" + editor.getWidth());
     setProperty("XPOS", "" + editor.getX());
@@ -768,6 +765,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         clearUndoRedoManagers();
         setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
         recents.add(file.getAbsolutePath());
+        try {
+          ZPEEditor.storeRecentFiles(recents);
+        } catch (IOException ex) {
+          ZPE.Log(ex.getMessage());
+        }
         editor.setTitle("ZPE Editor " + file.getAbsolutePath());
       } catch (IOException e) {
         JOptionPane.showMessageDialog(editor, "The file could not be opened.", "Error",

@@ -380,9 +380,27 @@ public class SQARLParser {
 
     parser.getNextSymbol();
 
-    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
+
+
+    while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF && parser.getCurrentSymbol() != SQARLParserByteCodes.ELSE) {
       output.append(parseOne());
       parser.getNextSymbol();
+    }
+
+    if(parser.getCurrentSymbol() == SQARLParserByteCodes.ELSE){
+      if(parser.peekAhead() == SQARLParserByteCodes.IF) {
+        output.append("else");
+        if(parser.peekAhead() == SQARLParserByteCodes.IF){
+          compileIf();
+        }
+      } else{
+        output.append("else: ");
+        parser.getNextSymbol();
+        while (parser.getCurrentSymbol() != SQARLParserByteCodes.END && parser.peekAhead() != SQARLParserByteCodes.IF) {
+          output.append(parseOne());
+          parser.getNextSymbol();
+        }
+      }
     }
 
     parser.getNextSymbol();
