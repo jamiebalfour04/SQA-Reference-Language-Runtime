@@ -19,6 +19,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -53,8 +54,12 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private final UndoAction undoAction;
   private final RedoAction redoAction;
   JEditorPane contentEditor;
+  JScrollPane scrollPane;
+  JCheckBoxMenuItem mnDarkModeMenuItem;
+  JMenuItem mntmRecentMenuItem;
 
   String lastFileOpened = "";
+  private boolean darkMode = false;
 
 
   JMenuItem mntmClearConsoleBeforeRunMenuItem;
@@ -65,7 +70,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private final JFrame editor;
 
   JCheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
-  ArrayList<String> recents = ZPEEditor.getRecentFiles();
+  ArrayList<String> recents = ZPEEditor.getRecentFiles("sqa-");
 
 
 
@@ -190,7 +195,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     getContentPane().add(mainPanel);
     mainPanel.setLayout(new BorderLayout(0, 0));
 
-    JScrollPane scrollPane = new JScrollPane();
+    scrollPane = new JScrollPane();
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
     scrollPane.setEnabled(false);
@@ -287,21 +292,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mntmOpenMenuItem.addActionListener(e -> open());
     mnFileMenu.add(mntmOpenMenuItem);
 
-    JMenuItem mntmRecentMenuItem = new JMenu("Recent files");
+    mntmRecentMenuItem = new JMenu("Recent files");
 
-    for(String fStr : recents){
-      JMenuItem item = new JMenuItem(new File(fStr).getName());
-      item.addActionListener(e -> {
-        try {
-          clearUndoRedoManagers();
-          setTextProperly(HelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
-          editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-      });
-      mntmRecentMenuItem.add(item);
-    }
+    updateRecentFiles();
 
     if(!recents.isEmpty()) {
       mnFileMenu.add(mntmRecentMenuItem);
@@ -399,6 +392,26 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mntmSelectAllMenuItem.addActionListener(e -> contentEditor.selectAll());
 
     mnEditMenu.add(mntmSelectAllMenuItem);
+
+    JMenu mnViewMenu = new JMenu("View");
+    mnEditMenu.setMnemonic('V');
+    menuBar.add(mnViewMenu);
+
+    mnDarkModeMenuItem = new JCheckBoxMenuItem("Dark Mode");
+    mnViewMenu.add(mnDarkModeMenuItem);
+    mnDarkModeMenuItem.addActionListener(e -> {
+      if (!darkMode) {
+        switchOnDarkMode();
+      } else {
+        switchOffDarkMode();
+      }
+
+      setProperty("DARK_MODE", "" + darkMode);
+      saveGUISettings(mainProperties);
+
+      updateEditor();
+    });
+
 
 
     JMenu mnScriptMenu = new JMenu("Script");
@@ -594,6 +607,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     RunningInstance.setErrorLevel(1);
 
+    if (mainProperties.containsKey("DARK_MODE")) {
+      if (mainProperties.get("DARK_MODE").equals("true")) {
+        switchOnDarkMode();
+      } else {
+        switchOffDarkMode();
+      }
+    }
+
   }
 
   private void closeUp(){
@@ -758,7 +779,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
         recents.add(file.getAbsolutePath());
         try {
-          ZPEEditor.storeRecentFiles(recents);
+          ZPEEditor.storeRecentFiles(recents, "sqa-");
+          recents = ZPEEditor.getRecentFiles("sqa-");
+          updateRecentFiles();
         } catch (IOException ex) {
           ZPE.Log(ex.getMessage());
         }
@@ -859,6 +882,140 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   @Override
   public Properties getProperties() {
     return this.mainProperties;
+  }
+
+  private void updateEditor() {
+
+    contentEditor = (JEditorPane) mainSyntax.getEditPane();
+    setTextProperly(contentEditor.getText());
+
+  }
+
+  private void setUpScrollBar(String trackColour, String thumbColour) {
+    scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+      @Override
+      protected void configureScrollBarColors() {
+        this.thumbColor = Color.decode(thumbColour);
+        this.trackColor = Color.decode(trackColour);
+        this.scrollBarWidth = 7;
+      }
+
+      @Override
+      protected JButton createDecreaseButton(int orientation) {
+        return createZeroButton();
+      }
+
+      @Override
+      protected JButton createIncreaseButton(int orientation) {
+        return createZeroButton();
+      }
+
+      protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+        // your code
+        Graphics2D g2 = (Graphics2D) g.create();
+
+        // Enable anti-aliasing for smooth edges
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Set the color of the thumb
+        g2.setColor(thumbColor);
+
+        // Set the thumb width and height
+        int arc = 10; // This value sets the roundness of the corners. Increase or decrease it as needed.
+
+        // Draw a rounded rectangle
+        g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, arc, arc);
+
+        // Dispose of the graphics context
+        g2.dispose();
+      }
+    });
+  }
+
+  private JButton createZeroButton() {
+    JButton button = new JButton();
+    Dimension zeroDim = new Dimension(0, 0);
+    button.setPreferredSize(zeroDim);
+    button.setMinimumSize(zeroDim);
+    button.setMaximumSize(zeroDim);
+    return button;
+  }
+
+  private void resetScroll(){
+    int caretPosition = contentEditor.getCaretPosition();
+    int scrollPosition = scrollPane.getVerticalScrollBar().getValue();
+    contentEditor.setText(contentEditor.getText());
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        contentEditor.requestFocus();
+        contentEditor.setCaretPosition(caretPosition);
+        scrollPane.getVerticalScrollBar().setValue(scrollPosition);
+      }
+    });
+  }
+
+  private void switchOnDarkMode() {
+
+    mnDarkModeMenuItem.setSelected(true);
+
+    Color dark = Color.decode("#282D37");
+    this.getContentPane().setBackground(dark);
+    scrollPane.setBackground(dark);
+    editor.setBackground(dark);
+    editor.getContentPane().setBackground(dark);
+    contentEditor.setBackground(dark);
+    contentEditor.setForeground(Color.white);
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.white);
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Quote, new Color(152, 195, 119));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Keyword, new Color(198, 120, 222));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Function, new Color(97, 172, 231));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Var, new Color(224, 108, 117));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Type, new Color(105, 143, 163));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Bool, new Color(208, 154, 102));
+    contentEditor.setCaretColor(Color.white);
+    resetScroll();
+    setUpScrollBar("#282D37", "#444444");
+
+    darkMode = true;
+  }
+
+  private void switchOffDarkMode() {
+
+    mnDarkModeMenuItem.setSelected(false);
+
+    Color light = new Color(255, 255, 255);
+    editor.setBackground(light);
+    editor.getContentPane().setBackground(light);
+    contentEditor.setBackground(light);
+    contentEditor.setForeground(Color.black);
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.black);
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Quote, new Color(0, 128, 0));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Keyword, new Color(200, 0, 255));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Var, new Color(255, 138, 0));
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Type, new Color(150, 0, 150));
+    contentEditor.setCaretColor(Color.black);
+    resetScroll();
+    setUpScrollBar("#dddddd", "#aaaaaa");
+
+    darkMode = false;
+  }
+
+  private void updateRecentFiles(){
+    mntmRecentMenuItem.removeAll();
+    for(String fStr : recents){
+      JMenuItem item = new JMenuItem(new File(fStr).getName());
+      item.addActionListener(e -> {
+        try {
+          clearUndoRedoManagers();
+          setTextProperly(HelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
+          editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+      });
+      mntmRecentMenuItem.add(item, 0);
+    }
   }
 
 }
