@@ -202,6 +202,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
     scrollPane.setBackground(Color.WHITE);
     mainPanel.add(scrollPane, BorderLayout.CENTER);
+    scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 
     contentEditor = (JEditorPane) mainSyntax.getEditPane();
@@ -777,6 +778,13 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       try {
         clearUndoRedoManagers();
         setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            contentEditor.setCaretPosition(0);
+            scrollPane.getVerticalScrollBar().setValue(0);
+          }
+        });
         recents.add(file.getAbsolutePath());
         try {
           ZPEEditor.storeRecentFiles(recents, "sqa-");
@@ -1010,6 +1018,13 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
           clearUndoRedoManagers();
           setTextProperly(HelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
           editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              contentEditor.setCaretPosition(0);
+              scrollPane.getVerticalScrollBar().setValue(0);
+            }
+          });
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }
