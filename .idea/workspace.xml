@@ -12,9 +12,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added and improved ELSE IF and ELSE statements.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added Python ELSE and ELSEIF statements to ZenPy and this has been updated to support that.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,30 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1702736217607</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fixed the setup for IntelliJ IDEA.">
-      <option name="closed" value="true" />
-      <created>1706397905882</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1706397905882</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Fixed the setup for IntelliJ IDEA.">
-      <option name="closed" value="true" />
-      <created>1706397921092</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1706397921092</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Updated to latest version of ZPE for better performance.">
-      <option name="closed" value="true" />
-      <created>1709192091094</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1709192091094</updated>
     </task>
     <task id="LOCAL-00006" summary="Updated to latest version of ZPE for better performance (LAME X2)">
       <option name="closed" value="true" />
@@ -527,12 +503,34 @@
       <option name="project" value="LOCAL" />
       <updated>1724417705028</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Added Python ELSE and ELSEIF statements to ZenPy and this has been compiled to support that.">
+      <option name="closed" value="true" />
+      <created>1724420478405</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1724420478405</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Added Python ELSE and ELSEIF statements to ZenPy and this has been compiled to support that.">
+      <option name="closed" value="true" />
+      <created>1724420486083</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1724420486083</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Added Python ELSE and ELSEIF statements to ZenPy and this has been updated to support that.">
+      <option name="closed" value="true" />
+      <created>1724420497105</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1724420497105</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added a build" />
-    <MESSAGE value="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though." />
     <MESSAGE value="Added a build folder." />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
     <MESSAGE value="Updated the README.md file with information about the download from the build folder." />
@@ -556,7 +554,9 @@
     <MESSAGE value="Added Recent files to the editor" />
     <MESSAGE value="Added support for ELSE in IF statements. Prevented the window from closing if the user selects no." />
     <MESSAGE value="Added and improved ELSE IF and ELSE statements." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added and improved ELSE IF and ELSE statements." />
+    <MESSAGE value="Added Python ELSE and ELSEIF statements to ZenPy and this has been compiled to support that." />
+    <MESSAGE value="Added Python ELSE and ELSEIF statements to ZenPy and this has been updated to support that." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Python ELSE and ELSEIF statements to ZenPy and this has been updated to support that." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -635,11 +635,6 @@
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
           <line>443</line>
           <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/zpe/transpilers/zenpy.jar!/jamiebalfour/zpe/PythonTranspiler.class</url>
-          <line>639</line>
-          <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

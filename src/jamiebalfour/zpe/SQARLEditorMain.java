@@ -424,8 +424,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
        */
       if (AttachedConsole == null) {
         AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18), 5);
-      } else {
-        AttachedConsole.stop(0);
       }
 
       SQARLParser sqarl = new SQARLParser();
@@ -434,12 +432,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       AttachedConsole.runCode(yass, new ZPEString[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
-
-    JMenuItem mntmStopCodeMenuItem = new JMenuItem("Stop code");
-    mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
-    mntmStopCodeMenuItem.addActionListener(e -> AttachedConsole.stop());
-
-    mnScriptMenu.add(mntmStopCodeMenuItem);
 
     mnScriptMenu.add(new JSeparator());
 
