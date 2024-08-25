@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -70,14 +71,27 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private final JFrame editor;
 
   JCheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
-  ArrayList<String> recents = ZPEEditor.getRecentFiles("sqa-");
+  ArrayList<String> recents = ZPEEditor.getRecentFiles("sqarl/");
 
-
+  ImageIcon lighterLogo;
+  ImageIcon lighterLogoFull;
 
   boolean dontUndo = true;
 
   public SQARLEditorMain() {
     setTitle("SQARL Editor");
+
+    URL imagePath;
+    if (ZPEHelperFunctions.isMac()) {
+      imagePath = SQARLEditorMain.class.getResource("/files/SQARLLogoMacOS.png");
+    } else {
+      imagePath = SQARLEditorMain.class.getResource("/files/SQARLLogoMacOS.png");
+    }
+    lighterLogoFull = new ImageIcon(imagePath);
+    Image newimg = lighterLogoFull.getImage().getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+    lighterLogo = new ImageIcon(newimg);
+
+
 
     final HashMap<String, SimpleAttributeSet> SQARL_KEYWORDS = new HashMap<>(16);
     SQARL_KEYWORDS.put("DECLARE", CodeEditorView.DEFAULT_KEYWORD);
@@ -604,6 +618,25 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 
 
+    try {
+      setIconImage(lighterLogoFull.getImage());
+    } catch (Exception ignored) {
+
+    }
+
+    try {
+      //Attempts to set the icon in the Dock/taskbar
+      if (java.awt.Taskbar.isTaskbarSupported()) {
+        final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+        final java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
+        final Image image = lighterLogoFull.getImage();
+
+        taskbar.setIconImage(image);
+      }
+    } catch (Exception e) {
+      //Ignore
+    }
+
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 
     RunningInstance.setErrorLevel(1);
@@ -787,8 +820,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         });
         recents.add(file.getAbsolutePath());
         try {
-          ZPEEditor.storeRecentFiles(recents, "sqa-");
-          recents = ZPEEditor.getRecentFiles("sqa-");
+          ZPEEditor.storeRecentFiles(recents, "sqarl/");
+          recents = ZPEEditor.getRecentFiles("sqarl/");
           updateRecentFiles();
         } catch (IOException ex) {
           ZPE.Log(ex.getMessage());

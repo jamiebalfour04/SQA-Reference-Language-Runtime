@@ -12,7 +12,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added Dark Mode and recent files to the editor.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="When a file is opened, the caret is moved to the top. The bold, font size and font family options now resort to keeping the caret position.">
+      <change afterPath="$PROJECT_DIR$/src/files/SQARLLogoMacOS.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
@@ -85,6 +86,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/files" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
@@ -135,14 +137,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1702736217607</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Bumped up to ZPE 1.12.4.">
-      <option name="closed" value="true" />
-      <created>1711959503576</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1711959503576</updated>
     </task>
     <task id="LOCAL-00009" summary="Fixed the issue in which the runtime would not start and would instead start the underlying ZPE runtime. This was due to the JAR file having two MANIFEST files, one MANIFEST.MF and the other having MANIFEST.mf (ZPE). To fix this, I have named the one in the SQARL as MANIFEST.mf, overwriting the ZPE one.">
       <option name="closed" value="true" />
@@ -528,11 +522,18 @@
       <option name="project" value="LOCAL" />
       <updated>1724508322742</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="When a file is opened, the caret is moved to the top. The bold, font size and font family options now resort to keeping the caret position.">
+      <option name="closed" value="true" />
+      <created>1724539050483</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1724539050483</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated the README.md file with information about the download from the build folder." />
     <MESSAGE value="Updated the README.md file with links." />
     <MESSAGE value="Updated ZPE version to match current build and updated the editor." />
     <MESSAGE value="Updated to match fixes in ZPE." />
@@ -557,7 +558,8 @@
     <MESSAGE value="Added Python ELSE and ELSEIF statements to ZenPy and this has been updated to support that." />
     <MESSAGE value="Updated to the latest version of ZPE 1.12.9." />
     <MESSAGE value="Added Dark Mode and recent files to the editor." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Dark Mode and recent files to the editor." />
+    <MESSAGE value="When a file is opened, the caret is moved to the top. The bold, font size and font family options now resort to keeping the caret position." />
+    <option name="LAST_COMMIT_MESSAGE" value="When a file is opened, the caret is moved to the top. The bold, font size and font family options now resort to keeping the caret position." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -631,6 +633,16 @@
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
           <line>443</line>
           <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
+          <line>91</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
+          <line>621</line>
+          <option name="timeStamp" value="59" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
