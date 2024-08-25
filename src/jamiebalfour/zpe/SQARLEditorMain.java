@@ -46,6 +46,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   protected UndoManager undoManager = new UndoManager();
 
   ZPEEditorConsole AttachedConsole;
+  Process currentProcess;
 
 
   boolean propertiesChanged = false;
@@ -61,6 +62,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   String lastFileOpened = "";
   private boolean darkMode = false;
+  JMenuItem mntmStopCodeMenuItem;
 
 
   JMenuItem mntmClearConsoleBeforeRunMenuItem;
@@ -450,16 +452,55 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
        * running = new ConsoleThread(); running.startConsole(contentEditor.getText(),
        * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
        */
-      if (AttachedConsole == null) {
+      /*if (AttachedConsole == null) {
         AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18), 5);
       }
 
-      SQARLParser sqarl = new SQARLParser();
-      String yass = sqarl.parseToYASS(contentEditor.getText());
 
-      AttachedConsole.runCode(yass, new ZPEString[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+
+
+
+      AttachedConsole.runCode(yass, new ZPEString[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());*/
+
+      try{
+        String extras = "";
+        if (chckbxmntmCaseSensitiveCompileCheckItem.isSelected()) {
+          extras += " --case_insensitive";
+        }
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(contentEditor.getText());
+        HelperFunctions.WriteFile(RunningInstance.getInstallPath() + "/tmp.yas", yass, false);
+        if (!RunningInstance.getJarExecPath().isEmpty()) {
+          if (new File(RunningInstance.getJarExecPath()).exists()) {
+            currentProcess = Runtime.getRuntime().exec("java -jar " + RunningInstance.getJarExecPath() + " -g " + RunningInstance.getInstallPath() + "/tmp.yas --console" + extras);
+            mntmStopCodeMenuItem.setEnabled(true);
+            mntmStopCodeMenuItem.setVisible(true);
+          }
+        } else {
+
+          AttachedConsole = new ZPEEditorConsole(this, "", this.contentEditor.getFont(), 5);
+          AttachedConsole.runCode(yass, new ZPEString[0], this.chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+          mntmStopCodeMenuItem.setVisible(false);
+        }
+      } catch(IOException ex){
+        //Do nothing
+      }
+
+
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
+
+
+    mntmStopCodeMenuItem = new JMenuItem("Stop code");
+    mntmStopCodeMenuItem.setEnabled(false);
+    mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
+    mntmStopCodeMenuItem.addActionListener(e -> {
+      currentProcess.destroy();
+      currentProcess = null;
+      mntmStopCodeMenuItem.setEnabled(false);
+    });
+
+    mnScriptMenu.add(mntmStopCodeMenuItem);
 
     mnScriptMenu.add(new JSeparator());
 

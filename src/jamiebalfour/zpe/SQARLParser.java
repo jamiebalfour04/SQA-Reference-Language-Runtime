@@ -92,7 +92,17 @@ public class SQARLParser {
         }
 
       } else if (first.equals("-g")) {
-        new SQARLEditorMain().setVisible(true);
+        if(argv.containsKey("--console")){
+          try {
+            //Pass to the internal ZPE instance to handle this - so easy!
+            ZPE.main(args);
+          } catch (IOException | ExitHalt e) {
+            throw new RuntimeException(e);
+          }
+        } else{
+          new SQARLEditorMain().setVisible(true);
+        }
+
       } else {
         System.out.println("You have provided incorrect arguments to the application.");
       }
