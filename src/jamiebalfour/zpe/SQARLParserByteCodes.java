@@ -1,6 +1,6 @@
 package jamiebalfour.zpe;
 
-import jamiebalfour.zpe.parser.ZenithParsingEngine.MultilineComment;
+import jamiebalfour.zpe.parser.ZenithParsingEngine;
 
 import java.util.ArrayList;
 
@@ -243,10 +243,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
   }
 
   @Override
-  public ArrayList<MultilineComment> listOfComments() {
-    ArrayList<MultilineComment> a = new ArrayList<>();
-    a.add(new MultilineComment("#", System.lineSeparator()));
-    a.add(new MultilineComment("(<", ")"));
+  public ArrayList<ZenithParsingEngine.ZPEComment> listOfComments() {
+    ArrayList<ZenithParsingEngine.ZPEComment> a = new ArrayList<>();
+    a.add(new ZenithParsingEngine.ZPEComment("#", System.lineSeparator()));
+    a.add(new ZenithParsingEngine.ZPEComment("(<", ")"));
     return a;
   }
 

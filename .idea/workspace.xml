@@ -12,10 +12,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to ZPE 1.12.9.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,6 +76,10 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
@@ -153,14 +156,8 @@
       <workItem from="1727536967278" duration="189000" />
       <workItem from="1727537192006" duration="163000" />
       <workItem from="1727537367190" duration="12000" />
-    </task>
-    <task id="LOCAL-00012" summary="Added support for classes. There's still more to be done with them such as adding the constructor which will use the YASS constructor method.">
-      <option name="closed" value="true" />
-      <created>1713735756081</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1713735756081</updated>
+      <workItem from="1727537531836" duration="325000" />
+      <workItem from="1727538000568" duration="30000" />
     </task>
     <task id="LOCAL-00013" summary="Bumped up to ZPE 1.12.5 support to fix issues with $-unbound variables.">
       <option name="closed" value="true" />
@@ -546,14 +543,21 @@
       <option name="project" value="LOCAL" />
       <updated>1725299559384</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters.">
+      <option name="closed" value="true" />
+      <created>1727537546316</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1727537546316</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them." />
     <MESSAGE value="Moved to the latest version of ZPE." />
     <MESSAGE value="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
     <MESSAGE value="Pushed the latest version of ZPE." />
@@ -578,7 +582,8 @@
     <MESSAGE value="Added the new icon." />
     <MESSAGE value="Much like the ZPE editor, the editor in this now detaches the console from the main editor application. It does this by calling the main method of ZPE internally." />
     <MESSAGE value="Updated to ZPE 1.12.9." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to ZPE 1.12.9." />
+    <MESSAGE value="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
