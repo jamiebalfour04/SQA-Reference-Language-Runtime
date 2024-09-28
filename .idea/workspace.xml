@@ -12,7 +12,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Much like the ZPE editor, the editor in this now detaches the console from the main editor application. It does this by calling the main method of ZPE internally." />
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to ZPE 1.12.9.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,11 +77,13 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -124,6 +131,14 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -132,14 +147,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1702736217607</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Added a .gitignore file">
-      <option name="closed" value="true" />
-      <created>1712135828062</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1712135828062</updated>
+      <workItem from="1727469037606" duration="139000" />
+      <workItem from="1727514061767" duration="30000" />
+      <workItem from="1727514154894" duration="2000" />
+      <workItem from="1727536967278" duration="189000" />
+      <workItem from="1727537192006" duration="163000" />
+      <workItem from="1727537367190" duration="12000" />
     </task>
     <task id="LOCAL-00012" summary="Added support for classes. There's still more to be done with them such as adding the constructor which will use the YASS constructor method.">
       <option name="closed" value="true" />
@@ -525,11 +538,21 @@
       <option name="project" value="LOCAL" />
       <updated>1724620556343</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Updated to ZPE 1.12.9.">
+      <option name="closed" value="true" />
+      <created>1725299559384</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1725299559384</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated to match fixes in ZPE." />
     <MESSAGE value="Made changes that align it with the new exceptions that have been added to ZPE and the changes that have come with them." />
     <MESSAGE value="Moved to the latest version of ZPE." />
     <MESSAGE value="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
@@ -554,7 +577,8 @@
     <MESSAGE value="When a file is opened, the caret is moved to the top. The bold, font size and font family options now resort to keeping the caret position." />
     <MESSAGE value="Added the new icon." />
     <MESSAGE value="Much like the ZPE editor, the editor in this now detaches the console from the main editor application. It does this by calling the main method of ZPE internally." />
-    <option name="LAST_COMMIT_MESSAGE" value="Much like the ZPE editor, the editor in this now detaches the console from the main editor application. It does this by calling the main method of ZPE internally." />
+    <MESSAGE value="Updated to ZPE 1.12.9." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to ZPE 1.12.9." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -630,14 +654,14 @@
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
-          <line>93</line>
-          <option name="timeStamp" value="58" />
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>465</line>
+          <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java</url>
-          <line>662</line>
-          <option name="timeStamp" value="59" />
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>464</line>
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -462,7 +462,7 @@ public class SQARLParser {
 
     parser.getNextSymbol();
 
-    while (parser.getCurrentSymbol() != SQARLParserByteCodes.DO) {
+    if (parser.getCurrentSymbol() != SQARLParserByteCodes.DO) {
       printError("Error. Expected DO.");
     }
 
