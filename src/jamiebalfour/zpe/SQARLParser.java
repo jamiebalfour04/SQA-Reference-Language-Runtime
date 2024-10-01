@@ -57,9 +57,7 @@ public class SQARLParser {
             System.exit(HelperFunctions.StringToInteger(e.getMessage()));
           } catch (BreakPointHalt e) {
             System.out.println(e.getMessage());
-          } catch (CompileException e) {
-            throw new RuntimeException(e);
-          } catch (ZPERuntimeException e) {
+          } catch (CompileException | ZPERuntimeException e) {
             throw new RuntimeException(e);
           }
 
