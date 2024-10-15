@@ -23,7 +23,7 @@ public class SQARLParser {
 
   public static void main(String[] args) {
 
-    HashMap<String, Object> argv = jamiebalfour.HelperFunctions.GenerateArgumentMap(args);
+    HashMap<String, Object> argv = jamiebalfour.HelperFunctions.generateArgumentMap(args);
     String first;
 
     if (args.length == 0) {
@@ -54,7 +54,7 @@ public class SQARLParser {
               System.out.println(output);
             }
           } catch (ExitHalt e) {
-            System.exit(HelperFunctions.StringToInteger(e.getMessage()));
+            System.exit(HelperFunctions.stringToInteger(e.getMessage()));
           } catch (BreakPointHalt e) {
             System.out.println(e.getMessage());
           } catch (CompileException | ZPERuntimeException e) {
@@ -74,7 +74,7 @@ public class SQARLParser {
             System.out.println(output);
           }
         } catch (IOException e) {
-          ZPE.Log("SQARL Runtime error: " + e.getMessage());
+          ZPE.log("SQARL Runtime error: " + e.getMessage());
         }
       } else if (first.equals("-python")) {
         String s;
@@ -85,18 +85,14 @@ public class SQARLParser {
           String code = t.Transpile(ZPEKit.compile(output), "");
           System.out.print(code);
         } catch (IOException | CompileException e) {
-          ZPE.Log("SQARL Runtime error: " + e.getMessage());
+          ZPE.log("SQARL Runtime error: " + e.getMessage());
           System.out.println("Transpile error in the compiler");
         }
 
       } else if (first.equals("-g")) {
         if(argv.containsKey("--console")){
-          try {
-            //Pass to the internal ZPE instance to handle this - so easy!
-            ZPE.main(args);
-          } catch (IOException | ExitHalt e) {
-            throw new RuntimeException(e);
-          }
+          //Pass to the internal ZPE instance to handle this - so easy!
+           ZPE.startConsole(args);
         } else{
           new SQARLEditorMain().setVisible(true);
         }
@@ -521,9 +517,9 @@ public class SQARLParser {
     }
 
 
-    if (!each) {
+    /*if (!each) {
       //output.append(parser.getCurrentWord());
-    }
+    }*/
 
 
     output.append(compileExpression());
@@ -601,7 +597,6 @@ public class SQARLParser {
 
   private String compileDeclare() {
     StringBuilder output = new StringBuilder();
-    boolean array = false;
     if (parser.getCurrentSymbol() == SQARLParserByteCodes.DECLARE) {
       parser.getNextSymbol();
     }
@@ -667,7 +662,7 @@ public class SQARLParser {
           }
 
 
-          if (parser.getCurrentWord().equals("")) {
+          if (parser.getCurrentWord().isEmpty()) {
             output.append("[[").append("\"\"").append("]]");
           } else {
             output.append("[[").append(parser.getCurrentWord()).append("]]");
@@ -687,7 +682,7 @@ public class SQARLParser {
           //Type of array
 
 
-          if (parser.getCurrentWord().equals("")) {
+          if (parser.getCurrentWord().isEmpty()) {
             output.append("[").append("\"\"").append("]");
           } else {
             output.append("[").append(parser.getCurrentWord()).append("]");
@@ -895,7 +890,7 @@ public class SQARLParser {
   private String compileClass() {
     parser.getNextSymbol();
     if (parser.getCurrentSymbol() != SQARLParserByteCodes.IDENTIFIER) {
-      //printError("IDENTIFIER not provided for a class");
+      printError("IDENTIFIER not provided for a class");
     }
 
     StringBuilder output = new StringBuilder();

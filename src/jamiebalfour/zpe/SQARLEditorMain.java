@@ -11,7 +11,6 @@ import jamiebalfour.zpe.editor.ZPEEditorConsole;
 import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.interfaces.GenericEditor;
 import jamiebalfour.zpe.os.macos.macOS;
-import jamiebalfour.zpe.core.CompileDetails;
 import jamiebalfour.zpe.types.ZPEString;
 
 import javax.swing.*;
@@ -84,7 +83,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     setTitle("SQARL Editor");
 
     URL imagePath;
-    if (ZPEHelperFunctions.isMac()) {
+    if (HelperFunctions.isMac()) {
       imagePath = SQARLEditorMain.class.getResource("/files/SQARLLogoMacOS.png");
     } else {
       imagePath = SQARLEditorMain.class.getResource("/files/SQARLLogoMacOS.png");
@@ -160,7 +159,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     if (!f.exists()) {
       if(!f.mkdirs()){
-        ZPE.Log(f + " could not be created");
+        ZPE.log(f + " could not be created");
       }
     }
 
@@ -175,7 +174,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 
     try{
-      mainProperties = HelperFunctions.ReadProperties(path);
+      mainProperties = HelperFunctions.readProperties(path);
     } catch (Exception e){
       //Ignore
     }
@@ -185,18 +184,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 
     if (mainProperties.containsKey("HEIGHT")) {
-      editor.setSize(editor.getWidth(), HelperFunctions.StringToInteger(mainProperties.get("HEIGHT").toString()));
+      editor.setSize(editor.getWidth(), HelperFunctions.stringToInteger(mainProperties.get("HEIGHT").toString()));
     }
     if (mainProperties.containsKey("WIDTH")) {
-      editor.setSize(HelperFunctions.StringToInteger(mainProperties.get("WIDTH").toString()), editor.getHeight());
+      editor.setSize(HelperFunctions.stringToInteger(mainProperties.get("WIDTH").toString()), editor.getHeight());
     }
     if (mainProperties.containsKey("XPOS")) {
       editor.setLocation(
-              new Point(HelperFunctions.StringToInteger(mainProperties.get("XPOS").toString()), editor.getY()));
+              new Point(HelperFunctions.stringToInteger(mainProperties.get("XPOS").toString()), editor.getY()));
     }
     if (mainProperties.containsKey("YPOS")) {
       editor.setLocation(
-              new Point(editor.getX(), HelperFunctions.StringToInteger(mainProperties.get("YPOS").toString())));
+              new Point(editor.getX(), HelperFunctions.stringToInteger(mainProperties.get("YPOS").toString())));
     }
     if (mainProperties.containsKey("MAXIMISED")) {
       if (mainProperties.get("MAXIMISED").toString().equals("true")) {
@@ -290,9 +289,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         saveAsDialog();
       } else {
         try {
-          HelperFunctions.WriteFile(lastFileOpened, contentEditor.getText(), false);
+          HelperFunctions.writeFile(lastFileOpened, contentEditor.getText(), false);
         } catch (IOException ex) {
-          ZPE.Log("SQARL Runtime error: " + ex.getMessage());
+          ZPE.log("SQARL Runtime error: " + ex.getMessage());
         }
       }
     });
@@ -469,7 +468,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         }
         SQARLParser sqarl = new SQARLParser();
         String yass = sqarl.parseToYASS(contentEditor.getText());
-        HelperFunctions.WriteFile(RunningInstance.getInstallPath() + "/tmp.yas", yass, false);
+        HelperFunctions.writeFile(RunningInstance.getInstallPath() + "/tmp.yas", yass, false);
         if (!RunningInstance.getJarExecPath().isEmpty()) {
           if (new File(RunningInstance.getJarExecPath()).exists()) {
             currentProcess = Runtime.getRuntime().exec("java -jar " + RunningInstance.getJarExecPath() + " -g " + RunningInstance.getInstallPath() + "/tmp.yas --console" + extras);
@@ -536,7 +535,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
         }
-        HelperFunctions.WriteFile(path1, code, false);
+        HelperFunctions.writeFile(path1, code, false);
 
         JOptionPane.showMessageDialog(editor,
                 "Python transpile success. The file has been successfully compiled to " + path1 + ".",
@@ -598,7 +597,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
           for (byte s : ZPEKit.parseToBytes(yass)) {
             text.append(s).append(" ");
           }
-          HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
+          HelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
         } catch (IOException ex) {
           JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
                   JOptionPane.ERROR_MESSAGE);
@@ -642,7 +641,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     JMenuItem mntmSQARLSpecificationWebsiteMenuItem = new JMenuItem("Read the SQARL Specification");
     mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> {try{
-      HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
+      HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
     } catch (Exception ex){
       JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
     }});
@@ -652,7 +651,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     JMenuItem mntmSQAWebsiteMenuItem = new JMenuItem("Visit SQA Website");
 
       mntmSQAWebsiteMenuItem.addActionListener(e -> {try {
-        HelperFunctions.OpenWebsite("https://www.sqa.org.uk/sqa/48486.html");
+        HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/48486.html");
       } catch (Exception ex){
         JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
       }});
@@ -711,9 +710,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mntmCompileCodeMenuItem.addActionListener(e -> {
       String name = JOptionPane.showInputDialog(editor,
               "Please insert the name of the compiled application.");
-      CompileDetails details = new CompileDetails();
-
-      details.name = name;
       File file;
       String extension;
 
@@ -737,7 +733,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         SQARLParser sqarl = new SQARLParser();
         String yass = sqarl.parseToYASS(contentEditor.getText());
         // null for no password
-        ZPEKit.compile(yass, file.toString() + "." + extension, details,
+        ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
                 !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
 
         JOptionPane.showMessageDialog(editor,
@@ -865,7 +861,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
           recents = ZPEEditor.getRecentFiles("sqarl/");
           updateRecentFiles();
         } catch (IOException ex) {
-          ZPE.Log(ex.getMessage());
+          ZPE.log(ex.getMessage());
         }
         editor.setTitle("ZPE Editor " + file.getAbsolutePath());
       } catch (IOException e) {
@@ -888,7 +884,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       String extension = getSaveExtension(fc.getFileFilter());
       // This is where a real application would open the file.
       try {
-        HelperFunctions.WriteFile(file.getAbsolutePath() + "." + extension, contentEditor.getText(), false);
+        HelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, contentEditor.getText(), false);
         lastFileOpened = file.getAbsolutePath();
       } catch (IOException e) {
         JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
@@ -914,7 +910,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       File f = new File(ZPEKit.getInstallPath() + "/sqarl/");
       if (!f.exists()) {
         if(!f.mkdirs()){
-          ZPE.Log(f + " could not be created.");
+          ZPE.log(f + " could not be created.");
         }
       }
       OutputStream output;
@@ -925,7 +921,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         // save properties to project root folder
         props.store(output, null);
       } catch (Exception e) {
-        ZPE.Log("SQARL Runtime error: GUI cannot save" + e.getMessage());
+        ZPE.log("SQARL Runtime error: GUI cannot save" + e.getMessage());
       }
     }
   }
@@ -948,11 +944,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     contentEditor.setText(text);
     dontUndo = false;
     //contentEditor.setCaretPosition(0);
-  }
-
-  @Override
-  public boolean clearTextBeforeRunning() {
-    return mntmClearConsoleBeforeRunMenuItem.isSelected();
   }
 
   @Override

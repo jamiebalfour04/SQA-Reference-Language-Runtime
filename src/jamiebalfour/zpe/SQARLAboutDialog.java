@@ -63,7 +63,7 @@ class SQARLAboutDialog extends JDialog {
         btnVisitWebsiteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {
-                HelperFunctions.OpenWebsite("https://www.jamiebalfour.scot/projects/zpe/");
+                HelperFunctions.openWebsite("https://www.jamiebalfour.scot/projects/zpe/");
               } catch (Exception ex) {
                 throw new RuntimeException(ex);
               }

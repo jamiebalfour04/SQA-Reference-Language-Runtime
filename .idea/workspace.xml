@@ -12,8 +12,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Changed references to MultilineComment to ZPEComment.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to latest version of ZPE.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -171,15 +174,15 @@
       <workItem from="1727537367190" duration="12000" />
       <workItem from="1727537531836" duration="325000" />
       <workItem from="1727538000568" duration="44000" />
-      <workItem from="1727816042086" duration="110000" />
-    </task>
-    <task id="LOCAL-00014" summary="Added the YASS Python transpiler to allow conversion to Python.">
-      <option name="closed" value="true" />
-      <created>1715504851275</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1715504851275</updated>
+      <workItem from="1727816042086" duration="823000" />
+      <workItem from="1728143317475" duration="129000" />
+      <workItem from="1728835074310" duration="66000" />
+      <workItem from="1728991363659" duration="36000" />
+      <workItem from="1728992053068" duration="21000" />
+      <workItem from="1728993544369" duration="29000" />
+      <workItem from="1728993628030" duration="1027000" />
+      <workItem from="1728997060857" duration="17000" />
+      <workItem from="1728997084602" duration="41000" />
     </task>
     <task id="LOCAL-00015" summary="Updated to the latest version of ZPE.">
       <option name="closed" value="true" />
@@ -565,14 +568,21 @@
       <option name="project" value="LOCAL" />
       <updated>1727538040377</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Updated to latest version of ZPE.">
+      <option name="closed" value="true" />
+      <created>1727816259839</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1727816259839</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Moved to the latest version of ZPE and added the latest ZenPy transpiler." />
     <MESSAGE value="Pushed the latest version of ZPE." />
     <MESSAGE value="Updated to the latest version of ZPE which now requires code to run with a permission level." />
     <MESSAGE value="Updated with the new changes brought to ZPE 1.12.9." />
@@ -597,89 +607,90 @@
     <MESSAGE value="Updated to ZPE 1.12.9." />
     <MESSAGE value="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters." />
     <MESSAGE value="Changed references to MultilineComment to ZPEComment." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed references to MultilineComment to ZPEComment." />
+    <MESSAGE value="Updated to latest version of ZPE." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to latest version of ZPE." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>824</line>
+          <line>819</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>877</line>
+          <line>872</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>1013</line>
+          <line>1008</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>640</line>
+          <line>635</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>664</line>
+          <line>659</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>731</line>
+          <line>726</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>524</line>
+          <line>520</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>499</line>
+          <line>495</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>512</line>
+          <line>508</line>
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>552</line>
+          <line>548</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>484</line>
+          <line>480</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>575</line>
+          <line>571</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>570</line>
+          <line>566</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>451</line>
+          <line>447</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>463</line>
+          <line>459</line>
           <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>462</line>
+          <line>458</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
