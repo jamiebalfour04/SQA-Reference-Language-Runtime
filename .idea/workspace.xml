@@ -12,12 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to latest version of ZPE.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +81,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -97,7 +95,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SQARLParser">
+  <component name="RunManager" selected="Application.SQARLParser -g">
     <configuration name="SQARLParser -g" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="jamiebalfour.zpe.SQARLParser" />
       <module name="sqa-reference-language-runtime" />
@@ -183,14 +181,8 @@
       <workItem from="1728993628030" duration="1027000" />
       <workItem from="1728997060857" duration="17000" />
       <workItem from="1728997084602" duration="41000" />
-    </task>
-    <task id="LOCAL-00015" summary="Updated to the latest version of ZPE.">
-      <option name="closed" value="true" />
-      <created>1716132263012</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1716132263013</updated>
+      <workItem from="1728997177599" duration="21000" />
+      <workItem from="1728997370919" duration="4008000" />
     </task>
     <task id="LOCAL-00016" summary="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
       <option name="closed" value="true" />
@@ -576,14 +568,21 @@
       <option name="project" value="LOCAL" />
       <updated>1727816259839</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here.">
+      <option name="closed" value="true" />
+      <created>1728997191787</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1728997191787</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Pushed the latest version of ZPE." />
     <MESSAGE value="Updated to the latest version of ZPE which now requires code to run with a permission level." />
     <MESSAGE value="Updated with the new changes brought to ZPE 1.12.9." />
     <MESSAGE value="Updated with the more changes brought to ZPE 1.12.9." />
@@ -608,7 +607,8 @@
     <MESSAGE value="Updated to ZPE 1.12.10. Added \r\n into the delimiter characters." />
     <MESSAGE value="Changed references to MultilineComment to ZPEComment." />
     <MESSAGE value="Updated to latest version of ZPE." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to latest version of ZPE." />
+    <MESSAGE value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
+    <option name="LAST_COMMIT_MESSAGE" value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

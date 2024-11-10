@@ -88,6 +88,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     } else {
       imagePath = SQARLEditorMain.class.getResource("/files/SQARLLogoMacOS.png");
     }
+    assert imagePath != null;
     lighterLogoFull = new ImageIcon(imagePath);
     Image newimg = lighterLogoFull.getImage().getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
     lighterLogo = new ImageIcon(newimg);
@@ -670,7 +671,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
         final java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
         final Image image = lighterLogoFull.getImage();
-
         taskbar.setIconImage(image);
       }
     } catch (Exception e) {
