@@ -12,10 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="As always, updated to support the latest version of ZPE.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,14 +183,9 @@
       <workItem from="1728997084602" duration="41000" />
       <workItem from="1728997177599" duration="21000" />
       <workItem from="1728997370919" duration="4008000" />
-    </task>
-    <task id="LOCAL-00016" summary="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
-      <option name="closed" value="true" />
-      <created>1716228547194</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1716228547194</updated>
+      <workItem from="1731266085981" duration="701000" />
+      <workItem from="1731855102309" duration="20000" />
+      <workItem from="1737963973728" duration="70000" />
     </task>
     <task id="LOCAL-00017" summary="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
       <option name="closed" value="true" />
@@ -576,14 +571,21 @@
       <option name="project" value="LOCAL" />
       <updated>1728997191787</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="As always, updated to support the latest version of ZPE.">
+      <option name="closed" value="true" />
+      <created>1731266150309</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1731266150309</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated to the latest version of ZPE which now requires code to run with a permission level." />
     <MESSAGE value="Updated with the new changes brought to ZPE 1.12.9." />
     <MESSAGE value="Updated with the more changes brought to ZPE 1.12.9." />
     <MESSAGE value="Added records and arrays" />
@@ -608,7 +610,8 @@
     <MESSAGE value="Changed references to MultilineComment to ZPEComment." />
     <MESSAGE value="Updated to latest version of ZPE." />
     <MESSAGE value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
-    <option name="LAST_COMMIT_MESSAGE" value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
+    <MESSAGE value="As always, updated to support the latest version of ZPE." />
+    <option name="LAST_COMMIT_MESSAGE" value="As always, updated to support the latest version of ZPE." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

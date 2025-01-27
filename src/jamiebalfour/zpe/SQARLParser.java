@@ -21,9 +21,9 @@ public class SQARLParser {
   ArrayList<String> classes = new ArrayList<>();
 
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws HelperFunctions.NoArgumentValueProvided {
 
-    HashMap<String, Object> argv = jamiebalfour.HelperFunctions.generateArgumentMap(args);
+    HashMap<String, String> argv = jamiebalfour.HelperFunctions.generateArgumentMap(args);
     String first;
 
     if (args.length == 0) {
