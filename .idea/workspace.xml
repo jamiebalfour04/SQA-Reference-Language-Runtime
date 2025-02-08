@@ -12,10 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="As always, updated to support the latest version of ZPE.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +46,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/Dropbox/Programs/ZPE/zpe.jar!/jamiebalfour/HelperFunctions.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$USER_HOME$/Dropbox/Programs/ZPE/zpe.jar!/jamiebalfour/zpe/editor/ZPEEditorConsole.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -81,7 +82,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -139,8 +140,8 @@
     </configuration>
     <list>
       <item itemvalue="Application.SQARLParser -g" />
-      <item itemvalue="Application.SQARLParser" />
       <item itemvalue="Application.SQARLParser -r " />
+      <item itemvalue="Application.SQARLParser" />
     </list>
     <recent_temporary>
       <list>
@@ -185,23 +186,10 @@
       <workItem from="1728997370919" duration="4008000" />
       <workItem from="1731266085981" duration="701000" />
       <workItem from="1731855102309" duration="20000" />
-      <workItem from="1737963973728" duration="70000" />
-    </task>
-    <task id="LOCAL-00017" summary="'Fixed' the compile_expression function to work with bracketted expressions. It's not perfect though.">
-      <option name="closed" value="true" />
-      <created>1716925872141</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1716925872141</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Added a build folder.">
-      <option name="closed" value="true" />
-      <created>1716926033464</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1716926033464</updated>
+      <workItem from="1737963973728" duration="1623000" />
+      <workItem from="1739043763794" duration="55000" />
+      <workItem from="1739043826069" duration="149000" />
+      <workItem from="1739044001797" duration="3000" />
     </task>
     <task id="LOCAL-00019" summary="Added a build folder.">
       <option name="closed" value="true" />
@@ -579,14 +567,29 @@
       <option name="project" value="LOCAL" />
       <updated>1731266150309</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;.">
+      <option name="closed" value="true" />
+      <created>1737964106217</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1737964106217</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;.">
+      <option name="closed" value="true" />
+      <created>1738018593094</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1738018593095</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated with the new changes brought to ZPE 1.12.9." />
     <MESSAGE value="Updated with the more changes brought to ZPE 1.12.9." />
     <MESSAGE value="Added records and arrays" />
     <MESSAGE value="Added arrays of arrays (2D arrays)" />
@@ -611,7 +614,8 @@
     <MESSAGE value="Updated to latest version of ZPE." />
     <MESSAGE value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
     <MESSAGE value="As always, updated to support the latest version of ZPE." />
-    <option name="LAST_COMMIT_MESSAGE" value="As always, updated to support the latest version of ZPE." />
+    <MESSAGE value="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

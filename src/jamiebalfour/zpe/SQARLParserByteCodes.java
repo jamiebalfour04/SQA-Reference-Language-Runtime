@@ -1,7 +1,5 @@
 package jamiebalfour.zpe;
 
-import jamiebalfour.zpe.parser.ZenithParsingEngine;
-
 import java.util.ArrayList;
 
 
@@ -243,10 +241,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
   }
 
   @Override
-  public ArrayList<ZenithParsingEngine.ZPEComment> listOfComments() {
-    ArrayList<ZenithParsingEngine.ZPEComment> a = new ArrayList<>();
-    a.add(new ZenithParsingEngine.ZPEComment("#", System.lineSeparator()));
-    a.add(new ZenithParsingEngine.ZPEComment("(<", ")"));
+  public ArrayList<jamiebalfour.zpe.parser.ZPEComment> listOfComments() {
+    ArrayList<jamiebalfour.zpe.parser.ZPEComment> a = new ArrayList<>();
+    a.add(new jamiebalfour.zpe.parser.ZPEComment("#", System.lineSeparator()));
+    a.add(new jamiebalfour.zpe.parser.ZPEComment("(<", ")"));
     return a;
   }
 
