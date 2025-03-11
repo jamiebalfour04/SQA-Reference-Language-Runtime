@@ -12,8 +12,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 
 class SQARLAboutDialog extends JDialog {

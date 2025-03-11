@@ -12,10 +12,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated the ZPEComments to reflect changes in the ZenithParsingEngine 1.4.2.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLAboutDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,8 +141,8 @@
     </configuration>
     <list>
       <item itemvalue="Application.SQARLParser -g" />
-      <item itemvalue="Application.SQARLParser -r " />
       <item itemvalue="Application.SQARLParser" />
+      <item itemvalue="Application.SQARLParser -r " />
     </list>
     <recent_temporary>
       <list>
@@ -190,14 +191,9 @@
       <workItem from="1739043763794" duration="55000" />
       <workItem from="1739043826069" duration="149000" />
       <workItem from="1739044001797" duration="3000" />
-    </task>
-    <task id="LOCAL-00019" summary="Added a build folder.">
-      <option name="closed" value="true" />
-      <created>1716926056759</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1716926056759</updated>
+      <workItem from="1739044012965" duration="48000" />
+      <workItem from="1739477900046" duration="54000" />
+      <workItem from="1741677479545" duration="27000" />
     </task>
     <task id="LOCAL-00020" summary="Updated the README.md file with information about the download from the build folder.">
       <option name="closed" value="true" />
@@ -583,14 +579,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738018593095</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Updated the ZPEComments to reflect changes in the ZenithParsingEngine 1.4.2.">
+      <option name="closed" value="true" />
+      <created>1739044055544</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1739044055545</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated with the more changes brought to ZPE 1.12.9." />
     <MESSAGE value="Added records and arrays" />
     <MESSAGE value="Added arrays of arrays (2D arrays)" />
     <MESSAGE value="Renamed methods that have changed and added exception handling to the methods that now throw errors." />
@@ -615,7 +618,8 @@
     <MESSAGE value="A couple of changes were made to names in ZPE and the HelperFunctions so these have been reflected here." />
     <MESSAGE value="As always, updated to support the latest version of ZPE." />
     <MESSAGE value="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated the generateArgumentMap to use a map of &lt;String, String&gt; rather than &lt;String, Object&gt;." />
+    <MESSAGE value="Updated the ZPEComments to reflect changes in the ZenithParsingEngine 1.4.2." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the ZPEComments to reflect changes in the ZenithParsingEngine 1.4.2." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

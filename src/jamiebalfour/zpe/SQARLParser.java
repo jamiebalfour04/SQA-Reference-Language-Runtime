@@ -8,7 +8,7 @@ import jamiebalfour.zpe.exceptions.BreakPointHalt;
 import jamiebalfour.zpe.exceptions.CompileException;
 import jamiebalfour.zpe.exceptions.ExitHalt;
 import jamiebalfour.zpe.exceptions.ZPERuntimeException;
-import jamiebalfour.zpe.parser.ZenithParsingEngine;
+import jamiebalfour.zpe.parser.v4.ZenithParsingEngine;
 
 import java.io.IOException;
 import java.util.ArrayList;
