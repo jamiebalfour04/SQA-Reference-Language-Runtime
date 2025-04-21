@@ -86,6 +86,47 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   Color borderColor = new Color(40, 75, 99);
 
+  boolean isMaximised = false;
+
+
+  private void maximiseButtonClicked() {
+    if (isMaximised) {
+      // Restore to normal size
+      setExtendedState(JFrame.NORMAL);
+      setSize(800, 600); // Reset to default size
+      setLocationRelativeTo(null);
+      //setShape(new java.awt.geom.RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), rounded ? 20 : 0, rounded ? 20 : 0));
+      getContentPane().setPreferredSize(new Dimension(800, 600)); // Ensure layout updates
+      getContentPane().revalidate();
+      getContentPane().repaint();
+    } else {
+      // Maximise
+
+
+      maximiseToCurrentScreen(_this);
+      getContentPane().setPreferredSize(null); // Let it auto-resize
+      getContentPane().revalidate();
+      getContentPane().repaint();
+    }
+
+    isMaximised = !isMaximised;
+  }
+
+  public void maximiseToCurrentScreen(JFrame frame) {
+    GraphicsConfiguration gc = frame.getGraphicsConfiguration();
+    Rectangle screenBounds = gc.getBounds();
+    Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+
+    // Calculate usable area (excluding taskbar/dock)
+    int x = screenBounds.x + screenInsets.left;
+    int y = screenBounds.y + screenInsets.top;
+    int width = screenBounds.width - screenInsets.left - screenInsets.right;
+    int height = screenBounds.height - screenInsets.top - screenInsets.bottom;
+
+    frame.setBounds(x, y, width, height);
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+  }
+
   public SQARLEditorMain() {
 
     this.setLayout(new BorderLayout());
@@ -96,6 +137,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     _titleBar = JBUI.generateCustomTitleBar(this, 0);
     _titleBar.setLabelText("Untitled");
+    _titleBar.setMaximiseButtonListener(e -> {
+      maximiseButtonClicked();
+    });
+    _titleBar.setCloseListener(e -> {
+      closeUp();
+      System.exit(0);
+
+    });
 
     JPanel topContainer = new JPanel();
     topContainer.setOpaque(false);
