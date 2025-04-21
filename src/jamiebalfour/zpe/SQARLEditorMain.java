@@ -1,6 +1,8 @@
 package jamiebalfour.zpe;
 
 import jamiebalfour.HelperFunctions;
+import jamiebalfour.ui.BorderedRoot;
+import jamiebalfour.ui.JBUI;
 import jamiebalfour.zpe.core.RunningInstance;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
@@ -47,6 +49,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   ZPEEditorConsole AttachedConsole;
   Process currentProcess;
 
+  private final jamiebalfour.ui.CustomTitleBar _titleBar;
+
 
   boolean propertiesChanged = false;
 
@@ -63,6 +67,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private boolean darkMode = false;
   JMenuItem mntmStopCodeMenuItem;
 
+  BorderedRoot borderedRoot;
 
   JMenuItem mntmClearConsoleBeforeRunMenuItem;
 
@@ -79,7 +84,29 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   boolean dontUndo = true;
 
+  Color borderColor = new Color(40, 75, 99);
+
   public SQARLEditorMain() {
+
+    this.setLayout(new BorderLayout());
+
+    borderedRoot = new BorderedRoot(this, borderColor, 3, 0);
+
+
+
+    _titleBar = JBUI.generateCustomTitleBar(this, 0);
+    _titleBar.setLabelText("Untitled");
+
+    JPanel topContainer = new JPanel();
+    topContainer.setOpaque(false);
+    topContainer.setLayout(new BorderLayout());
+    topContainer.add(_titleBar, BorderLayout.NORTH);
+
+    setBackground(borderColor);
+
+    getContentPane().add(topContainer, BorderLayout.NORTH);
+
+
     setTitle("SQARL Editor");
 
     URL imagePath;
@@ -182,7 +209,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 
     this.editor = this;
-    getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 
     if (mainProperties.containsKey("HEIGHT")) {
       editor.setSize(editor.getWidth(), HelperFunctions.stringToInteger(mainProperties.get("HEIGHT").toString()));
@@ -208,7 +234,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     this.setSize(new Dimension(600, 400));
 
     JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(mainPanel, BorderLayout.CENTER);
     mainPanel.setLayout(new BorderLayout(0, 0));
 
     scrollPane = new JScrollPane();
@@ -240,6 +266,13 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     scrollPane.setViewportView(contentEditor);
 
     scrollPane.setRowHeaderView(mainSyntax.getEditor());
+
+    // === Footer setup ===
+    JLabel footerLabel = new JLabel("<html>&copy; J Balfour 2019 - 2025</html>", SwingConstants.CENTER);
+    footerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // top, left, bottom, right padding
+    footerLabel.setForeground(Color.lightGray);
+    //getContentPane().add(footerLabel, BorderLayout.SOUTH);
+    getContentPane().add(footerLabel, BorderLayout.SOUTH);
 
 
     /*try {
@@ -1033,10 +1066,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnDarkModeMenuItem.setSelected(true);
 
     Color dark = Color.decode("#282D37");
-    this.getContentPane().setBackground(dark);
     scrollPane.setBackground(dark);
-    editor.setBackground(dark);
-    editor.getContentPane().setBackground(dark);
     contentEditor.setBackground(dark);
     contentEditor.setForeground(Color.white);
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.white);
@@ -1058,8 +1088,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnDarkModeMenuItem.setSelected(false);
 
     Color light = new Color(255, 255, 255);
-    editor.setBackground(light);
-    editor.getContentPane().setBackground(light);
     contentEditor.setBackground(light);
     contentEditor.setForeground(Color.black);
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.black);
