@@ -12,7 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Updated to the new look from JBUI.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="Added support for darkened versions of the Mac buttons.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
@@ -206,14 +206,12 @@
       <workItem from="1745244000678" duration="46000" />
       <workItem from="1745244307388" duration="3000" />
       <workItem from="1745244317477" duration="18000" />
-    </task>
-    <task id="LOCAL-00022" summary="Updated the README.md file with information about the download from the build folder.">
-      <option name="closed" value="true" />
-      <created>1716934871788</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1716934871788</updated>
+      <workItem from="1745244481838" duration="17000" />
+      <workItem from="1745244515725" duration="39000" />
+      <workItem from="1745244712468" duration="82000" />
+      <workItem from="1745245536231" duration="26000" />
+      <workItem from="1745248111377" duration="19000" />
+      <workItem from="1745248154703" duration="52000" />
     </task>
     <task id="LOCAL-00023" summary="Updated the README.md file with information about the download from the build folder.">
       <option name="closed" value="true" />
@@ -599,14 +597,21 @@
       <option name="project" value="LOCAL" />
       <updated>1745243857791</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="Added support for darkened versions of the Mac buttons.">
+      <option name="closed" value="true" />
+      <created>1745244491130</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1745244491130</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Renamed methods that have changed and added exception handling to the methods that now throw errors." />
     <MESSAGE value="Added command line transpiling to Python using the -python argument." />
     <MESSAGE value="Added support for for loops that look like:&#10;FOR count FROM 0 TO 8 DO&#10;  SEND count TO DISPLAY&#10;END FOR" />
     <MESSAGE value="Added support for subscripting arrays:&#10;&#10;DECLARE first INITIALLY [10, 11, 12]&#10;SET first[0] TO 20&#10;FOR counter FROM 0 TO 3 DO&#10;  SEND first[counter] TO DISPLAY&#10;END FOR" />
@@ -631,7 +636,8 @@
     <MESSAGE value="Updated the ZPEComments to reflect changes in the ZenithParsingEngine 1.4.2." />
     <MESSAGE value="Updated to use the latest version of ZPE." />
     <MESSAGE value="Updated to the new look from JBUI." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to the new look from JBUI." />
+    <MESSAGE value="Added support for darkened versions of the Mac buttons." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for darkened versions of the Mac buttons." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

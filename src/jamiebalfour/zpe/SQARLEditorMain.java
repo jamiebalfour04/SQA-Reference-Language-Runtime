@@ -16,6 +16,7 @@ import jamiebalfour.zpe.os.macos.macOS;
 import jamiebalfour.zpe.types.ZPEString;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
@@ -293,6 +294,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
     scrollPane.setBackground(Color.WHITE);
     mainPanel.add(scrollPane, BorderLayout.CENTER);
+    mainPanel.setBorder(new LineBorder(Color.black, 3));
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 
@@ -317,10 +319,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
     // === Footer setup ===
-    JLabel footerLabel = new JLabel("<html>&copy; J Balfour 2019 - 2025</html>", SwingConstants.CENTER);
-    footerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // top, left, bottom, right padding
-    footerLabel.setForeground(Color.lightGray);
-    //getContentPane().add(footerLabel, BorderLayout.SOUTH);
+    JLabel footerLabel = JBUI.generateJBFooter(("<html>&copy; J Balfour 2019 - 2025</html>"));
     getContentPane().add(footerLabel, BorderLayout.SOUTH);
 
 
