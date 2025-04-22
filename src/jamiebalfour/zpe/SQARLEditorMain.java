@@ -276,7 +276,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
     if (mainProperties.containsKey("MAXIMISED")) {
       if (mainProperties.get("MAXIMISED").toString().equals("true")) {
-        editor.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        maximiseButtonClicked();
       }
     }
 
@@ -778,7 +778,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     setProperty("WIDTH", "" + editor.getWidth());
     setProperty("XPOS", "" + editor.getX());
     setProperty("YPOS", "" + editor.getY());
-    if (editor.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
+    if (isMaximised) {
       setProperty("MAXIMISED", "true");
     } else {
       setProperty("MAXIMISED", "false");
