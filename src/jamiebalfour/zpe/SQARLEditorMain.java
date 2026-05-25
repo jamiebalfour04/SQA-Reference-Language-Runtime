@@ -74,6 +74,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
   static FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Text files (*.txt)", "txt");
   static FileNameExtensionFilter filter2 = new FileNameExtensionFilter("YASS Executable files (*.yex)", "yex");
+  static FileNameExtensionFilter winExe = new FileNameExtensionFilter("Executable files (*.exe)", "exe");
   private final JFrame editor;
 
   BalfMenuBar.CheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
@@ -134,7 +135,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     initialise();
 
-    getTitleBar().setCloseListener(e -> System.exit(0));
+    getTitleBar().setCloseListener(e -> {closeUp(); System.exit(0);});
 
     JPanel topContainer = new JPanel();
     topContainer.setOpaque(false);
@@ -249,6 +250,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     this.editor = this;
 
+    this.setSize(new Dimension(600, 400));
+
     editor.setMinimumSize(new Dimension(600, 600));
 
     if (mainProperties.containsKey("HEIGHT")) {
@@ -272,7 +275,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     }
 
 
-    this.setSize(new Dimension(600, 400));
+
 
     JPanel mainPanel = new JPanel();
     //getContentPane().add(mainPanel, BorderLayout.CENTER);
@@ -557,13 +560,25 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
           extras += " --case_insensitive";
         }
         SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
+        String yass = "";
+        try{
+          yass = sqarl.parseToYASS(mainSyntax.getText());
+        } catch(Exception ex){
+          JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+          return;
+        }
+        System.out.println(yass);
         FileHelperFunctions.writeFile(ZPEInstance.getInstallPath() + "/tmp.yas", yass, false);
         if (!ZPEInstance.getJarExecPath().isEmpty()) {
 
           File jarFile = new File(ZPEInstance.getJarExecPath());
 
           if (jarFile.exists()) {
+
+            if(currentProcess != null){
+              currentProcess.destroy();
+              currentProcess = null;
+            }
 
             ProcessBuilder pb = new ProcessBuilder(
                     "java",
@@ -573,6 +588,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
                     ZPEInstance.getInstallPath() + "/tmp.yas",
                     "--console"
             );
+
+
 
             if (extras != null && !extras.trim().isEmpty()) {
               for (String extra : extras.trim().split("\\s+")) {
@@ -592,7 +609,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                  System.out.println("[ZPE] " + line);
+                  //Debugging only
+                  //System.out.println("[ZPE] " + line);
                 }
 
               } catch (IOException ex) {
@@ -639,8 +657,101 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    BalfMenuBar.MenuItem mntmCompileCodeMenuItem = getBalfMenuBar(menuBar);
+    BalfMenuBar.MenuItem mntmCompileCodeMenuItem = new BalfMenuBar.MenuItem("Compile code", menuBar);
+    mntmCompileCodeMenuItem.addActionListener(e -> {
+      String name = JOptionPane.showInputDialog(editor,
+              "Please insert the name of the compiled application.");
+      File file;
+      String extension;
+
+      final JFileChooser fc = new JFileChooser();
+
+      fc.addChoosableFileFilter(filter2);
+      fc.setAcceptAllFileFilterUsed(false);
+
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
+
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+        extension = getSaveExtension(fc.getFileFilter());
+      } else {
+        return;
+      }
+
+      try {
+
+
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
+        // null for no password
+        ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
+                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
+
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile success. The file has been successfully compiled to " + file + ".",
+                "YASS compiler", JOptionPane.WARNING_MESSAGE);
+
+      } catch (IOException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor,
+                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
+                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+      }
+    });
+
     mnScriptMenu.add(mntmCompileCodeMenuItem);
+
+    BalfMenuBar.MenuItem mntmCompileCodeNativeMenuItem = new BalfMenuBar.MenuItem("Compile code to binary", menuBar);
+    mntmCompileCodeNativeMenuItem.addActionListener(e -> {
+      String applicationName = JOptionPane.showInputDialog(_frame, "Please insert the name of the compiled application.");
+      boolean wait = false;
+
+      File file12;
+      final JFileChooser fc = new JFileChooser();
+      fc.setAcceptAllFileFilterUsed(false);
+
+      if(HelperFunctions.isWindows()){
+        fc.addChoosableFileFilter(winExe);
+      } else{
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Binary", " ");
+
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.addChoosableFileFilter(filter);
+        fc.setFileFilter(filter);
+      }
+
+
+      int returnVal = fc.showSaveDialog(_frame.getContentPane());
+      if (returnVal != JFileChooser.APPROVE_OPTION) return;
+
+      String fpath = fc.getSelectedFile().getAbsolutePath();
+
+      if(HelperFunctions.isWindows()){
+        String extension = getSaveExtension(fc.getFileFilter());
+
+        if(!fpath.endsWith(extension)){
+          fpath = fpath + extension;
+        }
+      }
+
+
+
+      ZPEInstance.setErrorLevel(4);
+
+      SQARLParser sqarl = new SQARLParser();
+      String yass = null;
+      try {
+        yass = sqarl.parseToYASS(mainSyntax.getText());
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+        return;
+      }
+
+      ZPEKit.compileNativeBinary(yass, applicationName, fpath, wait);
+    });
 
     BalfMenuBar.MenuItem mntmTranspileCodeMenuItem = new BalfMenuBar.MenuItem("Transpile code to Python", menuBar);
     mntmTranspileCodeMenuItem.addActionListener(e -> {
@@ -681,6 +792,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         System.out.println(ex.getMessage());
       }
     });
+    mnScriptMenu.add(mntmCompileCodeNativeMenuItem);
     mnScriptMenu.add(mntmTranspileCodeMenuItem);
 
     mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
@@ -690,7 +802,13 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
 
       SQARLParser sqarl = new SQARLParser();
-      String yass = sqarl.parseToYASS(mainSyntax.getText());
+      String yass = null;
+      try {
+        yass = sqarl.parseToYASS(mainSyntax.getText());
+      } catch (CompileException ex) {
+        JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+        return;
+      }
 
       try {
         if (ZPEKit.validateCode(yass)) {
@@ -737,6 +855,9 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         } catch (IOException ex) {
           JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
                   JOptionPane.ERROR_MESSAGE);
+        } catch (CompileException ex) {
+          JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+          return;
         }
       }
 
@@ -828,7 +949,13 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
   }
 
+
   private void closeUp(){
+
+    if(currentProcess != null){
+      currentProcess.destroy();
+      currentProcess = null;
+    }
 
     setProperty("HEIGHT", "" + editor.getHeight());
     setProperty("WIDTH", "" + editor.getWidth());
@@ -840,54 +967,6 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       setProperty("MAXIMISED", "false");
     }
     saveGUISettings(mainProperties);
-  }
-
-  private BalfMenuBar.MenuItem getBalfMenuBar(BalfMenuBar menuBar) {
-    BalfMenuBar.MenuItem mntmCompileCodeMenuItem = new BalfMenuBar.MenuItem("Compile code", menuBar);
-    mntmCompileCodeMenuItem.addActionListener(e -> {
-      String name = JOptionPane.showInputDialog(editor,
-              "Please insert the name of the compiled application.");
-      File file;
-      String extension;
-
-      final JFileChooser fc = new JFileChooser();
-
-      fc.addChoosableFileFilter(filter2);
-      fc.setAcceptAllFileFilterUsed(false);
-
-      int returnVal = fc.showSaveDialog(editor.getContentPane());
-
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-        file = fc.getSelectedFile();
-        extension = getSaveExtension(fc.getFileFilter());
-      } else {
-        return;
-      }
-
-      try {
-
-
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-        // null for no password
-        ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
-                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
-
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile success. The file has been successfully compiled to " + file + ".",
-                "YASS compiler", JOptionPane.WARNING_MESSAGE);
-
-      } catch (IOException ex) {
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
-      } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
-      }
-    });
-    return mntmCompileCodeMenuItem;
   }
 
   private void clearUndoRedoManagers() {
@@ -1034,7 +1113,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     String msg = "";
     msg += "SQARL Language Runtime";
-    msg += "SQARL Runtime powered by ZPE copyright Jamie Balfour 2020 - " + ZPE.VERSION_DATE + "\\n\\n";
+    msg += "SQARL Runtime powered by ZPE copyright Jamie Balfour 2020 - " + ZPE.VERSION_DATE + "\n\n";
 
     msg += "Powered by Zenith Parsing Engine version " +
             ZenithParsingEngine.VERSION;
