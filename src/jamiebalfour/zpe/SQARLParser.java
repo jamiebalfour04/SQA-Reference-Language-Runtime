@@ -1,15 +1,18 @@
 package jamiebalfour.zpe;
 
+import jamiebalfour.FileHelperFunctions;
 import jamiebalfour.HelperFunctions;
+import jamiebalfour.ui.UIUtils;
 import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
-import jamiebalfour.zpe.exceptions.BreakPointHalt;
-import jamiebalfour.zpe.exceptions.CompileException;
-import jamiebalfour.zpe.exceptions.ExitHalt;
-import jamiebalfour.zpe.exceptions.ZPERuntimeException;
-import jamiebalfour.zpe.parser.v4.ZenithParsingEngine;
+import jamiebalfour.zpe.core.exceptions.BreakPointHalt;
+import jamiebalfour.zpe.core.exceptions.CompileException;
+import jamiebalfour.zpe.core.exceptions.ExitHalt;
+import jamiebalfour.zpe.core.exceptions.ZPERuntimeException;
+import jamiebalfour.zpe.parser.v5.ZenithParsingEngine;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,14 +26,20 @@ public class SQARLParser {
 
   public static void main(String[] args) throws HelperFunctions.NoArgumentValueProvided {
 
+
+    if(HelperFunctions.isMac()) {
+      HelperFunctions.setMacOSApplicationName("SQARL Runtime");
+    }
+
     HashMap<String, String> argv = jamiebalfour.HelperFunctions.generateArgumentMap(args);
     String first;
 
-    if (args.length == 0) {
 
+
+    if (args.length == 0) {
       if (System.console() == null) {
 
-        if (!ZPEHelperFunctions.isHeadless()) {
+        if (!HelperFunctions.isHeadless()) {
           new SQARLEditorMain().setVisible(true);
         }
 
@@ -47,7 +56,7 @@ public class SQARLParser {
       if (first.equals("-r") && argv.containsKey("-r")) {
         // Run
         try {
-          String s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-r").toString(), "utf-8");
+          String s = jamiebalfour.FileHelperFunctions.readFileAsString(argv.get("-r"), "utf-8");
           try {
             String output = compileAndRunSQARL(s);
             if (!output.isEmpty()) {
@@ -68,7 +77,7 @@ public class SQARLParser {
       } else if (first.equals("-e")) {
         String s;
         try {
-          s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-e").toString(), "utf-8");
+          s = jamiebalfour.FileHelperFunctions.readFileAsString(argv.get("-e").toString(), "utf-8");
           String output = compileSQARL(s);
           if (!output.isEmpty()) {
             System.out.println(output);
@@ -79,7 +88,7 @@ public class SQARLParser {
       } else if (first.equals("-python")) {
         String s;
         try {
-          s = jamiebalfour.HelperFunctions.readFileAsString(argv.get("-python").toString(), "utf-8");
+          s = jamiebalfour.FileHelperFunctions.readFileAsString(argv.get("-python").toString(), "utf-8");
           PythonTranspiler t = new PythonTranspiler();
           String output = compileSQARL(s);
           String code = t.Transpile(ZPEKit.compile(output), "");
@@ -92,9 +101,30 @@ public class SQARLParser {
       } else if (first.equals("-g")) {
         if(argv.containsKey("--console")){
           //Pass to the internal ZPE instance to handle this - so easy!
-           ZPE.startConsole(args);
+          boolean debugging = false;
+          boolean top = false;
+          if(argv.containsKey("--debugging")){
+            debugging = true;
+          }
+          if(argv.containsKey("--top")){
+            top = true;
+          }
+
+
+          try {
+            String code = FileHelperFunctions.readFileAsString(argv.get("-g").toString());
+            ZPE.startConsole(code, debugging, top);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+
+
         } else{
-          new SQARLEditorMain().setVisible(true);
+          SwingUtilities.invokeLater(() -> {
+            SQARLEditorMain editor = new SQARLEditorMain();
+            editor.setLocationRelativeTo(null);
+            editor.setVisible(true);
+          });
         }
 
       } else {

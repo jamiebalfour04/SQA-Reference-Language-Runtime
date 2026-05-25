@@ -1,19 +1,24 @@
 package jamiebalfour.zpe;
 
+import jamiebalfour.FileHelperFunctions;
 import jamiebalfour.HelperFunctions;
-import jamiebalfour.ui.BorderedRoot;
-import jamiebalfour.ui.JBUI;
-import jamiebalfour.zpe.core.RunningInstance;
+import jamiebalfour.codeeditor.CodeEditorView;
+import jamiebalfour.macOS;
+import jamiebalfour.ui.BalfLafManager;
+import jamiebalfour.ui.components.BalfButton;
+import jamiebalfour.ui.components.BalfMenuBar;
+import jamiebalfour.ui.components.BalfScrollbarPane;
+import jamiebalfour.ui.dialogs.BalfAboutDialog;
+import jamiebalfour.ui.windows.BalfWindow;
 import jamiebalfour.zpe.core.ZPE;
-import jamiebalfour.zpe.core.ZPEHelperFunctions;
+import jamiebalfour.zpe.core.ZPEInstance;
 import jamiebalfour.zpe.core.ZPEKit;
-import jamiebalfour.zpe.editor.CodeEditorView;
-import jamiebalfour.zpe.editor.ZPEEditor;
-import jamiebalfour.zpe.editor.ZPEEditorConsole;
-import jamiebalfour.zpe.exceptions.CompileException;
-import jamiebalfour.zpe.interfaces.GenericEditor;
-import jamiebalfour.zpe.os.macos.macOS;
-import jamiebalfour.zpe.types.ZPEString;
+import jamiebalfour.zpe.gui.editor.ConsoleOutputTextArea;
+import jamiebalfour.zpe.gui.editor.YASSUnfoldDialog;
+import jamiebalfour.zpe.gui.editor.ZPEEditor;
+import jamiebalfour.zpe.core.exceptions.CompileException;
+import jamiebalfour.zpe.core.interfaces.GenericEditor;
+import jamiebalfour.zpe.parser.v5.ZenithParsingEngine;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -21,7 +26,6 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -29,16 +33,13 @@ import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PrinterException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
-class SQARLEditorMain extends JFrame implements GenericEditor {
+class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
   SQARLEditorMain _this = this;
 
@@ -46,11 +47,10 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   CodeEditorView mainSyntax;
   protected UndoHandler undoHandler = new UndoHandler();
   protected UndoManager undoManager = new UndoManager();
+  SQARLEditorMain _frame = this;
 
-  ZPEEditorConsole AttachedConsole;
+  ConsoleOutputTextArea AttachedConsole;
   Process currentProcess;
-
-  private final jamiebalfour.ui.CustomTitleBar _titleBar;
 
 
   boolean propertiesChanged = false;
@@ -59,25 +59,24 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   private final UndoAction undoAction;
   private final RedoAction redoAction;
-  JEditorPane contentEditor;
-  JScrollPane scrollPane;
-  JCheckBoxMenuItem mnDarkModeMenuItem;
-  JMenuItem mntmRecentMenuItem;
+  BalfScrollbarPane scrollPane;
+  BalfMenuBar.CheckBoxMenuItem mnDarkModeMenuItem;
+  BalfMenuBar.Menu mntmRecentMenuItem;
+  BalfMenuBar menuBar;
 
   String lastFileOpened = "";
   private boolean darkMode = false;
-  JMenuItem mntmStopCodeMenuItem;
+  BalfMenuBar.MenuItem mntmStopCodeMenuItem;
 
-  BorderedRoot borderedRoot;
 
-  JMenuItem mntmClearConsoleBeforeRunMenuItem;
+  BalfMenuBar.MenuItem mntmClearConsoleBeforeRunMenuItem;
 
 
   static FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Text files (*.txt)", "txt");
   static FileNameExtensionFilter filter2 = new FileNameExtensionFilter("YASS Executable files (*.yex)", "yex");
   private final JFrame editor;
 
-  JCheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
+  BalfMenuBar.CheckBoxMenuItem chckbxmntmCaseSensitiveCompileCheckItem;
   ArrayList<String> recents = ZPEEditor.getRecentFiles("sqarl/");
 
   ImageIcon lighterLogo;
@@ -88,9 +87,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   Color borderColor = new Color(40, 75, 99);
 
   boolean isMaximised = false;
+  
+  static final Color themeColor = new Color(36, 41, 56);
 
 
-  private void maximiseButtonClicked() {
+  /*private void maximiseButtonClicked() {
     if (isMaximised) {
       // Restore to normal size
       setExtendedState(JFrame.NORMAL);
@@ -111,9 +112,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
 
     isMaximised = !isMaximised;
-  }
+  }*/
 
-  public void maximiseToCurrentScreen(JFrame frame) {
+  /*public void maximiseToCurrentScreen(JFrame frame) {
     GraphicsConfiguration gc = frame.getGraphicsConfiguration();
     Rectangle screenBounds = gc.getBounds();
     Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
@@ -126,35 +127,20 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     frame.setBounds(x, y, width, height);
     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-  }
+  }*/
 
   public SQARLEditorMain() {
+    super("SQARL Runtime", 9, themeColor, Color.white, null);
 
-    this.setLayout(new BorderLayout());
+    initialise();
 
-    borderedRoot = new BorderedRoot(this, borderColor, 3, 0);
-
-
-
-    _titleBar = JBUI.generateCustomTitleBar(this, 0);
-    _titleBar.setLabelText("Untitled");
-    _titleBar.setMaximiseButtonListener(e -> {
-      maximiseButtonClicked();
-    });
-    _titleBar.setCloseListener(e -> {
-      closeUp();
-      System.exit(0);
-
-    });
+    getTitleBar().setCloseListener(e -> System.exit(0));
 
     JPanel topContainer = new JPanel();
     topContainer.setOpaque(false);
     topContainer.setLayout(new BorderLayout());
-    topContainer.add(_titleBar, BorderLayout.NORTH);
 
-    setBackground(borderColor);
-
-    getContentPane().add(topContainer, BorderLayout.NORTH);
+    add(topContainer, BorderLayout.NORTH);
 
 
     setTitle("SQARL Editor");
@@ -170,54 +156,56 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     Image newimg = lighterLogoFull.getImage().getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
     lighterLogo = new ImageIcon(newimg);
 
+    mainSyntax = new CodeEditorView();
 
 
     final HashMap<String, SimpleAttributeSet> SQARL_KEYWORDS = new HashMap<>(16);
-    SQARL_KEYWORDS.put("DECLARE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("INITIALLY", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("WHILE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("RECEIVE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("FROM", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("KEYBOARD", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("END", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("SEND", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("FOR", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("EACH", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("DO", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("IF", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("THEN", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("SET", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("TO", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("DISPLAY", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("ARRAY", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("STRING", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("RECORD", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("CLASS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("INTEGER", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("REAL", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("BOOLEAN", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("CHARACTER", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("FUNCTION", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("RETURN", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("PROCEDURE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("AND", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("OR", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("NOT", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("MOD", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("OPEN", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("CLOSE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("CREATE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("METHODS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("THIS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("WITH", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("OVERRIDE", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("INHERITS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("CONSTRUCTOR", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("IS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("AS", CodeEditorView.DEFAULT_KEYWORD);
-    SQARL_KEYWORDS.put("ELSE", CodeEditorView.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("DECLARE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("INITIALLY", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("WHILE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("RECEIVE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("FROM", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("KEYBOARD", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("END", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("SEND", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("FOR", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("EACH", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("DO", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("IF", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("THEN", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("SET", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("TO", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("DISPLAY", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("ARRAY", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("STRING", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("RECORD", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("CLASS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("INTEGER", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("REAL", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("BOOLEAN", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("CHARACTER", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("FUNCTION", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("RETURN", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("PROCEDURE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("AND", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("OR", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("NOT", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("MOD", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("OPEN", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("CLOSE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("CREATE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("METHODS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("THIS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("WITH", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("OVERRIDE", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("INHERITS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("CONSTRUCTOR", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("IS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("AS", mainSyntax.DEFAULT_KEYWORD);
+    SQARL_KEYWORDS.put("ELSE", mainSyntax.DEFAULT_KEYWORD);
 
-    mainSyntax = new CodeEditorView(SQARL_KEYWORDS, "\"'", "");
+
+
 
     addWindowListener(new WindowAdapter() {
       @Override
@@ -258,7 +246,10 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
 
 
+
     this.editor = this;
+
+    editor.setMinimumSize(new Dimension(600, 600));
 
     if (mainProperties.containsKey("HEIGHT")) {
       editor.setSize(editor.getWidth(), HelperFunctions.stringToInteger(mainProperties.get("HEIGHT").toString()));
@@ -276,7 +267,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
     if (mainProperties.containsKey("MAXIMISED")) {
       if (mainProperties.get("MAXIMISED").toString().equals("true")) {
-        maximiseButtonClicked();
+        maximiseAction();
       }
     }
 
@@ -284,26 +275,28 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     this.setSize(new Dimension(600, 400));
 
     JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel, BorderLayout.CENTER);
+    //getContentPane().add(mainPanel, BorderLayout.CENTER);
     mainPanel.setLayout(new BorderLayout(0, 0));
 
-    scrollPane = new JScrollPane();
+    scrollPane = new BalfScrollbarPane();
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scrollPane.setEnabled(false);
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
-    scrollPane.setBackground(Color.WHITE);
+    scrollPane.setLightColour(Color.white);
     mainPanel.add(scrollPane, BorderLayout.CENTER);
     mainPanel.setBorder(new LineBorder(Color.black, 3));
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+    add(mainPanel, BorderLayout.CENTER);
 
-    contentEditor = (JEditorPane) mainSyntax.getEditPane();
-    contentEditor.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
+    scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
-    contentEditor.setFont(new Font("Monospaced", Font.PLAIN, 18));
+    mainSyntax.setWrapper(scrollPane);
 
-    contentEditor.setText("RECORD pupil IS {STRING name, INTEGER age}\r\n" +
+
+
+    mainSyntax.setFont(new Font("Monospaced", Font.PLAIN, 18));
+
+    mainSyntax.setText("RECORD pupil IS {STRING name, INTEGER age}\r\n" +
             "DECLARE total INITIALLY 0\r\n"
             + "DECLARE counter INITIALLY 0\r\n"
             + "DECLARE nextInput INITIALLY 0\r\n"
@@ -314,13 +307,24 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
             + "  SET counter TO counter + 1\r\n"
             + "END WHILE\r\n"
             + "SEND total / 10.0 TO DISPLAY");
-    scrollPane.setViewportView(contentEditor);
 
-    scrollPane.setRowHeaderView(mainSyntax.getEditor());
+
+
+    for(String keyword : SQARL_KEYWORDS.keySet()){
+      mainSyntax.addAutoCompleteItem(keyword, CodeEditorView.AutoCompleteItemType.Keyword);
+    }
+
+    this.mainSyntax.setKeywords(SQARL_KEYWORDS);
+
+    //scrollPane.add(mainSyntax.getEditor());
+    //scrollPane.setViewportView(mainSyntax.getEditor());
+
+    //mainSyntax.set
+
+    //scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
     // === Footer setup ===
-    JLabel footerLabel = JBUI.generateJBFooter(("<html>&copy; J Balfour 2019 - 2025</html>"));
-    getContentPane().add(footerLabel, BorderLayout.SOUTH);
+    getFooter().setText("<html>&copy; J Balfour 2019 - 2025</html>");
 
 
     /*try {
@@ -333,30 +337,35 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     if (HelperFunctions.isMac()) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
       try {
-        macOS a = new macOS();
-        a.addAboutDialog(this::showAbout);
+        macOS.addAboutDialog(this::showAbout);
       } catch (Exception e) {
         //Don't do anything
       }
     }
 
-    JMenuBar menuBar = new JMenuBar();
+    menuBar = new BalfMenuBar(themeColor, Color.white);
+    menuBar.setPaneColour(new Color(63, 71, 89));
 
-    setJMenuBar(menuBar);
+    topContainer.add(menuBar, BorderLayout.NORTH);
+
+    //setJMenuBar(menuBar);
+    
+    getTitleBar().attachMenu(menuBar);
 
     int modifier = InputEvent.CTRL_DOWN_MASK;
     if (HelperFunctions.isMac()) {
       modifier = InputEvent.META_DOWN_MASK;
     }
 
+
     this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-    JMenu mnFileMenu = new JMenu("File");
+    BalfMenuBar.Menu mnFileMenu = new BalfMenuBar.Menu("File", menuBar);
     mnFileMenu.setMnemonic('F');
     menuBar.add(mnFileMenu);
 
 
-    JMenuItem mntmNewMenuItem = new JMenuItem("New");
+    BalfMenuBar.MenuItem mntmNewMenuItem = new BalfMenuBar.MenuItem("New", menuBar);
     mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke('N', modifier));
     mntmNewMenuItem.addActionListener(e -> {
       clearUndoRedoManagers();
@@ -364,14 +373,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
     mnFileMenu.add(mntmNewMenuItem);
 
-    JMenuItem mntmSaveMenuItem = new JMenuItem("Save");
+    BalfMenuBar.MenuItem mntmSaveMenuItem = new BalfMenuBar.MenuItem("Save", menuBar);
     mntmSaveMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', modifier));
     mntmSaveMenuItem.addActionListener(e -> {
       if (lastFileOpened.isEmpty()) {
         saveAsDialog();
       } else {
         try {
-          HelperFunctions.writeFile(lastFileOpened, contentEditor.getText(), false);
+          FileHelperFunctions.writeFile(lastFileOpened, mainSyntax.getText(), false);
         } catch (IOException ex) {
           ZPE.log("SQARL Runtime error: " + ex.getMessage());
         }
@@ -379,18 +388,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
     mnFileMenu.add(mntmSaveMenuItem);
 
-    JMenuItem mntmSaveAsMenuItem = new JMenuItem("Save As");
+    BalfMenuBar.MenuItem mntmSaveAsMenuItem = new BalfMenuBar.MenuItem("Save As", menuBar);
     mntmSaveAsMenuItem.addActionListener(e -> saveAsDialog());
     mnFileMenu.add(mntmSaveAsMenuItem);
 
-    mnFileMenu.add(new JSeparator());
+    mnFileMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmOpenMenuItem = new JMenuItem("Open");
+    BalfMenuBar.MenuItem mntmOpenMenuItem = new BalfMenuBar.MenuItem("Open", menuBar);
     mntmOpenMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', modifier));
     mntmOpenMenuItem.addActionListener(e -> open());
     mnFileMenu.add(mntmOpenMenuItem);
 
-    mntmRecentMenuItem = new JMenu("Recent files");
+    mntmRecentMenuItem = new BalfMenuBar.Menu("Recent files", menuBar);
 
     updateRecentFiles();
 
@@ -399,13 +408,13 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     }
 
 
-    mnFileMenu.add(new JSeparator());
+    mnFileMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmPrintMenuItem = new JMenuItem("Print");
+    BalfMenuBar.MenuItem mntmPrintMenuItem = new BalfMenuBar.MenuItem("Print", menuBar);
     mntmPrintMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', modifier));
     mntmPrintMenuItem.addActionListener(e -> {
       try {
-        contentEditor.print();
+        mainSyntax.print();
       } catch (PrinterException e1) {
         JOptionPane.showMessageDialog(editor, "An error was encountered whilst trying to print.", "Error",
                 JOptionPane.ERROR_MESSAGE);
@@ -413,9 +422,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
     mnFileMenu.add(mntmPrintMenuItem);
 
-    mnFileMenu.add(new JSeparator());
+    mnFileMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmExitMenuItem = new JMenuItem("Exit");
+    BalfMenuBar.MenuItem mntmExitMenuItem = new BalfMenuBar.MenuItem("Exit", menuBar);
     mntmExitMenuItem.addActionListener(e -> {
       closeUp();
       System.exit(0);
@@ -425,77 +434,77 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnFileMenu.add(mntmExitMenuItem);
 
 
-    this.contentEditor.getDocument().addUndoableEditListener(undoHandler);
+    mainSyntax.getDocument().addUndoableEditListener(undoHandler);
 
     KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, modifier);
     KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, modifier);
 
     undoAction = new UndoAction();
-    contentEditor.getInputMap().put(undoKeystroke, "undoKeystroke");
-    contentEditor.getActionMap().put("undoKeystroke", undoAction);
+    mainSyntax.getInputMap().put(undoKeystroke, "undoKeystroke");
+    mainSyntax.getActionMap().put("undoKeystroke", undoAction);
 
     redoAction = new RedoAction();
-    contentEditor.getInputMap().put(redoKeystroke, "redoKeystroke");
-    contentEditor.getActionMap().put("redoKeystroke", redoAction);
+    mainSyntax.getInputMap().put(redoKeystroke, "redoKeystroke");
+    mainSyntax.getActionMap().put("redoKeystroke", redoAction);
 
 
-    JMenu mnEditMenu = new JMenu("Edit");
+    BalfMenuBar.Menu mnEditMenu = new BalfMenuBar.Menu("Edit", menuBar);
     mnEditMenu.setMnemonic('E');
     menuBar.add(mnEditMenu);
 
 
-    JMenuItem mntmUndoMenuItem = new JMenuItem(undoAction);
+    BalfMenuBar.MenuItem mntmUndoMenuItem = new BalfMenuBar.MenuItem(undoAction, menuBar);
     mntmUndoMenuItem.setAccelerator(KeyStroke.getKeyStroke('Z', modifier));
 
     mnEditMenu.add(mntmUndoMenuItem);
 
-    JMenuItem mntmRedoMenuItem = new JMenuItem(redoAction);
+    BalfMenuBar.MenuItem mntmRedoMenuItem = new BalfMenuBar.MenuItem(redoAction, menuBar);
     mntmRedoMenuItem.setAccelerator(KeyStroke.getKeyStroke('Y', modifier));
     mnEditMenu.add(mntmRedoMenuItem);
 
-    mnEditMenu.add(new JSeparator());
+    mnEditMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmCutMenuItem = new JMenuItem("Cut");
+    BalfMenuBar.MenuItem mntmCutMenuItem = new BalfMenuBar.MenuItem("Cut", menuBar);
     mntmCutMenuItem.setAccelerator(KeyStroke.getKeyStroke('X', modifier));
-    mntmCutMenuItem.addActionListener(e -> contentEditor.cut());
+    mntmCutMenuItem.addActionListener(e -> mainSyntax.cut());
     mnEditMenu.add(mntmCutMenuItem);
 
-    JMenuItem mntmCopyMenuItem = new JMenuItem("Copy");
+    BalfMenuBar.MenuItem mntmCopyMenuItem = new BalfMenuBar.MenuItem("Copy", menuBar);
     mntmCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke('C', modifier));
-    mntmCopyMenuItem.addActionListener(e -> contentEditor.copy());
+    mntmCopyMenuItem.addActionListener(e -> mainSyntax.copy());
     mnEditMenu.add(mntmCopyMenuItem);
 
-    JMenuItem mntmPasteMenuItem = new JMenuItem("Paste");
+    BalfMenuBar.MenuItem mntmPasteMenuItem = new BalfMenuBar.MenuItem("Paste", menuBar);
     mntmPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke('V', modifier));
-    mntmPasteMenuItem.addActionListener(e -> contentEditor.paste());
+    mntmPasteMenuItem.addActionListener(e -> mainSyntax.paste());
     mnEditMenu.add(mntmPasteMenuItem);
 
-    JMenuItem mntmDeleteMenuItem = new JMenuItem("Delete");
+    BalfMenuBar.MenuItem mntmDeleteMenuItem = new BalfMenuBar.MenuItem("Delete", menuBar);
     mntmDeleteMenuItem.addActionListener(e -> {
-      int start = contentEditor.getSelectionStart();
-      int end = contentEditor.getSelectionEnd();
+      int start = mainSyntax.getSelectionStart();
+      int end = mainSyntax.getSelectionEnd();
 
-      String current = contentEditor.getText();
+      String current = mainSyntax.getText();
 
       String newText = current.substring(0, start) + current.substring(end);
-      contentEditor.setText(newText);
+      mainSyntax.setText(newText);
 
     });
     mnEditMenu.add(mntmDeleteMenuItem);
 
-    mnEditMenu.add(new JSeparator());
+    mnEditMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmSelectAllMenuItem = new JMenuItem("Select All");
+    BalfMenuBar.MenuItem mntmSelectAllMenuItem = new BalfMenuBar.MenuItem("Select All", menuBar);
     mntmSelectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke('A', modifier));
-    mntmSelectAllMenuItem.addActionListener(e -> contentEditor.selectAll());
+    mntmSelectAllMenuItem.addActionListener(e -> mainSyntax.selectAll());
 
     mnEditMenu.add(mntmSelectAllMenuItem);
 
-    JMenu mnViewMenu = new JMenu("View");
+    BalfMenuBar.Menu mnViewMenu = new BalfMenuBar.Menu("View", menuBar);
     mnEditMenu.setMnemonic('V');
     menuBar.add(mnViewMenu);
 
-    mnDarkModeMenuItem = new JCheckBoxMenuItem("Dark Mode");
+    mnDarkModeMenuItem = new BalfMenuBar.CheckBoxMenuItem("Dark Mode", menuBar);
     mnViewMenu.add(mnDarkModeMenuItem);
     mnDarkModeMenuItem.addActionListener(e -> {
       if (!darkMode) {
@@ -507,30 +516,29 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       setProperty("DARK_MODE", "" + darkMode);
       saveGUISettings(mainProperties);
 
-      updateEditor();
     });
 
 
 
-    JMenu mnScriptMenu = new JMenu("Script");
+    BalfMenuBar.Menu mnScriptMenu = new BalfMenuBar.Menu("Script", menuBar);
     mnScriptMenu.setMnemonic('S');
     menuBar.add(mnScriptMenu);
 
-    chckbxmntmCaseSensitiveCompileCheckItem = new JCheckBoxMenuItem("Case sensitive compile");
+    chckbxmntmCaseSensitiveCompileCheckItem = new BalfMenuBar.CheckBoxMenuItem("Case sensitive compile", menuBar);
     chckbxmntmCaseSensitiveCompileCheckItem.setSelected(true);
     mnScriptMenu.add(chckbxmntmCaseSensitiveCompileCheckItem);
 
-    mntmClearConsoleBeforeRunMenuItem = new JCheckBoxMenuItem("Clear console before running");
+    mntmClearConsoleBeforeRunMenuItem = new BalfMenuBar.CheckBoxMenuItem("Clear console before running", menuBar);
     mntmClearConsoleBeforeRunMenuItem.setSelected(true);
     mnScriptMenu.add(mntmClearConsoleBeforeRunMenuItem);
 
-    mnScriptMenu.add(new JSeparator());
+    mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmRunCodeMenuItem = new JMenuItem("Run code");
+    BalfMenuBar.MenuItem mntmRunCodeMenuItem = new BalfMenuBar.MenuItem("Run code", menuBar);
     mntmRunCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
     mntmRunCodeMenuItem.addActionListener(e -> {
       /*
-       * running = new ConsoleThread(); running.startConsole(contentEditor.getText(),
+       * running = new ConsoleThread(); running.startConsole(mainSyntax.getText(),
        * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
        */
       /*if (AttachedConsole == null) {
@@ -545,22 +553,68 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
       try{
         String extras = "";
-        if (chckbxmntmCaseSensitiveCompileCheckItem.isSelected()) {
+        if (!chckbxmntmCaseSensitiveCompileCheckItem.isSelected()) {
           extras += " --case_insensitive";
         }
         SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
-        HelperFunctions.writeFile(RunningInstance.getInstallPath() + "/tmp.yas", yass, false);
-        if (!RunningInstance.getJarExecPath().isEmpty()) {
-          if (new File(RunningInstance.getJarExecPath()).exists()) {
-            currentProcess = Runtime.getRuntime().exec("java -jar " + RunningInstance.getJarExecPath() + " -g " + RunningInstance.getInstallPath() + "/tmp.yas --console" + extras);
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
+        FileHelperFunctions.writeFile(ZPEInstance.getInstallPath() + "/tmp.yas", yass, false);
+        if (!ZPEInstance.getJarExecPath().isEmpty()) {
+
+          File jarFile = new File(ZPEInstance.getJarExecPath());
+
+          if (jarFile.exists()) {
+
+            ProcessBuilder pb = new ProcessBuilder(
+                    "java",
+                    "-jar",
+                    jarFile.getAbsolutePath(),
+                    "-g",
+                    ZPEInstance.getInstallPath() + "/tmp.yas",
+                    "--console"
+            );
+
+            if (extras != null && !extras.trim().isEmpty()) {
+              for (String extra : extras.trim().split("\\s+")) {
+                pb.command().add(extra);
+              }
+            }
+
+            pb.redirectErrorStream(true);
+
+            currentProcess = pb.start();
+
+            // Read process output
+            new Thread(() -> {
+              try (BufferedReader reader = new BufferedReader(
+                      new InputStreamReader(currentProcess.getInputStream()))) {
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                  System.out.println("[ZPE] " + line);
+                }
+
+              } catch (IOException ex) {
+                ex.printStackTrace();
+              }
+            }).start();
+
+            // Detect process exit
+            new Thread(() -> {
+              try {
+                int exitCode = currentProcess.waitFor();
+                System.out.println("[ZPE] Process exited with code " + exitCode);
+              } catch (InterruptedException ex) {
+                ex.printStackTrace();
+              }
+            }).start();
+
             mntmStopCodeMenuItem.setEnabled(true);
             mntmStopCodeMenuItem.setVisible(true);
           }
-        } else {
 
-          AttachedConsole = new ZPEEditorConsole(this, "", this.contentEditor.getFont(), 5);
-          AttachedConsole.runCode(yass, new ZPEString[0], this.chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
+        } else {
           mntmStopCodeMenuItem.setVisible(false);
         }
       } catch(IOException ex){
@@ -572,7 +626,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnScriptMenu.add(mntmRunCodeMenuItem);
 
 
-    mntmStopCodeMenuItem = new JMenuItem("Stop code");
+    mntmStopCodeMenuItem = new BalfMenuBar.MenuItem("Stop code", menuBar);
     mntmStopCodeMenuItem.setEnabled(false);
     mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
     mntmStopCodeMenuItem.addActionListener(e -> {
@@ -583,12 +637,12 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnScriptMenu.add(mntmStopCodeMenuItem);
 
-    mnScriptMenu.add(new JSeparator());
+    mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmCompileCodeMenuItem = getjMenuItem();
+    BalfMenuBar.MenuItem mntmCompileCodeMenuItem = getBalfMenuBar(menuBar);
     mnScriptMenu.add(mntmCompileCodeMenuItem);
 
-    JMenuItem mntmTranspileCodeMenuItem = new JMenuItem("Transpile code to Python");
+    BalfMenuBar.MenuItem mntmTranspileCodeMenuItem = new BalfMenuBar.MenuItem("Transpile code to Python", menuBar);
     mntmTranspileCodeMenuItem.addActionListener(e -> {
       File file;
       String extension = ".py";
@@ -610,14 +664,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 
         SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
         PythonTranspiler t = new PythonTranspiler();
         String code = t.Transpile(ZPEKit.compile(yass), "");
         String path1 = file.getPath();
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
         }
-        HelperFunctions.writeFile(path1, code, false);
+        FileHelperFunctions.writeFile(path1, code, false);
 
         JOptionPane.showMessageDialog(editor,
                 "Python transpile success. The file has been successfully compiled to " + path1 + ".",
@@ -629,14 +683,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     });
     mnScriptMenu.add(mntmTranspileCodeMenuItem);
 
-    mnScriptMenu.add(new JSeparator());
+    mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
 
-    JMenuItem mntmAnalyseCodeMenuItem = new JMenuItem("Analyse code");
+    BalfMenuBar.MenuItem mntmAnalyseCodeMenuItem = new BalfMenuBar.MenuItem("Analyse code", menuBar);
     mntmAnalyseCodeMenuItem.addActionListener(e -> {
 
 
       SQARLParser sqarl = new SQARLParser();
-      String yass = sqarl.parseToYASS(contentEditor.getText());
+      String yass = sqarl.parseToYASS(mainSyntax.getText());
 
       try {
         if (ZPEKit.validateCode(yass)) {
@@ -656,7 +710,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnScriptMenu.add(mntmAnalyseCodeMenuItem);
 
 
-    JMenuItem mntmToByteCodeFileMenuItem = new JMenuItem("Compile to byte codes");
+    BalfMenuBar.MenuItem mntmToByteCodeFileMenuItem = new BalfMenuBar.MenuItem("Compile to byte codes", menuBar);
     mntmToByteCodeFileMenuItem.addActionListener(e -> {
 
       final JFileChooser fc = new JFileChooser();
@@ -673,13 +727,13 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
         try {
 
           SQARLParser sqarl = new SQARLParser();
-          String yass = sqarl.parseToYASS(contentEditor.getText());
+          String yass = sqarl.parseToYASS(mainSyntax.getText());
 
           StringBuilder text = new StringBuilder();
           for (byte s : ZPEKit.parseToBytes(yass)) {
             text.append(s).append(" ");
           }
-          HelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
+          FileHelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
         } catch (IOException ex) {
           JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
                   JOptionPane.ERROR_MESSAGE);
@@ -690,17 +744,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnScriptMenu.add(mntmToByteCodeFileMenuItem);
 
-    JMenuItem mntmUnfoldCodeMenuItem = new JMenuItem("Unfold (explain) code");
+    BalfMenuBar.MenuItem mntmUnfoldCodeMenuItem = new BalfMenuBar.MenuItem("Unfold (explain) code", menuBar);
     mntmUnfoldCodeMenuItem.addActionListener(e -> {
 
       String result;
       try {
         SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
-        result = ZPEKit.unfold(yass, false);
-        JOptionPane.showMessageDialog(editor, ZPEHelperFunctions.smartSplit(result, 100), "Code Explanation",
-                JOptionPane.INFORMATION_MESSAGE);
-
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
+        result = ZPEKit.unfold(mainSyntax.getText(), false);
+        JOptionPane op = new JOptionPane(new YASSUnfoldDialog(result).getContentPane(), JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, lighterLogo, new String[]{});
+        JDialog dlg = op.createDialog(_this, "YASS Unfold code explainer");
+        dlg.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dlg.setVisible(true);
       } catch (CompileException ex) {
         throw new RuntimeException(ex);
       }
@@ -710,18 +765,18 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mnScriptMenu.add(mntmUnfoldCodeMenuItem);
 
     //Help menu
-    JMenu mnHelpMenu = new JMenu("Help");
+    BalfMenuBar.Menu mnHelpMenu = new BalfMenuBar.Menu("Help", menuBar);
     mnHelpMenu.setMnemonic('H');
     menuBar.add(mnHelpMenu);
 
     if (!HelperFunctions.isMac()) {
-      JMenuItem mntmAboutFileMenuItem = new JMenuItem("About");
+      BalfMenuBar.MenuItem mntmAboutFileMenuItem = new BalfMenuBar.MenuItem("About", menuBar);
       mntmAboutFileMenuItem.addActionListener(e -> showAbout());
       mnHelpMenu.add(mntmAboutFileMenuItem);
-      mnHelpMenu.add(new JSeparator());
+      mnHelpMenu.add(new BalfMenuBar.Separator(menuBar));
     }
 
-    JMenuItem mntmSQARLSpecificationWebsiteMenuItem = new JMenuItem("Read the SQARL Specification");
+    BalfMenuBar.MenuItem mntmSQARLSpecificationWebsiteMenuItem = new BalfMenuBar.MenuItem("Read the SQARL Specification", menuBar);
     mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> {try{
       HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
     } catch (Exception ex){
@@ -730,7 +785,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnHelpMenu.add(mntmSQARLSpecificationWebsiteMenuItem);
 
-    JMenuItem mntmSQAWebsiteMenuItem = new JMenuItem("Visit SQA Website");
+    BalfMenuBar.MenuItem mntmSQAWebsiteMenuItem = new BalfMenuBar.MenuItem("Visit SQA Website", menuBar);
 
       mntmSQAWebsiteMenuItem.addActionListener(e -> {try {
         HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/48486.html");
@@ -760,7 +815,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnHelpMenu.add(mntmSQAWebsiteMenuItem);
 
-    RunningInstance.setErrorLevel(1);
+
+    ZPEInstance.setErrorLevel(1);
 
     if (mainProperties.containsKey("DARK_MODE")) {
       if (mainProperties.get("DARK_MODE").equals("true")) {
@@ -786,8 +842,8 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     saveGUISettings(mainProperties);
   }
 
-  private JMenuItem getjMenuItem() {
-    JMenuItem mntmCompileCodeMenuItem = new JMenuItem("Compile code");
+  private BalfMenuBar.MenuItem getBalfMenuBar(BalfMenuBar menuBar) {
+    BalfMenuBar.MenuItem mntmCompileCodeMenuItem = new BalfMenuBar.MenuItem("Compile code", menuBar);
     mntmCompileCodeMenuItem.addActionListener(e -> {
       String name = JOptionPane.showInputDialog(editor,
               "Please insert the name of the compiled application.");
@@ -812,7 +868,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
 
         SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(contentEditor.getText());
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
         // null for no password
         ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
                 !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
@@ -928,11 +984,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       // This is where a real application would open the file.
       try {
         clearUndoRedoManagers();
-        setTextProperly(HelperFunctions.readFileAsString(file.getAbsolutePath()));
+        setTextProperly(FileHelperFunctions.readFileAsString(file.getAbsolutePath()));
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
-            contentEditor.setCaretPosition(0);
+            mainSyntax.setCaretPosition(0);
             scrollPane.getVerticalScrollBar().setValue(0);
           }
         });
@@ -965,7 +1021,7 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
       String extension = getSaveExtension(fc.getFileFilter());
       // This is where a real application would open the file.
       try {
-        HelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, contentEditor.getText(), false);
+        FileHelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, mainSyntax.getText(), false);
         lastFileOpened = file.getAbsolutePath();
       } catch (IOException e) {
         JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
@@ -976,13 +1032,47 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   private void showAbout() {
 
-    JOptionPane op = new JOptionPane(new SQARLAboutDialog().getContentPane(), JOptionPane.PLAIN_MESSAGE,
-            JOptionPane.DEFAULT_OPTION, null, new String[]{});
+    String msg = "";
+    msg += "SQARL Language Runtime";
+    msg += "SQARL Runtime powered by ZPE copyright Jamie Balfour 2020 - " + ZPE.VERSION_DATE + "\\n\\n";
 
-    JDialog dlg = op.createDialog(editor, "About SQA Reference Language Runtime");
+    msg += "Powered by Zenith Parsing Engine version " +
+            ZenithParsingEngine.VERSION;
+    msg += "\n\nFor more information visit\n" +
+            "https://www.jamiebalfour.scot/projects/zpe/";
 
-    dlg.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+    final BalfButton btnVisitWebsiteButton =
+            new BalfButton("More", 15);
 
+    btnVisitWebsiteButton.addActionListener(e -> {
+
+      try {
+
+        HelperFunctions.openWebsite(
+                "https://www.jamiebalfour.scot/projects/zpe/"
+        );
+
+      } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+                getContentPane(),
+                "Could not open the ZPE website",
+                "Failure",
+                JOptionPane.ERROR_MESSAGE
+        );
+      }
+    });
+
+    JDialog dlg = new JDialog(
+            _frame,
+            "About ZPE",
+            true // modal
+    );
+
+    dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+    dlg = new BalfAboutDialog(_frame, "SQARL Language Runtime", msg, btnVisitWebsiteButton, lighterLogoFull, themeColor, Color.white);
+    dlg.setLocationRelativeTo(_frame);
     dlg.setVisible(true);
   }
 
@@ -1022,9 +1112,9 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
   void setTextProperly(String text) {
     dontUndo = true;
-    contentEditor.setText(text);
+    mainSyntax.setText(text);
     dontUndo = false;
-    //contentEditor.setCaretPosition(0);
+    //mainSyntax.setCaretPosition(0);
   }
 
   @Override
@@ -1038,54 +1128,6 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     return this.mainProperties;
   }
 
-  private void updateEditor() {
-
-    contentEditor = (JEditorPane) mainSyntax.getEditPane();
-    setTextProperly(contentEditor.getText());
-
-  }
-
-  private void setUpScrollBar(String trackColour, String thumbColour) {
-    scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-      @Override
-      protected void configureScrollBarColors() {
-        this.thumbColor = Color.decode(thumbColour);
-        this.trackColor = Color.decode(trackColour);
-        this.scrollBarWidth = 7;
-      }
-
-      @Override
-      protected JButton createDecreaseButton(int orientation) {
-        return createZeroButton();
-      }
-
-      @Override
-      protected JButton createIncreaseButton(int orientation) {
-        return createZeroButton();
-      }
-
-      protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-        // your code
-        Graphics2D g2 = (Graphics2D) g.create();
-
-        // Enable anti-aliasing for smooth edges
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // Set the color of the thumb
-        g2.setColor(thumbColor);
-
-        // Set the thumb width and height
-        int arc = 10; // This value sets the roundness of the corners. Increase or decrease it as needed.
-
-        // Draw a rounded rectangle
-        g2.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, arc, arc);
-
-        // Dispose of the graphics context
-        g2.dispose();
-      }
-    });
-  }
-
   private JButton createZeroButton() {
     JButton button = new JButton();
     Dimension zeroDim = new Dimension(0, 0);
@@ -1096,14 +1138,14 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   }
 
   private void resetScroll(){
-    int caretPosition = contentEditor.getCaretPosition();
+    int caretPosition = mainSyntax.getCaretPosition();
     int scrollPosition = scrollPane.getVerticalScrollBar().getValue();
-    contentEditor.setText(contentEditor.getText());
+    mainSyntax.setText(mainSyntax.getText());
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
-        contentEditor.requestFocus();
-        contentEditor.setCaretPosition(caretPosition);
+        mainSyntax.requestFocus();
+        mainSyntax.setCaretPosition(caretPosition);
         scrollPane.getVerticalScrollBar().setValue(scrollPosition);
       }
     });
@@ -1113,10 +1155,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnDarkModeMenuItem.setSelected(true);
 
+    BalfLafManager.getInstance().toggleDarkMode(true);
     Color dark = Color.decode("#282D37");
-    scrollPane.setBackground(dark);
-    contentEditor.setBackground(dark);
-    contentEditor.setForeground(Color.white);
+    scrollPane.setDarkColour(dark);
+    mainSyntax.setBackground(dark);
+    mainSyntax.setForeground(Color.white);
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.white);
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Quote, new Color(152, 195, 119));
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Keyword, new Color(198, 120, 222));
@@ -1124,9 +1167,11 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Var, new Color(224, 108, 117));
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Type, new Color(105, 143, 163));
     mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Bool, new Color(208, 154, 102));
-    contentEditor.setCaretColor(Color.white);
+    mainSyntax.setCaretColor(Color.white);
     resetScroll();
-    setUpScrollBar("#282D37", "#444444");
+
+
+
 
     darkMode = true;
   }
@@ -1135,17 +1180,29 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
 
     mnDarkModeMenuItem.setSelected(false);
 
+    BalfLafManager.getInstance().toggleDarkMode(false);
+
     Color light = new Color(255, 255, 255);
-    contentEditor.setBackground(light);
-    contentEditor.setForeground(Color.black);
-    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal, Color.black);
-    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Quote, new Color(0, 128, 0));
-    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Keyword, new Color(200, 0, 255));
-    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Var, new Color(255, 138, 0));
-    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Type, new Color(150, 0, 150));
-    contentEditor.setCaretColor(Color.black);
+    mainSyntax.setBackground(light);
+    mainSyntax.setForeground(Color.black);
+
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Normal,
+            Color.black);
+
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Quote,
+            new Color(152, 195, 121)); // Soft green
+
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Keyword,
+            new Color(198, 120, 221)); // IntelliJ-style purple
+
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Var,
+            new Color(224, 108, 117)); // Soft coral/red
+
+    mainSyntax.setAttributeColor(CodeEditorView.ATTR_TYPE.Type,
+            new Color(97, 175, 239)); // VS Code blue
+
+    mainSyntax.setCaretColor(Color.black);
     resetScroll();
-    setUpScrollBar("#dddddd", "#aaaaaa");
 
     darkMode = false;
   }
@@ -1153,16 +1210,16 @@ class SQARLEditorMain extends JFrame implements GenericEditor {
   private void updateRecentFiles(){
     mntmRecentMenuItem.removeAll();
     for(String fStr : recents){
-      JMenuItem item = new JMenuItem(new File(fStr).getName());
+      BalfMenuBar.MenuItem item = new BalfMenuBar.MenuItem(new File(fStr).getName(), menuBar);
       item.addActionListener(e -> {
         try {
           clearUndoRedoManagers();
-          setTextProperly(HelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
+          setTextProperly(FileHelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
           editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
           SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-              contentEditor.setCaretPosition(0);
+              mainSyntax.setCaretPosition(0);
               scrollPane.getVerticalScrollBar().setValue(0);
             }
           });

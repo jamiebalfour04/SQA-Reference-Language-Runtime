@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MANIFEST/MANIFEST.iml" filepath="$PROJECT_DIR$/MANIFEST/MANIFEST.iml" />
       <module fileurl="file://$PROJECT_DIR$/sqa-reference-language-runtime.iml" filepath="$PROJECT_DIR$/sqa-reference-language-runtime.iml" />
     </modules>
   </component>
