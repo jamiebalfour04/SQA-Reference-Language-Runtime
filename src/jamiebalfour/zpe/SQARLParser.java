@@ -13,7 +13,10 @@ import jamiebalfour.zpe.core.exceptions.ZPERuntimeException;
 import jamiebalfour.zpe.parser.v5.ZenithParsingEngine;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +31,6 @@ public class SQARLParser {
 
   public static void main(String[] args) throws HelperFunctions.NoArgumentValueProvided {
 
-
     if(HelperFunctions.isMac()) {
       HelperFunctions.setMacOSApplicationName("SQARL Runtime");
     }
@@ -39,16 +41,14 @@ public class SQARLParser {
 
 
     if (args.length == 0) {
-      if (System.console() == null) {
-
-        if (!HelperFunctions.isHeadless()) {
-          new SQARLEditorMain().setVisible(true);
-        }
-
-      } else {
+      if (HelperFunctions.isHeadless() || ZPEHelperFunctions.isTrulyCommandLine()) {
         // If nothing has been provided
         System.out.println("If you are running this from the console, please provide at least one command line argument. You can use -r to run an SQARL program directly.");
         System.exit(0);
+
+
+      } else {
+        new SQARLEditorMain().setVisible(true);
       }
 
 
