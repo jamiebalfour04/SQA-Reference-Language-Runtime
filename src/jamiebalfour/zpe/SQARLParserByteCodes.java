@@ -40,6 +40,13 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
   final static byte FOR = 19;
   final static byte EACH = 20;
   final static byte ELSE = 21;
+  final static byte TIMES = 22;
+  final static byte STEP = 23;
+  final static byte POWER = 24;
+  final static byte DOT = 25;
+  final static byte SEMICOLON = 26;
+  final static byte OPEN = 27;
+  final static byte CLOSE = 28;
 
 
   final static byte INT = 29;
@@ -47,6 +54,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
   final static byte BOOLEAN = 31;
   final static byte REAL = 32;
   final static byte ASSIGNMENT = 33;
+  final static byte CREATE = 34;
+  final static byte INHERITS = 35;
+  final static byte WITH = 36;
+  final static byte OVERRIDE = 37;
 
   final static byte AND = 40;
   final static byte OR = 41;
@@ -98,6 +109,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
       case "INTEGER":
       case "BOOLEAN":
       case "REAL":
+      case "CHARACTER":
       case "STRING":
         return SQARLParserByteCodes.TYPE;
       case "ARRAY":
@@ -130,6 +142,12 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
         return SQARLParserByteCodes.DISPLAY;
       case "SET":
         return SQARLParserByteCodes.SET;
+      case "OPEN":
+        return SQARLParserByteCodes.OPEN;
+      case "CLOSE":
+        return SQARLParserByteCodes.CLOSE;
+      case "CREATE":
+        return SQARLParserByteCodes.CREATE;
       case "AND":
         return SQARLParserByteCodes.AND;
       case "OR":
@@ -139,9 +157,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
       case "&":
         return SQARLParserByteCodes.CONCAT;
       case "!=":
+      case "≠":
         return SQARLParserByteCodes.NEQUAL;
       case "=":
-        return SQARLParserByteCodes.ASSIGNMENT;
+        return SQARLParserByteCodes.EQUAL;
       case "==":
         return SQARLParserByteCodes.EQUAL;
       case ">":
@@ -151,7 +170,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
       case ">=":
         return SQARLParserByteCodes.GTE;
       case "<=":
+      case "≤":
         return SQARLParserByteCodes.LTE;
+      case "≥":
+        return SQARLParserByteCodes.GTE;
       case "(":
         return SQARLParserByteCodes.LBRA;
       case ")":
@@ -166,6 +188,12 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
         return SQARLParserByteCodes.RSQBR;
       case ",":
         return SQARLParserByteCodes.COMMA;
+      case ".":
+        return SQARLParserByteCodes.DOT;
+      case ";":
+        return SQARLParserByteCodes.SEMICOLON;
+      case "^":
+        return SQARLParserByteCodes.POWER;
       case "+":
         return SQARLParserByteCodes.PLUS;
       case "ELSE":
@@ -180,6 +208,10 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
         return SQARLParserByteCodes.MOD;
       case "REPEAT":
         return SQARLParserByteCodes.REPEAT;
+      case "TIMES":
+        return SQARLParserByteCodes.TIMES;
+      case "STEP":
+        return SQARLParserByteCodes.STEP;
       case "IF":
         return SQARLParserByteCodes.IF;
       case "THEN":
@@ -204,6 +236,12 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
         return SQARLParserByteCodes.RETURN;
       case "RETURNS":
         return SQARLParserByteCodes.RETURNS;
+      case "INHERITS":
+        return SQARLParserByteCodes.INHERITS;
+      case "WITH":
+        return SQARLParserByteCodes.WITH;
+      case "OVERRIDE":
+        return SQARLParserByteCodes.OVERRIDE;
     }
 
     if (w.matches(INTEGER_REGEX))
@@ -228,7 +266,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
 
   @Override
   public String[] listOfSubsequentCharacters() {
-    return new String[]{"<=", ">=", "=="};
+    return new String[]{"<=", ">=", "==", "!="};
   }
 
   @Override

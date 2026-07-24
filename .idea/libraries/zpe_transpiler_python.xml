@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="zpe.transpiler.python">
-    <CLASSES>
-      <root url="jar://$JARs$/zpe.transpiler.python.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

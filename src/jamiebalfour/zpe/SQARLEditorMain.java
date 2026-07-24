@@ -1,9 +1,7 @@
 package jamiebalfour.zpe;
 
-import jamiebalfour.FileHelperFunctions;
-import jamiebalfour.HelperFunctions;
+import jamiebalfour.helpers.*;
 import jamiebalfour.codeeditor.CodeEditorView;
-import jamiebalfour.macOS;
 import jamiebalfour.ui.BalfLafManager;
 import jamiebalfour.ui.components.BalfButton;
 import jamiebalfour.ui.components.BalfMenuBar;
@@ -18,7 +16,11 @@ import jamiebalfour.zpe.gui.editor.YASSUnfoldDialog;
 import jamiebalfour.zpe.gui.editor.ZPEEditor;
 import jamiebalfour.zpe.core.exceptions.CompileException;
 import jamiebalfour.zpe.core.interfaces.GenericEditor;
-import jamiebalfour.zpe.parser.v5.ZenithParsingEngine;
+import jamiebalfour.zpe.parser.v6.ZenithParsingEngine;
+import jamiebalfour.zpe.transpilers.PythonTranspiler;
+import jamiebalfour.zpe.transpilers.ZPEJavascriptTranspiler;
+import jamiebalfour.zpe.transpilers.ZPEPhpTranspiler;
+import jamiebalfour.zpe.transpilers.ZPEPythonTranspiler;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -133,9 +135,10 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
   public SQARLEditorMain() {
     super("SQARL Runtime", 9, themeColor, Color.white, null);
 
-    initialise();
+
 
     getTitleBar().setCloseListener(e -> {closeUp(); System.exit(0);});
+    getTitleBar().setLabelText("SQARL Runtime");
 
     JPanel topContainer = new JPanel();
     topContainer.setOpaque(false);
@@ -157,7 +160,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     Image newimg = lighterLogoFull.getImage().getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
     lighterLogo = new ImageIcon(newimg);
 
-    mainSyntax = new CodeEditorView();
+    mainSyntax = new CodeEditorView(false);
 
 
     final HashMap<String, SimpleAttributeSet> SQARL_KEYWORDS = new HashMap<>(16);
@@ -212,8 +215,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       @Override
       public void windowClosing(WindowEvent e) {
 
-        int confirmed = JOptionPane.showConfirmDialog(editor, "Are you sure you want to exit the program?", "Exit Program Message Box", JOptionPane.YES_NO_OPTION);
-        if (confirmed == JOptionPane.YES_OPTION) {
+        boolean confirmed = BalfLafManager.showConfirm(editor, "Are you sure you want to exit the program?", "Exit Program");
+        if (confirmed) {
           dispose();
 
           closeUp();
@@ -317,7 +320,13 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       mainSyntax.addAutoCompleteItem(keyword, CodeEditorView.AutoCompleteItemType.Keyword);
     }
 
-    this.mainSyntax.setKeywords(SQARL_KEYWORDS);
+    this.mainSyntax.clearKeywords();
+
+    for(String s : SQARL_KEYWORDS.keySet()){
+      mainSyntax.addKeyword(s, SQARL_KEYWORDS.get(s));
+    }
+
+
 
     //scrollPane.add(mainSyntax.getEditor());
     //scrollPane.setViewportView(mainSyntax.getEditor());
@@ -419,8 +428,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
         mainSyntax.print();
       } catch (PrinterException e1) {
-        JOptionPane.showMessageDialog(editor, "An error was encountered whilst trying to print.", "Error",
-                JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "An error was encountered whilst trying to print.", "Error");
       }
     });
     mnFileMenu.add(mntmPrintMenuItem);
@@ -468,17 +476,17 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mnEditMenu.add(new BalfMenuBar.Separator(menuBar));
 
     BalfMenuBar.MenuItem mntmCutMenuItem = new BalfMenuBar.MenuItem("Cut", menuBar);
-    mntmCutMenuItem.setAccelerator(KeyStroke.getKeyStroke('X', modifier));
+    mntmCutMenuItem.setPseudoAccelerator(KeyStroke.getKeyStroke('X', modifier));
     mntmCutMenuItem.addActionListener(e -> mainSyntax.cut());
     mnEditMenu.add(mntmCutMenuItem);
 
     BalfMenuBar.MenuItem mntmCopyMenuItem = new BalfMenuBar.MenuItem("Copy", menuBar);
-    mntmCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke('C', modifier));
+    mntmCopyMenuItem.setPseudoAccelerator(KeyStroke.getKeyStroke('C', modifier));
     mntmCopyMenuItem.addActionListener(e -> mainSyntax.copy());
     mnEditMenu.add(mntmCopyMenuItem);
 
     BalfMenuBar.MenuItem mntmPasteMenuItem = new BalfMenuBar.MenuItem("Paste", menuBar);
-    mntmPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke('V', modifier));
+    mntmPasteMenuItem.setPseudoAccelerator(KeyStroke.getKeyStroke('V', modifier));
     mntmPasteMenuItem.addActionListener(e -> mainSyntax.paste());
     mnEditMenu.add(mntmPasteMenuItem);
 
@@ -564,7 +572,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         try{
           yass = sqarl.parseToYASS(mainSyntax.getText());
         } catch(Exception ex){
-          JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+          BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
           return;
         }
         System.out.println(yass);
@@ -659,8 +667,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     BalfMenuBar.MenuItem mntmCompileCodeMenuItem = new BalfMenuBar.MenuItem("Compile code", menuBar);
     mntmCompileCodeMenuItem.addActionListener(e -> {
-      String name = JOptionPane.showInputDialog(editor,
-              "Please insert the name of the compiled application.");
+      String name = BalfLafManager.showInput(editor,"Please insert the name of the compiled application.", "Compiled code name");
       File file;
       String extension;
 
@@ -687,18 +694,18 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
                 !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
 
-        JOptionPane.showMessageDialog(editor,
+        BalfLafManager.showAlert(editor,
                 "YASS compile success. The file has been successfully compiled to " + file + ".",
-                "YASS compiler", JOptionPane.WARNING_MESSAGE);
+                "YASS compiler");
 
       } catch (IOException ex) {
-        JOptionPane.showMessageDialog(editor,
+        BalfLafManager.showAlert(editor,
                 "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+                "YASS compiler");
       } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor,
+        BalfLafManager.showAlert(editor,
                 "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
-                "YASS compiler", JOptionPane.ERROR_MESSAGE);
+                "YASS compiler");
       }
     });
 
@@ -706,7 +713,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
     BalfMenuBar.MenuItem mntmCompileCodeNativeMenuItem = new BalfMenuBar.MenuItem("Compile code to binary", menuBar);
     mntmCompileCodeNativeMenuItem.addActionListener(e -> {
-      String applicationName = JOptionPane.showInputDialog(_frame, "Please insert the name of the compiled application.");
+      String applicationName = BalfLafManager.showInput(_frame, "Please insert the name of the compiled application.", "Application name");
       boolean wait = false;
 
       File file12;
@@ -746,15 +753,19 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
         yass = sqarl.parseToYASS(mainSyntax.getText());
       } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
         return;
       }
 
       ZPEKit.compileNativeBinary(yass, applicationName, fpath, wait);
     });
 
-    BalfMenuBar.MenuItem mntmTranspileCodeMenuItem = new BalfMenuBar.MenuItem("Transpile code to Python", menuBar);
-    mntmTranspileCodeMenuItem.addActionListener(e -> {
+    mnScriptMenu.add(mntmCompileCodeNativeMenuItem);
+
+    mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
+
+    BalfMenuBar.MenuItem mntmTranspileCodeToPythonMenuItem = new BalfMenuBar.MenuItem("Transpile code to Python", menuBar);
+    mntmTranspileCodeToPythonMenuItem.addActionListener(e -> {
       File file;
       String extension = ".py";
 
@@ -776,24 +787,102 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
         SQARLParser sqarl = new SQARLParser();
         String yass = sqarl.parseToYASS(mainSyntax.getText());
-        PythonTranspiler t = new PythonTranspiler();
-        String code = t.Transpile(ZPEKit.compile(yass), "");
+
+        String code = ZPEKit.transpileCode(yass, "", new ZPEPythonTranspiler());
         String path1 = file.getPath();
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
         }
         FileHelperFunctions.writeFile(path1, code, false);
 
-        JOptionPane.showMessageDialog(editor,
-                "Python transpile success. The file has been successfully compiled to " + path1 + ".",
-                "Python transpiler", JOptionPane.WARNING_MESSAGE);
+        BalfLafManager.showAlert(editor,"Python transpile success. The file has been successfully compiled to " + path1 + ".", "Python transpiler");
 
       } catch(Exception ex){
         System.out.println(ex.getMessage());
       }
     });
-    mnScriptMenu.add(mntmCompileCodeNativeMenuItem);
-    mnScriptMenu.add(mntmTranspileCodeMenuItem);
+
+    mnScriptMenu.add(mntmTranspileCodeToPythonMenuItem);
+
+    BalfMenuBar.MenuItem mntmTranspileCodeToJavaScriptMenuItem = new BalfMenuBar.MenuItem("Transpile code to JavaScript", menuBar);
+    mntmTranspileCodeToJavaScriptMenuItem.addActionListener(e -> {
+      File file;
+      String extension = ".js";
+
+      final JFileChooser fc = new JFileChooser();
+      FileNameExtensionFilter jsFilter = new FileNameExtensionFilter("JavaScript files (*.js)", "js");
+      fc.addChoosableFileFilter(jsFilter);
+      fc.setAcceptAllFileFilterUsed(false);
+
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
+
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+      } else {
+        return;
+      }
+
+      try {
+
+
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
+
+        String code = ZPEKit.transpileCode(yass, "", new ZPEJavascriptTranspiler());
+        String path1 = file.getPath();
+        if(!path1.endsWith(extension)){
+          path1 = path1 + extension;
+        }
+        FileHelperFunctions.writeFile(path1, code, false);
+
+        BalfLafManager.showAlert(editor,"JavaScript transpile success. The file has been successfully compiled to " + path1 + ".", "JavaScript transpiler");
+
+      } catch(Exception ex){
+        System.out.println(ex.getMessage());
+      }
+    });
+
+    mnScriptMenu.add(mntmTranspileCodeToJavaScriptMenuItem);
+
+    BalfMenuBar.MenuItem mntmTranspileCodeToPHPMenuItem = new BalfMenuBar.MenuItem("Transpile code to PHP", menuBar);
+    mntmTranspileCodeToPHPMenuItem.addActionListener(e -> {
+      File file;
+      String extension = ".php";
+
+      final JFileChooser fc = new JFileChooser();
+      FileNameExtensionFilter phpFilter = new FileNameExtensionFilter("PHP files (*.php)", "php");
+      fc.addChoosableFileFilter(phpFilter);
+      fc.setAcceptAllFileFilterUsed(false);
+
+      int returnVal = fc.showSaveDialog(editor.getContentPane());
+
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        file = fc.getSelectedFile();
+      } else {
+        return;
+      }
+
+      try {
+
+
+        SQARLParser sqarl = new SQARLParser();
+        String yass = sqarl.parseToYASS(mainSyntax.getText());
+
+        String code = ZPEKit.transpileCode(yass, "", new ZPEPhpTranspiler());
+        String path1 = file.getPath();
+        if(!path1.endsWith(extension)){
+          path1 = path1 + extension;
+        }
+        FileHelperFunctions.writeFile(path1, code, false);
+
+        BalfLafManager.showAlert(editor,"PHP transpile success. The file has been successfully compiled to " + path1 + ".", "PHP transpiler");
+
+      } catch(Exception ex){
+        System.out.println(ex.getMessage());
+      }
+    });
+
+    mnScriptMenu.add(mntmTranspileCodeToPHPMenuItem);
 
     mnScriptMenu.add(new BalfMenuBar.Separator(menuBar));
 
@@ -806,21 +895,18 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
         yass = sqarl.parseToYASS(mainSyntax.getText());
       } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
         return;
       }
 
       try {
         if (ZPEKit.validateCode(yass)) {
-          JOptionPane.showMessageDialog(editor, "Code is valid", "Code analysis",
-                  JOptionPane.INFORMATION_MESSAGE);
+          BalfLafManager.showAlert(editor, "Code is valid", "Code analysis");
         } else {
-          JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
-                  JOptionPane.INFORMATION_MESSAGE);
+          BalfLafManager.showAlert(editor, "Code is invalid", "Code analysis");
         }
       } catch (CompileException ex) {
-        JOptionPane.showMessageDialog(editor, "Code is invalid", "Code analysis",
-                JOptionPane.INFORMATION_MESSAGE);
+        BalfLafManager.showAlert(editor, "Code is invalid", "Code analysis");
       }
 
     });
@@ -853,10 +939,9 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
           }
           FileHelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
         } catch (IOException ex) {
-          JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
-                  JOptionPane.ERROR_MESSAGE);
+          BalfLafManager.showAlert(editor, "The file could not be saved.", "Error");
         } catch (CompileException ex) {
-          JOptionPane.showMessageDialog(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error", JOptionPane.ERROR_MESSAGE);
+          BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
           return;
         }
       }
@@ -873,7 +958,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         SQARLParser sqarl = new SQARLParser();
         String yass = sqarl.parseToYASS(mainSyntax.getText());
         result = ZPEKit.unfold(mainSyntax.getText(), false);
-        JOptionPane op = new JOptionPane(new YASSUnfoldDialog(result).getContentPane(), JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, lighterLogo, new String[]{});
+        JOptionPane op = new JOptionPane(new YASSUnfoldDialog(_frame, result, themeColor, getForegroundColour()).getContentPane(), JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, lighterLogo, new String[]{});
         JDialog dlg = op.createDialog(_this, "YASS Unfold code explainer");
         dlg.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dlg.setVisible(true);
@@ -901,7 +986,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mntmSQARLSpecificationWebsiteMenuItem.addActionListener(e -> {try{
       HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/files_ccc/Reference-language-for-Computing-Science-Sep2016.pdf");
     } catch (Exception ex){
-      JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
+      BalfLafManager.showAlert(editor, "Could not open SQA website", "Failure");
     }});
 
     mnHelpMenu.add(mntmSQARLSpecificationWebsiteMenuItem);
@@ -911,7 +996,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       mntmSQAWebsiteMenuItem.addActionListener(e -> {try {
         HelperFunctions.openWebsite("https://www.sqa.org.uk/sqa/48486.html");
       } catch (Exception ex){
-        JOptionPane.showMessageDialog(editor, "Could not open SQA website", "Failure", JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "Could not open SQA website", "Failure");
       }});
 
 
@@ -1004,7 +1089,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
         undoManager.undo();
       } catch (CannotUndoException ex) {
-        JOptionPane.showMessageDialog(editor, "Cannot undo.", "Error", JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "Cannot undo.", "Error");
       }
       update();
       redoAction.update();
@@ -1034,7 +1119,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
         undoManager.redo();
       } catch (CannotRedoException ex) {
-        JOptionPane.showMessageDialog(editor, "Cannot redo.", "Error", JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "Cannot redo.", "Error");
       }
       update();
       undoAction.update();
@@ -1081,8 +1166,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         }
         editor.setTitle("ZPE Editor " + file.getAbsolutePath());
       } catch (IOException e) {
-        JOptionPane.showMessageDialog(editor, "The file could not be opened.", "Error",
-                JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "The file could not be opened.", "Error");
       }
     }
   }
@@ -1103,8 +1187,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         FileHelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, mainSyntax.getText(), false);
         lastFileOpened = file.getAbsolutePath();
       } catch (IOException e) {
-        JOptionPane.showMessageDialog(editor, "The file could not be saved.", "Error",
-                JOptionPane.ERROR_MESSAGE);
+        BalfLafManager.showAlert(editor, "The file could not be saved.", "Error");
       }
     }
   }
@@ -1133,12 +1216,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
       } catch (Exception ex) {
 
-        JOptionPane.showMessageDialog(
-                getContentPane(),
-                "Could not open the ZPE website",
-                "Failure",
-                JOptionPane.ERROR_MESSAGE
-        );
+        BalfLafManager.showAlert(this,"Could not open the ZPE website", "Failure");
       }
     });
 
