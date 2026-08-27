@@ -38,7 +38,11 @@ import java.awt.event.*;
 import java.awt.print.PrinterException;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -293,7 +297,18 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mainPanel.setBorder(new LineBorder(Color.black, 3));
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-    add(mainPanel, BorderLayout.CENTER);
+    AttachedConsole = new ConsoleOutputTextArea("", Color.WHITE);
+    AttachedConsole.addProcessFinishedListener(() -> SwingUtilities.invokeLater(() -> {
+      if (mntmStopCodeMenuItem != null) mntmStopCodeMenuItem.setEnabled(false);
+    }));
+    BalfScrollbarPane consolePane = new BalfScrollbarPane(AttachedConsole, 0);
+    consolePane.setLightColour(Color.BLACK);
+    consolePane.setBorder(BorderFactory.createEmptyBorder());
+    JSplitPane editorAndConsole = new JSplitPane(JSplitPane.VERTICAL_SPLIT, mainPanel, consolePane);
+    editorAndConsole.setResizeWeight(0.72);
+    editorAndConsole.setDividerLocation(0.72);
+    editorAndConsole.setDividerSize(4);
+    add(editorAndConsole, BorderLayout.CENTER);
 
     scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
@@ -549,18 +564,24 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     BalfMenuBar.MenuItem mntmRunCodeMenuItem = new BalfMenuBar.MenuItem("Run code", menuBar);
     mntmRunCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
     mntmRunCodeMenuItem.addActionListener(e -> {
-      Thread runner = new Thread(() -> {
-        try {
-          String output = SQARLParser.compileAndRunSQARL(mainSyntax.getText());
-          if (!output.isEmpty()) System.out.println(output);
-        } catch (Exception exception) {
-          SwingUtilities.invokeLater(() -> BalfLafManager.showAlert(editor,
-                  "SQARL Runtime error: " + exception.getMessage(), "SQARL Runtime error"));
-        }
-      }, "SQARL IAST runner");
-      runner.setDaemon(true);
-      runner.start();
-      mntmStopCodeMenuItem.setVisible(false);
+      try {
+        Path source = Files.createTempFile("sqarl-editor-", ".sqarl");
+        Files.writeString(source, mainSyntax.getText(), StandardCharsets.UTF_8);
+        String javaExecutable = Path.of(System.getProperty("java.home"), "bin",
+                HelperFunctions.isWindows() ? "java.exe" : "java").toString();
+        AttachedConsole.runCommand(Arrays.asList(
+                javaExecutable,
+                "-cp", System.getProperty("java.class.path"),
+                SQARLParser.class.getName(),
+                "-r", source.toString()),
+                null, "Running SQARL directly through its IAST frontend.",
+                mntmClearConsoleBeforeRunMenuItem.isSelected());
+        mntmStopCodeMenuItem.setVisible(true);
+        mntmStopCodeMenuItem.setEnabled(true);
+      } catch (IOException exception) {
+        BalfLafManager.showAlert(editor,
+                "SQARL Runtime error: " + exception.getMessage(), "SQARL Runtime error");
+      }
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
 
@@ -569,8 +590,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mntmStopCodeMenuItem.setEnabled(false);
     mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
     mntmStopCodeMenuItem.addActionListener(e -> {
-      if (currentProcess != null) currentProcess.destroy();
-      currentProcess = null;
+      if (AttachedConsole != null) AttachedConsole.destroyCurrentProcess();
       mntmStopCodeMenuItem.setEnabled(false);
     });
 

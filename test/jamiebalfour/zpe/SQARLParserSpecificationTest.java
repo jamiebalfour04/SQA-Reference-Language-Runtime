@@ -19,6 +19,7 @@ public final class SQARLParserSpecificationTest {
     emitsIASTWithoutYASS();
     controlFlowAndExpressionsCompile();
     routinesAndRecordsCompile();
+    keyboardAverageProgramCompiles();
     IASTCanBeTranspiled();
     IASTCanBeUnfolded();
     IASTCanBecomeAStandardCompiledApplication();
@@ -54,6 +55,21 @@ public final class SQARLParserSpecificationTest {
         "PROCEDURE main()\n" +
         "SEND double(4) TO DISPLAY\n" +
         "END PROCEDURE\n"));
+  }
+
+  private static void keyboardAverageProgramCompiles() throws Exception {
+    assertProgram(SQARLParser.compileSQARL(
+        "RECORD pupil IS {STRING name, INTEGER age}\n" +
+        "DECLARE total INITIALLY 0\n" +
+        "DECLARE counter INITIALLY 0\n" +
+        "DECLARE nextInput INITIALLY 0\n" +
+        "WHILE counter < 10 DO\n" +
+        "  SEND \"Insert a number\" TO DISPLAY\n" +
+        "  RECEIVE nextInput FROM KEYBOARD\n" +
+        "  SET total TO total + nextInput\n" +
+        "  SET counter TO counter + 1\n" +
+        "END WHILE\n" +
+        "SEND total / 10.0 TO DISPLAY\n"));
   }
 
   private static void IASTCanBeTranspiled() throws Exception {

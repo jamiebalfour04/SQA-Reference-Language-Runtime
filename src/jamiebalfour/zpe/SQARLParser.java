@@ -143,6 +143,7 @@ public final class SQARLParser {
     if (tokens.match(SQARLParserByteCodes.DECLARE)) return compileDeclare(tokens);
     if (tokens.match(SQARLParserByteCodes.SET)) return compileSet(tokens);
     if (tokens.match(SQARLParserByteCodes.SEND)) return compileSend(tokens);
+    if (tokens.match(SQARLParserByteCodes.RECEIVE)) return compileReceive(tokens);
     if (tokens.match(SQARLParserByteCodes.IF)) return compileIf(lines, position, tokens);
     if (tokens.match(SQARLParserByteCodes.WHILE)) return compileWhile(lines, position, tokens);
     if (tokens.match(SQARLParserByteCodes.REPEAT)) return compileRepeat(lines, position, tokens);
@@ -190,6 +191,17 @@ public final class SQARLParser {
     }
     tokens.end();
     return bytecode.printWithValueNames("nothing", "unknown", value);
+  }
+
+  private IAST compileReceive(Tokens tokens) throws CompileException {
+    IAST target = assignable(tokens);
+    tokens.require(SQARLParserByteCodes.FROM, "Expected FROM in RECEIVE.");
+    if (!tokens.match(SQARLParserByteCodes.KEYBOARD)) {
+      throw tokens.error("RECEIVE currently expects KEYBOARD.");
+    }
+    tokens.end();
+    return bytecode.assignment(target, null, bytecode.call("auto_input"),
+            YASSByteCodes.PROTECTED, false);
   }
 
   private IAST compileIf(List<Line> lines, Position position, Tokens header) throws CompileException {
