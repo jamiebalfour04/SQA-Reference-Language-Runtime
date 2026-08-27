@@ -12,16 +12,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="- Added native compiling.&#10;- Added additional grammar parsing to SQARLParser.">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/sqarl_runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/sqarl_runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/CodeEditorView.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/zpe_transpiler_python.xml" beforeDir="false" />
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sqa-reference-language-runtime.iml" beforeDir="false" afterPath="$PROJECT_DIR$/sqa-reference-language-runtime.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLEditorMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParserByteCodes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,15 +260,14 @@
       <workItem from="1784885489951" duration="570000" />
       <workItem from="1784886129424" duration="1175000" />
       <workItem from="1784889474381" duration="464000" />
-      <workItem from="1784891740855" duration="72000" />
-    </task>
-    <task id="LOCAL-00027" summary="Updated to match fixes in ZPE.">
-      <option name="closed" value="true" />
-      <created>1717240480788</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1717240480788</updated>
+      <workItem from="1784891740855" duration="320000" />
+      <workItem from="1785776254675" duration="84000" />
+      <workItem from="1787868139232" duration="165000" />
+      <workItem from="1787868662179" duration="54000" />
+      <workItem from="1787868823899" duration="568000" />
+      <workItem from="1787869409778" duration="245000" />
+      <workItem from="1787869672207" duration="4000" />
+      <workItem from="1787869692589" duration="174000" />
     </task>
     <task id="LOCAL-00028" summary="Updated to match fixes in ZPE.">
       <option name="closed" value="true" />
@@ -661,14 +653,21 @@
       <option name="project" value="LOCAL" />
       <updated>1779822356245</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf.">
+      <option name="closed" value="true" />
+      <created>1784891898647</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1784891898648</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added support for &gt;= and &lt;=." />
     <MESSAGE value="Added Recent files to the editor" />
     <MESSAGE value="Added support for ELSE in IF statements. Prevented the window from closing if the user selects no." />
     <MESSAGE value="Added and improved ELSE IF and ELSE statements." />
@@ -693,93 +692,19 @@
     <MESSAGE value="Added the stylistic appearance of the black box surrounding the content editor." />
     <MESSAGE value="- Gave the SQARLEditorMain a new look.&#10;- Fixed an issue in which code did not run correctly.&#10;- Remove SQARLAboutDialog.java and replaced it with the standard BalfLaf about dialog." />
     <MESSAGE value="- Added native compiling.&#10;- Added additional grammar parsing to SQARLParser." />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added native compiling.&#10;- Added additional grammar parsing to SQARLParser." />
+    <MESSAGE value="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf." />
+    <option name="LAST_COMMIT_MESSAGE" value="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>953</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>1006</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>1253</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>849</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>863</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>682</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>666</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>678</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>718</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>652</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Sync/Programs/ZPE/zpe.jar!/jamiebalfour/zpe/core/YASSCompiler.class</url>
-          <line>85</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Sync/Programs/ZPE/zpe.jar!/jamiebalfour/zpe/core/YASSCompiler.class</url>
-          <line>125</line>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>550</line>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>66</line>
-          <option name="timeStamp" value="68" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
-          <line>158</line>
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Sync/Programs/ZPE/zpe.jar!/jamiebalfour/codeeditor/CodeEditorView.class</url>
+          <url>jar://$ZPE$/zpe.jar!/jamiebalfour/codeeditor/CodeEditorView.class</url>
           <line>1485</line>
           <option name="timeStamp" value="70" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Sync/Programs/ZPE/zpe.jar!/jamiebalfour/codeeditor/CodeEditorView.class</url>
+          <url>jar://$ZPE$/zpe.jar!/jamiebalfour/codeeditor/CodeEditorView.class</url>
           <line>1441</line>
           <option name="timeStamp" value="71" />
         </line-breakpoint>
