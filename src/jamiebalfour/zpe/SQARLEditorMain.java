@@ -9,6 +9,7 @@ import jamiebalfour.ui.components.BalfScrollbarPane;
 import jamiebalfour.ui.dialogs.BalfAboutDialog;
 import jamiebalfour.ui.windows.BalfWindow;
 import jamiebalfour.zpe.core.ZPE;
+import jamiebalfour.zpe.core.IAST;
 import jamiebalfour.zpe.core.ZPEInstance;
 import jamiebalfour.zpe.core.ZPEKit;
 import jamiebalfour.zpe.gui.editor.ConsoleOutputTextArea;
@@ -548,106 +549,18 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     BalfMenuBar.MenuItem mntmRunCodeMenuItem = new BalfMenuBar.MenuItem("Run code", menuBar);
     mntmRunCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
     mntmRunCodeMenuItem.addActionListener(e -> {
-      /*
-       * running = new ConsoleThread(); running.startConsole(mainSyntax.getText(),
-       * runtimeArgs, !chckbxmntmCaseSensitiveCompileCheckItem.isSelected());
-       */
-      /*if (AttachedConsole == null) {
-        AttachedConsole = new ZPEEditorConsole(_this, "", new Font("Consolas", Font.PLAIN, 18), 5);
-      }
-
-
-
-
-
-      AttachedConsole.runCode(yass, new ZPEString[0], chckbxmntmCaseSensitiveCompileCheckItem.isSelected());*/
-
-      try{
-        String extras = "";
-        if (!chckbxmntmCaseSensitiveCompileCheckItem.isSelected()) {
-          extras += " --case_insensitive";
+      Thread runner = new Thread(() -> {
+        try {
+          String output = SQARLParser.compileAndRunSQARL(mainSyntax.getText());
+          if (!output.isEmpty()) System.out.println(output);
+        } catch (Exception exception) {
+          SwingUtilities.invokeLater(() -> BalfLafManager.showAlert(editor,
+                  "SQARL Runtime error: " + exception.getMessage(), "SQARL Runtime error"));
         }
-        SQARLParser sqarl = new SQARLParser();
-        String yass = "";
-        try{
-          yass = sqarl.parseToYASS(mainSyntax.getText());
-        } catch(Exception ex){
-          BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
-          return;
-        }
-        System.out.println(yass);
-        FileHelperFunctions.writeFile(ZPEInstance.getInstallPath() + "/tmp.yas", yass, false);
-        if (!ZPEInstance.getJarExecPath().isEmpty()) {
-
-          File jarFile = new File(ZPEInstance.getJarExecPath());
-
-          if (jarFile.exists()) {
-
-            if(currentProcess != null){
-              currentProcess.destroy();
-              currentProcess = null;
-            }
-
-            ProcessBuilder pb = new ProcessBuilder(
-                    "java",
-                    "-jar",
-                    jarFile.getAbsolutePath(),
-                    "-g",
-                    ZPEInstance.getInstallPath() + "/tmp.yas",
-                    "--console"
-            );
-
-
-
-            if (extras != null && !extras.trim().isEmpty()) {
-              for (String extra : extras.trim().split("\\s+")) {
-                pb.command().add(extra);
-              }
-            }
-
-            pb.redirectErrorStream(true);
-
-            currentProcess = pb.start();
-
-            // Read process output
-            new Thread(() -> {
-              try (BufferedReader reader = new BufferedReader(
-                      new InputStreamReader(currentProcess.getInputStream()))) {
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                  //Debugging only
-                  //System.out.println("[ZPE] " + line);
-                }
-
-              } catch (IOException ex) {
-                ex.printStackTrace();
-              }
-            }).start();
-
-            // Detect process exit
-            new Thread(() -> {
-              try {
-                int exitCode = currentProcess.waitFor();
-                System.out.println("[ZPE] Process exited with code " + exitCode);
-              } catch (InterruptedException ex) {
-                ex.printStackTrace();
-              }
-            }).start();
-
-            mntmStopCodeMenuItem.setEnabled(true);
-            mntmStopCodeMenuItem.setVisible(true);
-          }
-
-        } else {
-          mntmStopCodeMenuItem.setVisible(false);
-        }
-      } catch(IOException ex){
-        //Do nothing
-      }
-
-
+      }, "SQARL IAST runner");
+      runner.setDaemon(true);
+      runner.start();
+      mntmStopCodeMenuItem.setVisible(false);
     });
     mnScriptMenu.add(mntmRunCodeMenuItem);
 
@@ -656,7 +569,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mntmStopCodeMenuItem.setEnabled(false);
     mntmStopCodeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
     mntmStopCodeMenuItem.addActionListener(e -> {
-      currentProcess.destroy();
+      if (currentProcess != null) currentProcess.destroy();
       currentProcess = null;
       mntmStopCodeMenuItem.setEnabled(false);
     });
@@ -688,24 +601,21 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
 
 
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-        // null for no password
-        ZPEKit.compile(yass, file.toString() + "." + extension, name, "",
-                !chckbxmntmCaseSensitiveCompileCheckItem.isSelected(), false, null, null);
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        ZPEKit.compile(program, file.toString() + "." + extension, name, "");
 
         BalfLafManager.showAlert(editor,
-                "YASS compile success. The file has been successfully compiled to " + file + ".",
-                "YASS compiler");
+                "SQARL compile success. The file has been successfully compiled to " + file + ".",
+                "SQARL compiler");
 
       } catch (IOException ex) {
         BalfLafManager.showAlert(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given due to an IOException.",
-                "YASS compiler");
+                "SQARL compile failure. The compiled file could not be written due to an IOException.",
+                "SQARL compiler");
       } catch (CompileException ex) {
         BalfLafManager.showAlert(editor,
-                "YASS compile failure. The YASS compiler could not compile the code given. The error was: " + ex.getMessage(),
-                "YASS compiler");
+                "SQARL compile failure. The error was: " + ex.getMessage(),
+                "SQARL compiler");
       }
     });
 
@@ -748,16 +658,12 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
       ZPEInstance.setErrorLevel(4);
 
-      SQARLParser sqarl = new SQARLParser();
-      String yass = null;
       try {
-        yass = sqarl.parseToYASS(mainSyntax.getText());
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        ZPEKit.compileNativeBinary(program, applicationName, fpath, wait);
       } catch (CompileException ex) {
         BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
-        return;
       }
-
-      ZPEKit.compileNativeBinary(yass, applicationName, fpath, wait);
     });
 
     mnScriptMenu.add(mntmCompileCodeNativeMenuItem);
@@ -785,10 +691,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
 
 
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-
-        String code = ZPEKit.transpileCode(yass, "", new ZPEPythonTranspiler());
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        String code = ZPEKit.transpileCode(program, "", new ZPEPythonTranspiler());
         String path1 = file.getPath();
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
@@ -825,10 +729,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
 
 
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-
-        String code = ZPEKit.transpileCode(yass, "", new ZPEJavascriptTranspiler());
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        String code = ZPEKit.transpileCode(program, "", new ZPEJavascriptTranspiler());
         String path1 = file.getPath();
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
@@ -865,10 +767,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
       try {
 
 
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-
-        String code = ZPEKit.transpileCode(yass, "", new ZPEPhpTranspiler());
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        String code = ZPEKit.transpileCode(program, "", new ZPEPhpTranspiler());
         String path1 = file.getPath();
         if(!path1.endsWith(extension)){
           path1 = path1 + extension;
@@ -890,21 +790,9 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mntmAnalyseCodeMenuItem.addActionListener(e -> {
 
 
-      SQARLParser sqarl = new SQARLParser();
-      String yass = null;
       try {
-        yass = sqarl.parseToYASS(mainSyntax.getText());
-      } catch (CompileException ex) {
-        BalfLafManager.showAlert(editor, "SQARL Runtime error: " + ex.getMessage(), "SQARL Runtime error");
-        return;
-      }
-
-      try {
-        if (ZPEKit.validateCode(yass)) {
-          BalfLafManager.showAlert(editor, "Code is valid", "Code analysis");
-        } else {
-          BalfLafManager.showAlert(editor, "Code is invalid", "Code analysis");
-        }
+        SQARLParser.compileSQARL(mainSyntax.getText());
+        BalfLafManager.showAlert(editor, "Code is valid", "Code analysis");
       } catch (CompileException ex) {
         BalfLafManager.showAlert(editor, "Code is invalid", "Code analysis");
       }
@@ -930,11 +818,10 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
         // This is where a real application would open the file.
         try {
 
-          SQARLParser sqarl = new SQARLParser();
-          String yass = sqarl.parseToYASS(mainSyntax.getText());
+          IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
 
           StringBuilder text = new StringBuilder();
-          for (byte s : ZPEKit.parseToBytes(yass)) {
+          for (byte s : ZPEKit.parseToBytes(program)) {
             text.append(s).append(" ");
           }
           FileHelperFunctions.writeFile(file.getAbsolutePath() + "." + extension, text.toString(), false);
@@ -955,9 +842,8 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
 
       String result;
       try {
-        SQARLParser sqarl = new SQARLParser();
-        String yass = sqarl.parseToYASS(mainSyntax.getText());
-        result = ZPEKit.unfold(mainSyntax.getText(), false);
+        IAST program = SQARLParser.compileSQARL(mainSyntax.getText());
+        result = ZPEKit.unfold(program, false);
         JOptionPane op = new JOptionPane(new YASSUnfoldDialog(_frame, result, themeColor, getForegroundColour()).getContentPane(), JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, lighterLogo, new String[]{});
         JDialog dlg = op.createDialog(_this, "YASS Unfold code explainer");
         dlg.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
