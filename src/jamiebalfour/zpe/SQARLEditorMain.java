@@ -6,6 +6,7 @@ import jamiebalfour.ui.BalfLafManager;
 import jamiebalfour.ui.components.BalfButton;
 import jamiebalfour.ui.components.BalfMenuBar;
 import jamiebalfour.ui.components.BalfScrollbarPane;
+import jamiebalfour.ui.components.BalfSplitPane;
 import jamiebalfour.ui.dialogs.BalfAboutDialog;
 import jamiebalfour.ui.windows.BalfWindow;
 import jamiebalfour.zpe.core.ZPE;
@@ -304,11 +305,23 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     BalfScrollbarPane consolePane = new BalfScrollbarPane(AttachedConsole, 0);
     consolePane.setLightColour(Color.BLACK);
     consolePane.setBorder(BorderFactory.createEmptyBorder());
-    JSplitPane editorAndConsole = new JSplitPane(JSplitPane.VERTICAL_SPLIT, mainPanel, consolePane);
+    BalfSplitPane editorAndConsole = new BalfSplitPane(JSplitPane.VERTICAL_SPLIT);
+    editorAndConsole.setTopComponent(mainPanel);
+    editorAndConsole.setBottomComponent(consolePane);
+    editorAndConsole.setContinuousLayout(false);
     editorAndConsole.setResizeWeight(0.72);
     editorAndConsole.setDividerLocation(0.72);
     editorAndConsole.setDividerSize(4);
-    add(editorAndConsole, BorderLayout.CENTER);
+    editorAndConsole.setDarkColour(new Color(68, 68, 69));
+    if (!BalfLafManager.getInstance().isSystemUI()) {
+      editorAndConsole.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(68, 68, 69)));
+    } else {
+      editorAndConsole.setBorder(BorderFactory.createEmptyBorder());
+    }
+    JPanel splitContainer = new JPanel(new BorderLayout());
+    splitContainer.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+    splitContainer.add(editorAndConsole, BorderLayout.CENTER);
+    add(splitContainer, BorderLayout.CENTER);
 
     scrollPane.setRowHeaderView(mainSyntax.getEditor());
 
