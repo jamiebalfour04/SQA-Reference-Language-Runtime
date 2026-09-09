@@ -1,5 +1,5 @@
 # SQA Reference Language Runtime powered by ZPE and YASS
-This is a preprocessor for the YASS programming language. The program is designed to read SQA Reference Language, parse it, transpile it to YASS, and run it through the ZPE Runtime Environment (ZRE) or compile it within the ZPE Programming Environment (https://www.jamiebalfour.scot/projects/zpe/). It's fast due to ZPE's performance and can also be compiled to run natively on a system with a GraalVM native image. 
+This is a preprocessor for the YASS programming language. The program is designed to read SQA Reference Language, parse it, compile it to ZPE Intermediate Representation (ZIR) and into the AST (or IAST), and run it through the ZPE Runtime Environment (ZRE) or compile it within the ZPE Programming Environment (https://www.jamiebalfour.scot/projects/zpe/). It's fast due to ZPE's performance and can also be compiled to run natively on a system with a GraalVM native image. 
 
 Since it now supports transpilation, the SQA Reference Language Runtime combines two of my other projects: ZPE Programming Environment and ZenPy. 
 
