@@ -10,7 +10,7 @@ public class SQARLParserByteCodes implements jamiebalfour.zpe.parser.Tokeniser {
   final static String DOUBLE_REGEX = "(-?[0-9]+((\\.)[0-9]+))(E[0-9]+)?";
   final static String STRING_REGEX = "(\".*\")|('.*')";
   final static String NULL_REGEX = "null";
-  final static String BOOLEAN_REGEX = "(true|false)";
+  final static String BOOLEAN_REGEX = "(?i:true|false)";
   //A string of characters outwith quotes
   final static String IDENTIFIER_REGEX = "([A-z][A-z0-9_]*)";
 

@@ -16,6 +16,8 @@ import jamiebalfour.zpe.transpilers.ZPEPythonTranspiler;
 import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,34 +57,91 @@ public final class SQARLParser {
     return output == null ? "" : output.toString();
   }
 
-  public static void main(String[] args) throws HelperFunctions.NoArgumentValueProvided {
+  public static void main(String[] args) {
+    configureApplication();
+    try {
+      if (args.length == 0) openDefaultMode();
+      else dispatchCommand(args);
+    } catch (Exception exception) {
+      ZPE.log("SQARL Runtime error: " + exception.getMessage());
+    }
+  }
+
+  private static void configureApplication() {
     if (HelperFunctions.isMac()) HelperFunctions.setMacOSApplicationName("SQARL Runtime");
-    if (args.length == 0) {
-      if (HelperFunctions.isHeadless() || ZPEHelperFunctions.isTrulyCommandLine()) {
-        System.out.println("Provide -r <file> to run, -e <file> to compile, or -python <file> to transpile SQARL.");
-      } else {
-        SwingUtilities.invokeLater(() -> new SQARLEditorMain().setVisible(true));
-      }
+  }
+
+  private static void openDefaultMode() {
+    if (HelperFunctions.isHeadless() || ZPEHelperFunctions.isTrulyCommandLine()) printStartupInformation();
+    else launchEditor();
+  }
+
+  private static void dispatchCommand(String[] args) throws Exception {
+    String command = args[0];
+    if ("-h".equals(command) || "--help".equals(command)) {
+      printStartupInformation();
+      return;
+    }
+    if ("--install".equals(command)) {
+      SQARLInstaller.install();
       return;
     }
 
     HashMap<String, String> arguments = HelperFunctions.generateArgumentMap(args);
-    try {
-      switch (args[0]) {
-        case "-r": run(read(arguments, "-r")); break;
-        case "-e": compileApplication(arguments.get("-e"), read(arguments, "-e")); break;
-        case "-python":
-          System.out.print(ZPEKit.transpileCode(compileSQARL(read(arguments, "-python")), "", new ZPEPythonTranspiler()));
-          break;
-        case "-g":
-          if (arguments.containsKey("--console")) run(read(arguments, "-g"));
-          else SwingUtilities.invokeLater(() -> new SQARLEditorMain().setVisible(true));
-          break;
-        default: System.out.println("Unknown SQARL option `" + args[0] + "`.");
-      }
-    } catch (Exception exception) {
-      ZPE.log("SQARL Runtime error: " + exception.getMessage());
+    switch (command) {
+      case "-r": run(read(arguments, "-r")); break;
+      case "-e": compileOrTranspile(arguments); break;
+      case "-python": printPython(read(arguments, "-python")); break;
+      case "-g": openEditorOrConsole(arguments); break;
+      default:
+        System.out.println("Unknown SQARL option `" + command + "`.\n");
+        printStartupInformation();
     }
+  }
+
+  private static void compileOrTranspile(HashMap<String, String> arguments) throws Exception {
+    String source = read(arguments, "-e");
+    if (arguments.containsKey("-python")) transpilePython(Path.of(arguments.get("-python")), source);
+    else compileApplication(arguments.get("-e"), source);
+  }
+
+  private static void printPython(String source) throws Exception {
+    System.out.print(ZPEKit.transpileCode(compileSQARL(source), "", new ZPEPythonTranspiler()));
+  }
+
+  private static void openEditorOrConsole(HashMap<String, String> arguments) throws Exception {
+    if (arguments.containsKey("--console")) run(read(arguments, "-g"));
+    else {
+      String filename = arguments.get("-g");
+      launchEditor(filename == null ? null : Path.of(filename));
+    }
+  }
+
+  private static void launchEditor() {
+    launchEditor(null);
+  }
+
+  private static void launchEditor(Path file) {
+    SwingUtilities.invokeLater(() -> {
+      SQARLEditorMain editor = new SQARLEditorMain();
+      if (file != null) editor.openFile(file);
+      editor.setVisible(true);
+    });
+  }
+
+  private static void printStartupInformation() {
+    System.out.println("SQARL Runtime\n");
+    printCommand("-r <file>", "Run a SQARL program.");
+    printCommand("-e <file>", "Compile a SQARL program to a ZPE executable.");
+    printCommand("-e <file> -python <output>", "Transpile SQARL to a Python file.");
+    printCommand("-python <file>", "Print transpiled Python to standard output.");
+    printCommand("-g [file] [--console]", "Open the editor, or run the file in console mode.");
+    printCommand("--install", "Install SQARL into ZPE and create the sqarl command.");
+    printCommand("-h, --help", "Show this help screen.");
+  }
+
+  private static void printCommand(String usage, String description) {
+    System.out.printf("  %-31s %s%n", usage, description);
   }
 
   private static String read(HashMap<String, String> arguments, String option) throws IOException {
@@ -107,6 +166,14 @@ public final class SQARLParser {
       throw new IllegalStateException("A compiled SQARL application requires PROCEDURE main or FUNCTION main.");
     }
     System.out.println("Compiled SQARL application to " + output + ".yex");
+  }
+
+  static void transpilePython(Path output, String source) throws Exception {
+    String python = ZPEKit.transpileCode(compileSQARL(source), "", new ZPEPythonTranspiler());
+    Path destination = output.toAbsolutePath().normalize();
+    if (destination.getParent() != null) Files.createDirectories(destination.getParent());
+    Files.writeString(destination, python, StandardCharsets.UTF_8);
+    System.out.println("Transpiled SQARL to " + destination + ".");
   }
 
   private List<Line> tokenise(String source) {
@@ -196,11 +263,18 @@ public final class SQARLParser {
   private IAST compileReceive(Tokens tokens) throws CompileException {
     IAST target = assignable(tokens);
     tokens.require(SQARLParserByteCodes.FROM, "Expected FROM in RECEIVE.");
+    byte inputType = YASSByteCodes.MIXED_TYPE;
+    if (tokens.match(SQARLParserByteCodes.LBRA)) {
+      inputType = declaredType(tokens);
+      tokens.require(SQARLParserByteCodes.RBRA, "Expected ) after RECEIVE input type.");
+    }
     if (!tokens.match(SQARLParserByteCodes.KEYBOARD)) {
       throw tokens.error("RECEIVE currently expects KEYBOARD.");
     }
     tokens.end();
-    return bytecode.assignment(target, null, bytecode.call("auto_input"),
+    IAST value = bytecode.call("auto_input");
+    if (inputType != YASSByteCodes.MIXED_TYPE) value = bytecode.cast(value, inputType);
+    return bytecode.assignment(target, null, value,
             YASSByteCodes.PROTECTED, false);
   }
 

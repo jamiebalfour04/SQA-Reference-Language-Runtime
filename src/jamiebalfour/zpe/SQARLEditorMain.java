@@ -1063,30 +1063,32 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     int returnVal = fc.showOpenDialog(this.getContentPane());
 
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      File file = fc.getSelectedFile();
-      // This is where a real application would open the file.
+      openFile(fc.getSelectedFile().toPath());
+    }
+  }
+
+  void openFile(Path file) {
+    Path absoluteFile = file.toAbsolutePath().normalize();
+    try {
+      clearUndoRedoManagers();
+      setTextProperly(Files.readString(absoluteFile, StandardCharsets.UTF_8));
+      lastFileOpened = absoluteFile.toString();
+      SwingUtilities.invokeLater(() -> {
+        mainSyntax.setCaretPosition(0);
+        scrollPane.getVerticalScrollBar().setValue(0);
+      });
+      recents.remove(lastFileOpened);
+      recents.add(lastFileOpened);
       try {
-        clearUndoRedoManagers();
-        setTextProperly(FileHelperFunctions.readFileAsString(file.getAbsolutePath()));
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            mainSyntax.setCaretPosition(0);
-            scrollPane.getVerticalScrollBar().setValue(0);
-          }
-        });
-        recents.add(file.getAbsolutePath());
-        try {
-          ZPEEditor.storeRecentFiles(recents, "sqarl/");
-          recents = ZPEEditor.getRecentFiles("sqarl/");
-          updateRecentFiles();
-        } catch (IOException ex) {
-          ZPE.log(ex.getMessage());
-        }
-        editor.setTitle("ZPE Editor " + file.getAbsolutePath());
-      } catch (IOException e) {
-        BalfLafManager.showAlert(editor, "The file could not be opened.", "Error");
+        ZPEEditor.storeRecentFiles(recents, "sqarl/");
+        recents = ZPEEditor.getRecentFiles("sqarl/");
+        updateRecentFiles();
+      } catch (IOException exception) {
+        ZPE.log(exception.getMessage());
       }
+      editor.setTitle("SQARL Editor " + lastFileOpened);
+    } catch (IOException exception) {
+      BalfLafManager.showAlert(editor, "The file could not be opened: " + absoluteFile, "Error");
     }
   }
 
@@ -1287,22 +1289,7 @@ class SQARLEditorMain extends BalfWindow implements GenericEditor {
     mntmRecentMenuItem.removeAll();
     for(String fStr : recents){
       BalfMenuBar.MenuItem item = new BalfMenuBar.MenuItem(new File(fStr).getName(), menuBar);
-      item.addActionListener(e -> {
-        try {
-          clearUndoRedoManagers();
-          setTextProperly(FileHelperFunctions.readFileAsString(new File(fStr).getAbsolutePath()));
-          editor.setTitle("ZPE Editor " + new File(fStr).getAbsolutePath());
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              mainSyntax.setCaretPosition(0);
-              scrollPane.getVerticalScrollBar().setValue(0);
-            }
-          });
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-      });
+      item.addActionListener(e -> openFile(Path.of(fStr)));
       mntmRecentMenuItem.add(item, 0);
     }
   }
