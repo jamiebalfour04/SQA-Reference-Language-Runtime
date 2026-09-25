@@ -8,6 +8,7 @@ import jamiebalfour.zpe.core.ZPE;
 import jamiebalfour.zpe.core.ZPECompilerBytecodeBuilder;
 import jamiebalfour.zpe.core.ZPEHelperFunctions;
 import jamiebalfour.zpe.core.ZPEKit;
+import jamiebalfour.zpe.core.ZPERuntimeEnvironment;
 import jamiebalfour.zpe.core.exceptions.CompileException;
 import jamiebalfour.zpe.core.interfaces.ZPEType;
 import jamiebalfour.zpe.parser.v6.ZenithParsingEngine;
@@ -49,11 +50,14 @@ public final class SQARLParser {
   }
 
   public static IAST compileSQARL(String source) throws CompileException {
-    return new SQARLParser().compile(source);
+    IAST results = new SQARLParser().compile(source);
+    return results;
   }
 
   public static String compileAndRunSQARL(String source) throws Exception {
-    ZPEType output = ZPEKit.runCode(compileSQARL(source), new HashMap<>(), 5);
+    ZPERuntimeEnvironment runtime = new ZPERuntimeEnvironment();
+    runtime.setOutputBuffering(false);
+    ZPEType output = ZPEKit.runCode(runtime, compileSQARL(source), new HashMap<>());
     return output == null ? "" : output.toString();
   }
 
@@ -92,6 +96,7 @@ public final class SQARLParser {
       case "-r": run(read(arguments, "-r")); break;
       case "-e": compileOrTranspile(arguments); break;
       case "-python": printPython(read(arguments, "-python")); break;
+      case "-yass": printYass(read(arguments, "-yass")); break;
       case "-g": openEditorOrConsole(arguments); break;
       default:
         System.out.println("Unknown SQARL option `" + command + "`.\n");
@@ -107,6 +112,10 @@ public final class SQARLParser {
 
   private static void printPython(String source) throws Exception {
     System.out.print(ZPEKit.transpileCode(compileSQARL(source), "", new ZPEPythonTranspiler()));
+  }
+
+  private static void printYass(String source) throws Exception {
+    System.out.print(ZPEKit.decompile(compileSQARL(source)));
   }
 
   private static void openEditorOrConsole(HashMap<String, String> arguments) throws Exception {
@@ -135,6 +144,7 @@ public final class SQARLParser {
     printCommand("-e <file>", "Compile a SQARL program to a ZPE executable.");
     printCommand("-e <file> -python <output>", "Transpile SQARL to a Python file.");
     printCommand("-python <file>", "Print transpiled Python to standard output.");
+    printCommand("-yass <file>", "Print decompiled YASS to standard output.");
     printCommand("-g [file] [--console]", "Open the editor, or run the file in console mode.");
     printCommand("--install", "Install SQARL into ZPE and create the sqarl command.");
     printCommand("-h, --help", "Show this help screen.");
@@ -161,7 +171,13 @@ public final class SQARLParser {
     int extension = filename.lastIndexOf('.');
     if (extension > 0) filename = filename.substring(0, extension);
     String output = inputPath.getParent().resolve(filename).toString();
-    Object status = ZPEKit.compile(compileSQARL(source), output, filename, "SQARL").getName();
+    // A standalone SQARL script is an application too. If it does not define
+    // an entry point, place its top-level statements inside main automatically.
+    String applicationSource = source;
+    if (!source.matches("(?is).*\\b(?:PROCEDURE|FUNCTION)\\s+main\\s*\\(.*")) {
+      applicationSource = "PROCEDURE main()\n" + source + "\nEND PROCEDURE\n";
+    }
+    Object status = ZPEKit.compile(compileSQARL(applicationSource), output, filename, "SQARL").getName();
     if (!Integer.valueOf(0).equals(status)) {
       throw new IllegalStateException("A compiled SQARL application requires PROCEDURE main or FUNCTION main.");
     }
@@ -257,6 +273,8 @@ public final class SQARLParser {
       throw tokens.error("Direct file SEND support is not implemented yet.");
     }
     tokens.end();
+    // Use the same print node as YASS and Zpeedy. It owns the runtime's
+    // prompt/flush behavior, unlike emitting raw std_out calls here.
     return bytecode.printWithValueNames("nothing", "unknown", value);
   }
 
@@ -272,6 +290,7 @@ public final class SQARLParser {
       throw tokens.error("RECEIVE currently expects KEYBOARD.");
     }
     tokens.end();
+    // Keep SQARL's numeric/string conversion behaviour in auto_input for now.
     IAST value = bytecode.call("auto_input");
     if (inputType != YASSByteCodes.MIXED_TYPE) value = bytecode.cast(value, inputType);
     return bytecode.assignment(target, null, value,

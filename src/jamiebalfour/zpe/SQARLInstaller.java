@@ -12,9 +12,12 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Installs the packaged SQARL runtime and its command-line launcher. */
+/**
+ * Installs the packaged SQARL runtime and its command-line launcher.
+ */
 final class SQARLInstaller {
-  private SQARLInstaller() { }
+  private SQARLInstaller() {
+  }
 
   static void install() throws Exception {
     Path source = Path.of(SQARLParser.class.getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -58,7 +61,10 @@ final class SQARLInstaller {
         value = value.substring(1, value.length() - 1);
       }
       if (!value.isEmpty()) {
-        try { candidates.add(Path.of(value)); } catch (Exception ignored) { }
+        try {
+          candidates.add(Path.of(value));
+        } catch (Exception ignored) {
+        }
       }
     }
     candidates.sort((left, right) -> Boolean.compare(!preferredCommandDirectory(left, windows), !preferredCommandDirectory(right, windows)));
@@ -70,17 +76,14 @@ final class SQARLInstaller {
 
   private static boolean preferredCommandDirectory(Path directory, boolean windows) {
     String value = directory.toString().toLowerCase();
-    return windows ? value.contains("windows")
-            : value.equals("/usr/local/bin") || value.equals("/opt/homebrew/bin") || value.equals("/usr/bin");
+    return windows ? value.contains("windows") : value.equals("/usr/local/bin") || value.equals("/opt/homebrew/bin") || value.equals("/usr/bin");
   }
 
   static Path writeCommand(Path jar, Path directory, boolean windows) throws IOException {
     Files.createDirectories(directory);
     Path launcher = directory.resolve(windows ? "sqarl.cmd" : "sqarl");
     String jarPath = jar.toAbsolutePath().normalize().toString();
-    String contents = windows
-            ? "@echo off\r\njava -Xmx2048M -jar \"" + jarPath.replace("\"", "\"\"") + "\" %*\r\n"
-            : "#!/bin/sh\nexec java -Xmx2048M -jar '" + jarPath.replace("'", "'\"'\"'") + "' \"$@\"\n";
+    String contents = windows ? "@echo off\r\njava -Xmx2048M -jar \"" + jarPath.replace("\"", "\"\"") + "\" %*\r\n" : "#!/bin/sh\nexec java -Xmx2048M -jar '" + jarPath.replace("'", "'\"'\"'") + "' \"$@\"\n";
     Path temporary = Files.createTempFile(directory, "sqarl-command-", ".tmp");
     try {
       Files.writeString(temporary, contents, StandardCharsets.UTF_8);
@@ -93,8 +96,11 @@ final class SQARLInstaller {
       Files.deleteIfExists(temporary);
     }
     if (!windows) {
-      try { Files.setPosixFilePermissions(launcher, PosixFilePermissions.fromString("rwxr-xr-x")); }
-      catch (UnsupportedOperationException exception) { launcher.toFile().setExecutable(true, false); }
+      try {
+        Files.setPosixFilePermissions(launcher, PosixFilePermissions.fromString("rwxr-xr-x"));
+      } catch (UnsupportedOperationException exception) {
+        launcher.toFile().setExecutable(true, false);
+      }
     }
     return launcher;
   }
