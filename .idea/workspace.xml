@@ -12,9 +12,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf.">
+    <list default="true" id="49fde480-ac6b-4fe5-a0d2-68744f17ed1c" name="Changes" comment="* Added a new AI generated SQARL_COVERAGE file that explains what's been implemented in this runtime.&#10;* Big change - SQARL no longer compiles to YASS before running code - it simply compiles using ZPE's new ZPECompilerBytecodeBuilder, similar to my new Zpeedy language.">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/sqarl_runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/sqarl_runtime.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/sqarl-runtime.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/sqarl-runtime.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLInstaller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLInstaller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +70,7 @@
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;Application.SQARLParser -g.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SQARLParser -r .executor&quot;: &quot;Run&quot;,
     &quot;Application.SQARLParser.executor&quot;: &quot;Run&quot;,
     &quot;JAR Application.sqarl-runtime.jar.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -83,7 +87,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -97,7 +101,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SQARLParser -g">
+  <component name="RunManager" selected="Application.SQARLParser -r ">
     <configuration name="SQARLParser -g" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="jamiebalfour.zpe.SQARLParser" />
       <module name="sqa-reference-language-runtime" />
@@ -115,7 +119,7 @@
     <configuration name="SQARLParser -r " type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="jamiebalfour.zpe.SQARLParser" />
       <module name="sqa-reference-language-runtime" />
-      <option name="PROGRAM_PARAMETERS" value="-r $USER_HOME$/sqa.txt" />
+      <option name="PROGRAM_PARAMETERS" value="-r $USER_HOME$/sqarl.txt" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="jamiebalfour.zpe.*" />
@@ -268,14 +272,35 @@
       <workItem from="1787869409778" duration="245000" />
       <workItem from="1787869672207" duration="4000" />
       <workItem from="1787869692589" duration="174000" />
-    </task>
-    <task id="LOCAL-00028" summary="Updated to match fixes in ZPE.">
-      <option name="closed" value="true" />
-      <created>1720703768595</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1720703768595</updated>
+      <workItem from="1787870555442" duration="102000" />
+      <workItem from="1788502406582" duration="1137000" />
+      <workItem from="1788504255428" duration="1509000" />
+      <workItem from="1788767683987" duration="602000" />
+      <workItem from="1788941318207" duration="1914000" />
+      <workItem from="1788947891933" duration="7000" />
+      <workItem from="1789160615640" duration="4000" />
+      <workItem from="1789477026958" duration="84000" />
+      <workItem from="1789552582260" duration="358000" />
+      <workItem from="1789553548560" duration="6000" />
+      <workItem from="1789557273072" duration="37000" />
+      <workItem from="1790352516002" duration="613000" />
+      <workItem from="1790353476212" duration="1823000" />
+      <workItem from="1790356144137" duration="10000" />
+      <workItem from="1790356875490" duration="9000" />
+      <workItem from="1790356902609" duration="8000" />
+      <workItem from="1790357088576" duration="496000" />
+      <workItem from="1790357606491" duration="1962000" />
+      <workItem from="1790359862833" duration="1096000" />
+      <workItem from="1790361985066" duration="28000" />
+      <workItem from="1790362018722" duration="35000" />
+      <workItem from="1790362161333" duration="36000" />
+      <workItem from="1790362271776" duration="60000" />
+      <workItem from="1790362381142" duration="58000" />
+      <workItem from="1790362707556" duration="83000" />
+      <workItem from="1790362921001" duration="16000" />
+      <workItem from="1790364374161" duration="58000" />
+      <workItem from="1790364974060" duration="41000" />
+      <workItem from="1790365994335" duration="600000" />
     </task>
     <task id="LOCAL-00029" summary="Updated to match fixes in ZPE.">
       <option name="closed" value="true" />
@@ -661,14 +686,21 @@
       <option name="project" value="LOCAL" />
       <updated>1784891898648</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="* Added a new AI generated SQARL_COVERAGE file that explains what's been implemented in this runtime.&#10;* Big change - SQARL no longer compiles to YASS before running code - it simply compiles using ZPE's new ZPECompilerBytecodeBuilder, similar to my new Zpeedy language.">
+      <option name="closed" value="true" />
+      <created>1787870652902</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1787870652902</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Recent files to the editor" />
     <MESSAGE value="Added support for ELSE in IF statements. Prevented the window from closing if the user selects no." />
     <MESSAGE value="Added and improved ELSE IF and ELSE statements." />
     <MESSAGE value="Added Python ELSE and ELSEIF statements to ZenPy and this has been compiled to support that." />
@@ -693,7 +725,8 @@
     <MESSAGE value="- Gave the SQARLEditorMain a new look.&#10;- Fixed an issue in which code did not run correctly.&#10;- Remove SQARLAboutDialog.java and replaced it with the standard BalfLaf about dialog." />
     <MESSAGE value="- Added native compiling.&#10;- Added additional grammar parsing to SQARLParser." />
     <MESSAGE value="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf." />
-    <option name="LAST_COMMIT_MESSAGE" value="* Thanks to ChatGPT, the parser has more coverage than before.&#10;* Fixed an issue in which the editor would crash due to not having comments added to it.&#10;* Improved ZPE-inline performance and linkage.&#10;* Changed all JOptionPanes to my own alerts from BalfLaf." />
+    <MESSAGE value="* Added a new AI generated SQARL_COVERAGE file that explains what's been implemented in this runtime.&#10;* Big change - SQARL no longer compiles to YASS before running code - it simply compiles using ZPE's new ZPECompilerBytecodeBuilder, similar to my new Zpeedy language." />
+    <option name="LAST_COMMIT_MESSAGE" value="* Added a new AI generated SQARL_COVERAGE file that explains what's been implemented in this runtime.&#10;* Big change - SQARL no longer compiles to YASS before running code - it simply compiles using ZPE's new ZPECompilerBytecodeBuilder, similar to my new Zpeedy language." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -708,7 +741,27 @@
           <line>1441</line>
           <option name="timeStamp" value="71" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/jamiebalfour/zpe/SQARLParser.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$ZPE$/zpe.jar!/jamiebalfour/zpe/core/ZPERuntimeEnvironment.class</url>
+          <line>782</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="jamiebalfour.zpe.core.ZPECompilerBytecodeBuilder" memberName="syntheticVariableCounter" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

@@ -1,0 +1,39 @@
+SEND "Please enter a start mileage" TO DISPLAY
+RECEIVE startMileage FROM KEYBOARD
+RECEIVE numberOfStops FROM KEYBOARD
+
+WHILE numberOfStops < 1 OR numberOfStops > 10 DO
+    SEND "Enter a number from 1 to 10" TO DISPLAY
+    RECEIVE numberOfStops FROM KEYBOARD
+END WHILE
+
+SET previousMileage TO startMileage
+SET totalMiles TO 0
+SET totalCost TO 0
+SET stageCosts TO []
+
+FOR stop FROM 1 TO numberOfStops DO
+    RECEIVE currentMileage FROM KEYBOARD
+
+    SEND "1 Standard, 2 Priority, 3 Express" TO DISPLAY
+    RECEIVE deliveryType FROM KEYBOARD
+
+    WHILE deliveryType < 1 OR deliveryType > 3 DO
+        SEND "Enter 1, 2 or 3" TO DISPLAY
+        RECEIVE deliveryType FROM KEYBOARD
+    END WHILE
+
+    IF deliveryType = 1 THEN
+        SET rate TO 0.20
+    ELSE IF deliveryType = 2 THEN
+        SET rate TO 0.35
+    ELSE
+        SET rate TO 0.50
+    END IF
+
+    SET stageMiles TO currentMileage - previousMileage
+    SET stageCost TO stageMiles * rate
+    SET totalMiles TO totalMiles + stageMiles
+    SET totalCost TO totalCost + stageCost
+    SET previousMileage TO currentMileage
+END FOR
